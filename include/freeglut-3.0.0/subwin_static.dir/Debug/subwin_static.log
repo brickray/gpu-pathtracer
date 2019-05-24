@@ -1,0 +1,4 @@
+﻿  Building Custom Rule E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeLists.txt
+  CMake does not need to re-run because E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\generate.stamp is up-to-date.
+  subwin.c
+  subwin_static.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\bin\Debug\subwin_staticd.exe

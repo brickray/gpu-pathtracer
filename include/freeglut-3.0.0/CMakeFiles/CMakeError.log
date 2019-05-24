@@ -1,0 +1,304 @@
+Determining if files unistd.h exist failed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_3a50a.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:06:55。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_3a50a.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_3a50a.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_3a50a.dir\Debug\cmTC_3a50a.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_3a50a.dir\Debug\cmTC_3a50a.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_3a50a.dir\Debug\\" /Fd"cmTC_3a50a.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_3a50a.dir\Debug\\" /Fd"cmTC_3a50a.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  
+  CheckIncludeFiles.c
+E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: 无法打开包括文件: “unistd.h”: No such file or directory [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_3a50a.vcxproj]
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_3a50a.vcxproj”(默认目标)的操作 - 失败。
+
+生成失败。
+
+“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_3a50a.vcxproj”(默认目标) (1) ->
+(ClCompile 目标) -> 
+  E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: 无法打开包括文件: “unistd.h”: No such file or directory [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_3a50a.vcxproj]
+
+    0 个警告
+    1 个错误
+
+已用时间 00:00:01.44
+
+Source:
+/* */
+#include <unistd.h>
+
+
+int main(void){return 0;}
+
+Determining if files sys/time.h exist failed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_d99c0.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:06:57。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d99c0.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_d99c0.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_d99c0.dir\Debug\cmTC_d99c0.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_d99c0.dir\Debug\cmTC_d99c0.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_d99c0.dir\Debug\\" /Fd"cmTC_d99c0.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_d99c0.dir\Debug\\" /Fd"cmTC_d99c0.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  
+  CheckIncludeFiles.c
+E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: 无法打开包括文件: “sys/time.h”: No such file or directory [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d99c0.vcxproj]
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d99c0.vcxproj”(默认目标)的操作 - 失败。
+
+生成失败。
+
+“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d99c0.vcxproj”(默认目标) (1) ->
+(ClCompile 目标) -> 
+  E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: 无法打开包括文件: “sys/time.h”: No such file or directory [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d99c0.vcxproj]
+
+    0 个警告
+    1 个错误
+
+已用时间 00:00:01.00
+
+Source:
+/* */
+#include <sys/time.h>
+
+
+int main(void){return 0;}
+
+Determining if files sys/param.h exist failed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_ec033.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:07:01。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_ec033.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_ec033.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_ec033.dir\Debug\cmTC_ec033.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_ec033.dir\Debug\cmTC_ec033.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_ec033.dir\Debug\\" /Fd"cmTC_ec033.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_ec033.dir\Debug\\" /Fd"cmTC_ec033.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  
+  CheckIncludeFiles.c
+E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: 无法打开包括文件: “sys/param.h”: No such file or directory [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_ec033.vcxproj]
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_ec033.vcxproj”(默认目标)的操作 - 失败。
+
+生成失败。
+
+“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_ec033.vcxproj”(默认目标) (1) ->
+(ClCompile 目标) -> 
+  E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: 无法打开包括文件: “sys/param.h”: No such file or directory [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_ec033.vcxproj]
+
+    0 个警告
+    1 个错误
+
+已用时间 00:00:00.96
+
+Source:
+/* */
+#include <sys/param.h>
+
+
+int main(void){return 0;}
+
+Determining if files sys/ioctl.h exist failed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_60018.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:07:03。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_60018.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_60018.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_60018.dir\Debug\cmTC_60018.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_60018.dir\Debug\cmTC_60018.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_60018.dir\Debug\\" /Fd"cmTC_60018.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_60018.dir\Debug\\" /Fd"cmTC_60018.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  
+  CheckIncludeFiles.c
+E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: 无法打开包括文件: “sys/ioctl.h”: No such file or directory [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_60018.vcxproj]
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_60018.vcxproj”(默认目标)的操作 - 失败。
+
+生成失败。
+
+“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_60018.vcxproj”(默认目标) (1) ->
+(ClCompile 目标) -> 
+  E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: 无法打开包括文件: “sys/ioctl.h”: No such file or directory [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_60018.vcxproj]
+
+    0 个警告
+    1 个错误
+
+已用时间 00:00:01.37
+
+Source:
+/* */
+#include <sys/ioctl.h>
+
+
+int main(void){return 0;}
+
+Determining if files usbhid.h exist failed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_991ce.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:07:07。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_991ce.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_991ce.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_991ce.dir\Debug\cmTC_991ce.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_991ce.dir\Debug\cmTC_991ce.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_991ce.dir\Debug\\" /Fd"cmTC_991ce.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_991ce.dir\Debug\\" /Fd"cmTC_991ce.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  
+  CheckIncludeFiles.c
+E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: 无法打开包括文件: “usbhid.h”: No such file or directory [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_991ce.vcxproj]
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_991ce.vcxproj”(默认目标)的操作 - 失败。
+
+生成失败。
+
+“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_991ce.vcxproj”(默认目标) (1) ->
+(ClCompile 目标) -> 
+  E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: 无法打开包括文件: “usbhid.h”: No such file or directory [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_991ce.vcxproj]
+
+    0 个警告
+    1 个错误
+
+已用时间 00:00:01.02
+
+Source:
+/* */
+#include <usbhid.h>
+
+
+int main(void){return 0;}
+
+Determining if the function gettimeofday exists failed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_4d4af.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:07:08。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_4d4af.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_4d4af.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_4d4af.dir\Debug\cmTC_4d4af.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_4d4af.dir\Debug\cmTC_4d4af.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=gettimeofday /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_4d4af.dir\Debug\\" /Fd"cmTC_4d4af.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\CMake\share\cmake-3.6\Modules\CheckFunctionExists.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=gettimeofday /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_4d4af.dir\Debug\\" /Fd"cmTC_4d4af.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\CMake\share\cmake-3.6\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_4d4af.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_4d4af.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_4d4af.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_4d4af.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: 无法解析的外部符号 _gettimeofday，该符号在函数 _main 中被引用 [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_4d4af.vcxproj]
+E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_4d4af.exe : fatal error LNK1120: 1 个无法解析的外部命令 [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_4d4af.vcxproj]
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_4d4af.vcxproj”(默认目标)的操作 - 失败。
+
+生成失败。
+
+“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_4d4af.vcxproj”(默认目标) (1) ->
+(Link 目标) -> 
+  CheckFunctionExists.obj : error LNK2019: 无法解析的外部符号 _gettimeofday，该符号在函数 _main 中被引用 [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_4d4af.vcxproj]
+  E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_4d4af.exe : fatal error LNK1120: 1 个无法解析的外部命令 [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_4d4af.vcxproj]
+
+    0 个警告
+    2 个错误
+
+已用时间 00:00:01.73
+
+
+Determining if the function XParseGeometry exists failed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_d4da1.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:07:11。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d4da1.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_d4da1.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_d4da1.dir\Debug\cmTC_d4da1.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_d4da1.dir\Debug\cmTC_d4da1.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=XParseGeometry /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_d4da1.dir\Debug\\" /Fd"cmTC_d4da1.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\CMake\share\cmake-3.6\Modules\CheckFunctionExists.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=XParseGeometry /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_d4da1.dir\Debug\\" /Fd"cmTC_d4da1.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\CMake\share\cmake-3.6\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_d4da1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_d4da1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_d4da1.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_d4da1.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: 无法解析的外部符号 _XParseGeometry，该符号在函数 _main 中被引用 [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d4da1.vcxproj]
+E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_d4da1.exe : fatal error LNK1120: 1 个无法解析的外部命令 [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d4da1.vcxproj]
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d4da1.vcxproj”(默认目标)的操作 - 失败。
+
+生成失败。
+
+“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d4da1.vcxproj”(默认目标) (1) ->
+(Link 目标) -> 
+  CheckFunctionExists.obj : error LNK2019: 无法解析的外部符号 _XParseGeometry，该符号在函数 _main 中被引用 [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d4da1.vcxproj]
+  E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_d4da1.exe : fatal error LNK1120: 1 个无法解析的外部命令 [E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_d4da1.vcxproj]
+
+    0 个警告
+    2 个错误
+
+已用时间 00:00:01.62
+
+

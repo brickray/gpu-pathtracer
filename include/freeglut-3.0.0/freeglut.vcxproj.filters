@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_callbacks.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_cursor.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_display.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_ext.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_font_data.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_gamemode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_geometry.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_gl2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_input_devices.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_joystick.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_misc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_overlay.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_spaceball.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_state.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_stroke_mono_roman.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_stroke_roman.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_structure.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_teapot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_videoresize.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_window.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_font.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_menu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_cursor_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_display_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_ext_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_gamemode_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_init_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_input_devices_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_joystick_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_main_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_menu_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_spaceball_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_state_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_structure_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_window_mswin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\util\xparsegeometry_repl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\include\GL\freeglut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\include\GL\freeglut_ext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\include\GL\freeglut_std.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\include\GL\glut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_gl2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_init.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\fg_teapot_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\mswin\fg_internal_mswin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\src\util\xparsegeometry_repl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\freeglutdll.def">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\freeglut.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{F9D94D0B-F6E8-342F-B111-09F003738827}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{273A7B5E-3262-373A-A1DA-D70209154542}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

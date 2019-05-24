@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\225fcafb80bd6e6c9a92b87f9e7a338d\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{ABE20217-778C-397A-81D3-168FDA08E175}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

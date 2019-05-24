@@ -1,0 +1,5 @@
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (CallbackMaker_static.vcxproj, CallbackMaker.vcxproj, Fractals_random_static.vcxproj, Fractals.vcxproj, Fractals_random.vcxproj, Fractals_static.vcxproj, freeglut.vcxproj, freeglut_static.vcxproj, Lorenz.vcxproj, Lorenz_static.vcxproj, multi-touch_static.vcxproj, multi-touch.vcxproj, One.vcxproj, One_static.vcxproj, Resizer.vcxproj, Resizer_static.vcxproj, shapes.vcxproj, shapes_static.vcxproj, smooth_opengl3.vcxproj, subwin.vcxproj, timer.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Building Custom Rule E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeLists.txt
+  CMake does not need to re-run because E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\generate.stamp is up-to-date.
+  smooth_opengl3.c
+LINK : fatal error LNK1181: 无法打开输入文件“lib\Release\freeglut_static.lib”

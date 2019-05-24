@@ -1,0 +1,529 @@
+The system is: Windows - 6.1.7601 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler:  
+Build flags: 
+Id flags: 
+
+The output was:
+0
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:06:12。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\3.6.1\CompilerIdC\CompilerIdC.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“Debug\”。
+  正在创建目录“Debug\CompilerIdC.tlog\”。
+InitializeBuildStatus:
+  正在创建“Debug\CompilerIdC.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /nologo /W0 /WX- /Od /Oy- /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue CMakeCCompilerId.c
+  CMakeCCompilerId.c
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdC.lib" /MACHINE:X86 /SAFESEH Debug\CMakeCCompilerId.obj
+  CompilerIdC.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\3.6.1\CompilerIdC\.\CompilerIdC.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_C_COMPILER=D:\VS2013\VC\bin\cl.exe
+FinalizeBuildStatus:
+  正在删除文件“Debug\CompilerIdC.tlog\unsuccessfulbuild”。
+  正在对“Debug\CompilerIdC.tlog\CompilerIdC.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\3.6.1\CompilerIdC\CompilerIdC.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:20.78
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
+
+The C compiler identification is MSVC, found in "E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/3.6.1/CompilerIdC/CompilerIdC.exe"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler:  
+Build flags: 
+Id flags: 
+
+The output was:
+0
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:06:34。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\3.6.1\CompilerIdCXX\CompilerIdCXX.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“Debug\”。
+  正在创建目录“Debug\CompilerIdCXX.tlog\”。
+InitializeBuildStatus:
+  正在创建“Debug\CompilerIdCXX.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /nologo /W0 /WX- /Od /Oy- /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:queue CMakeCXXCompilerId.cpp
+  CMakeCXXCompilerId.cpp
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X86 /SAFESEH Debug\CMakeCXXCompilerId.obj
+  CompilerIdCXX.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\3.6.1\CompilerIdCXX\.\CompilerIdCXX.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_CXX_COMPILER=D:\VS2013\VC\bin\cl.exe
+FinalizeBuildStatus:
+  正在删除文件“Debug\CompilerIdCXX.tlog\unsuccessfulbuild”。
+  正在对“Debug\CompilerIdCXX.tlog\CompilerIdCXX.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\3.6.1\CompilerIdCXX\CompilerIdCXX.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:03.47
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
+
+The CXX compiler identification is MSVC, found in "E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/3.6.1/CompilerIdCXX/CompilerIdCXX.exe"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_68113.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:06:38。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_68113.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_68113.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_68113.dir\Debug\cmTC_68113.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_68113.dir\Debug\cmTC_68113.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_68113.dir\Debug\\" /Fd"cmTC_68113.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\testCCompiler.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  testCCompiler.c
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_68113.dir\Debug\\" /Fd"cmTC_68113.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\testCCompiler.c"
+  
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_68113.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_68113.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_68113.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_68113.dir\Debug\testCCompiler.obj
+  cmTC_68113.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_68113.exe
+FinalizeBuildStatus:
+  正在删除文件“cmTC_68113.dir\Debug\cmTC_68113.tlog\unsuccessfulbuild”。
+  正在对“cmTC_68113.dir\Debug\cmTC_68113.tlog\cmTC_68113.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_68113.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:02.90
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_fd7b1.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:06:42。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_fd7b1.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_fd7b1.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_fd7b1.dir\Debug\cmTC_fd7b1.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_fd7b1.dir\Debug\cmTC_fd7b1.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_fd7b1.dir\Debug\\" /Fd"cmTC_fd7b1.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\CMake\share\cmake-3.6\Modules\CMakeCCompilerABI.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_fd7b1.dir\Debug\\" /Fd"cmTC_fd7b1.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\CMake\share\cmake-3.6\Modules\CMakeCCompilerABI.c"
+  
+  CMakeCCompilerABI.c
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_fd7b1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_fd7b1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_fd7b1.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_fd7b1.dir\Debug\CMakeCCompilerABI.obj
+  cmTC_fd7b1.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_fd7b1.exe
+FinalizeBuildStatus:
+  正在删除文件“cmTC_fd7b1.dir\Debug\cmTC_fd7b1.tlog\unsuccessfulbuild”。
+  正在对“cmTC_fd7b1.dir\Debug\cmTC_fd7b1.tlog\cmTC_fd7b1.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_fd7b1.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:02.38
+
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_2f905.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:06:45。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_2f905.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_2f905.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_2f905.dir\Debug\cmTC_2f905.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_2f905.dir\Debug\cmTC_2f905.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTC_2f905.dir\Debug\\" /Fd"cmTC_2f905.dir\Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTC_2f905.dir\Debug\\" /Fd"cmTC_2f905.dir\Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
+  
+  testCXXCompiler.cxx
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_2f905.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_2f905.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_2f905.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_2f905.dir\Debug\testCXXCompiler.obj
+  cmTC_2f905.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_2f905.exe
+FinalizeBuildStatus:
+  正在删除文件“cmTC_2f905.dir\Debug\cmTC_2f905.tlog\unsuccessfulbuild”。
+  正在对“cmTC_2f905.dir\Debug\cmTC_2f905.tlog\cmTC_2f905.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_2f905.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:02.15
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_ffe8c.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:06:48。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_ffe8c.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_ffe8c.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_ffe8c.dir\Debug\cmTC_ffe8c.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_ffe8c.dir\Debug\cmTC_ffe8c.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTC_ffe8c.dir\Debug\\" /Fd"cmTC_ffe8c.dir\Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:queue "E:\CMake\share\cmake-3.6\Modules\CMakeCXXCompilerABI.cpp"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTC_ffe8c.dir\Debug\\" /Fd"cmTC_ffe8c.dir\Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:queue "E:\CMake\share\cmake-3.6\Modules\CMakeCXXCompilerABI.cpp"
+  
+  CMakeCXXCompilerABI.cpp
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_ffe8c.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_ffe8c.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_ffe8c.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_ffe8c.dir\Debug\CMakeCXXCompilerABI.obj
+  cmTC_ffe8c.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_ffe8c.exe
+FinalizeBuildStatus:
+  正在删除文件“cmTC_ffe8c.dir\Debug\cmTC_ffe8c.tlog\unsuccessfulbuild”。
+  正在对“cmTC_ffe8c.dir\Debug\cmTC_ffe8c.tlog\cmTC_ffe8c.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_ffe8c.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:01.86
+
+
+
+
+Detecting CXX [] compiler features compiled with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_7e1f6.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:06:50。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_7e1f6.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_7e1f6.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_7e1f6.dir\Debug\cmTC_7e1f6.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_7e1f6.dir\Debug\cmTC_7e1f6.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTC_7e1f6.dir\Debug\\" /Fd"cmTC_7e1f6.dir\Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\feature_tests.cxx"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTC_7e1f6.dir\Debug\\" /Fd"cmTC_7e1f6.dir\Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\feature_tests.cxx"
+  
+  feature_tests.cxx
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_7e1f6.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_7e1f6.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_7e1f6.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_7e1f6.dir\Debug\feature_tests.obj
+  cmTC_7e1f6.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_7e1f6.exe
+FinalizeBuildStatus:
+  正在删除文件“cmTC_7e1f6.dir\Debug\cmTC_7e1f6.tlog\unsuccessfulbuild”。
+  正在对“cmTC_7e1f6.dir\Debug\cmTC_7e1f6.tlog\cmTC_7e1f6.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_7e1f6.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:01.78
+
+
+    Feature record: CXX_FEATURE:1cxx_alias_templates
+    Feature record: CXX_FEATURE:0cxx_alignas
+    Feature record: CXX_FEATURE:0cxx_alignof
+    Feature record: CXX_FEATURE:0cxx_attributes
+    Feature record: CXX_FEATURE:0cxx_attribute_deprecated
+    Feature record: CXX_FEATURE:1cxx_auto_type
+    Feature record: CXX_FEATURE:0cxx_binary_literals
+    Feature record: CXX_FEATURE:0cxx_constexpr
+    Feature record: CXX_FEATURE:1cxx_contextual_conversions
+    Feature record: CXX_FEATURE:1cxx_decltype
+    Feature record: CXX_FEATURE:0cxx_decltype_auto
+    Feature record: CXX_FEATURE:1cxx_default_function_template_args
+    Feature record: CXX_FEATURE:1cxx_defaulted_functions
+    Feature record: CXX_FEATURE:0cxx_defaulted_move_initializers
+    Feature record: CXX_FEATURE:1cxx_delegating_constructors
+    Feature record: CXX_FEATURE:0cxx_deleted_functions
+    Feature record: CXX_FEATURE:0cxx_digit_separators
+    Feature record: CXX_FEATURE:1cxx_enum_forward_declarations
+    Feature record: CXX_FEATURE:1cxx_explicit_conversions
+    Feature record: CXX_FEATURE:1cxx_extended_friend_declarations
+    Feature record: CXX_FEATURE:1cxx_extern_templates
+    Feature record: CXX_FEATURE:1cxx_final
+    Feature record: CXX_FEATURE:0cxx_func_identifier
+    Feature record: CXX_FEATURE:0cxx_generalized_initializers
+    Feature record: CXX_FEATURE:0cxx_generic_lambdas
+    Feature record: CXX_FEATURE:0cxx_inheriting_constructors
+    Feature record: CXX_FEATURE:0cxx_inline_namespaces
+    Feature record: CXX_FEATURE:1cxx_lambdas
+    Feature record: CXX_FEATURE:0cxx_lambda_init_captures
+    Feature record: CXX_FEATURE:1cxx_local_type_template_args
+    Feature record: CXX_FEATURE:1cxx_long_long_type
+    Feature record: CXX_FEATURE:0cxx_noexcept
+    Feature record: CXX_FEATURE:0cxx_nonstatic_member_init
+    Feature record: CXX_FEATURE:1cxx_nullptr
+    Feature record: CXX_FEATURE:1cxx_override
+    Feature record: CXX_FEATURE:1cxx_range_for
+    Feature record: CXX_FEATURE:1cxx_raw_string_literals
+    Feature record: CXX_FEATURE:0cxx_reference_qualified_functions
+    Feature record: CXX_FEATURE:0cxx_return_type_deduction
+    Feature record: CXX_FEATURE:1cxx_right_angle_brackets
+    Feature record: CXX_FEATURE:1cxx_rvalue_references
+    Feature record: CXX_FEATURE:0cxx_sizeof_member
+    Feature record: CXX_FEATURE:1cxx_static_assert
+    Feature record: CXX_FEATURE:1cxx_strong_enums
+    Feature record: CXX_FEATURE:1cxx_template_template_parameters
+    Feature record: CXX_FEATURE:0cxx_thread_local
+    Feature record: CXX_FEATURE:1cxx_trailing_return_types
+    Feature record: CXX_FEATURE:0cxx_unicode_literals
+    Feature record: CXX_FEATURE:1cxx_uniform_initialization
+    Feature record: CXX_FEATURE:0cxx_unrestricted_unions
+    Feature record: CXX_FEATURE:0cxx_user_literals
+    Feature record: CXX_FEATURE:0cxx_variable_templates
+    Feature record: CXX_FEATURE:1cxx_variadic_macros
+    Feature record: CXX_FEATURE:1cxx_variadic_templates
+Determining if files sys/types.h exist passed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_85744.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:06:53。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_85744.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_85744.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_85744.dir\Debug\cmTC_85744.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_85744.dir\Debug\cmTC_85744.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_85744.dir\Debug\\" /Fd"cmTC_85744.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_85744.dir\Debug\\" /Fd"cmTC_85744.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  
+  CheckIncludeFiles.c
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_85744.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_85744.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_85744.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_85744.dir\Debug\CheckIncludeFiles.obj
+  cmTC_85744.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_85744.exe
+FinalizeBuildStatus:
+  正在删除文件“cmTC_85744.dir\Debug\cmTC_85744.tlog\unsuccessfulbuild”。
+  正在对“cmTC_85744.dir\Debug\cmTC_85744.tlog\cmTC_85744.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_85744.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:01.81
+
+
+Determining if files stdbool.h exist passed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_2794f.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:06:59。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_2794f.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_2794f.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_2794f.dir\Debug\cmTC_2794f.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_2794f.dir\Debug\cmTC_2794f.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_2794f.dir\Debug\\" /Fd"cmTC_2794f.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_2794f.dir\Debug\\" /Fd"cmTC_2794f.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  
+  CheckIncludeFiles.c
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_2794f.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_2794f.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_2794f.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_2794f.dir\Debug\CheckIncludeFiles.obj
+  cmTC_2794f.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_2794f.exe
+FinalizeBuildStatus:
+  正在删除文件“cmTC_2794f.dir\Debug\cmTC_2794f.tlog\unsuccessfulbuild”。
+  正在对“cmTC_2794f.dir\Debug\cmTC_2794f.tlog\cmTC_2794f.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_2794f.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:01.71
+
+
+Determining if files fcntl.h exist passed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_71f40.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:07:04。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_71f40.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_71f40.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_71f40.dir\Debug\cmTC_71f40.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_71f40.dir\Debug\cmTC_71f40.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_71f40.dir\Debug\\" /Fd"cmTC_71f40.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_71f40.dir\Debug\\" /Fd"cmTC_71f40.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  
+  CheckIncludeFiles.c
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_71f40.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_71f40.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_71f40.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_71f40.dir\Debug\CheckIncludeFiles.obj
+  cmTC_71f40.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_71f40.exe
+FinalizeBuildStatus:
+  正在删除文件“cmTC_71f40.dir\Debug\cmTC_71f40.tlog\unsuccessfulbuild”。
+  正在对“cmTC_71f40.dir\Debug\cmTC_71f40.tlog\cmTC_71f40.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_71f40.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:01.78
+
+
+Determining if files stdint.h exist passed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_a0d5d.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:07:13。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_a0d5d.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_a0d5d.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_a0d5d.dir\Debug\cmTC_a0d5d.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_a0d5d.dir\Debug\cmTC_a0d5d.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_a0d5d.dir\Debug\\" /Fd"cmTC_a0d5d.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_a0d5d.dir\Debug\\" /Fd"cmTC_a0d5d.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  
+  CheckIncludeFiles.c
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_a0d5d.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_a0d5d.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_a0d5d.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_a0d5d.dir\Debug\CheckIncludeFiles.obj
+  cmTC_a0d5d.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_a0d5d.exe
+FinalizeBuildStatus:
+  正在删除文件“cmTC_a0d5d.dir\Debug\cmTC_a0d5d.tlog\unsuccessfulbuild”。
+  正在对“cmTC_a0d5d.dir\Debug\cmTC_a0d5d.tlog\cmTC_a0d5d.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_a0d5d.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:01.56
+
+
+Determining if files inttypes.h exist passed with the following output:
+Change Dir: E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/MSBuild/12.0/bin/MSBuild.exe" "cmTC_3f0de.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=12.0"
+Microsoft(R) 生成引擎版本 12.0.21005.1
+[Microsoft .NET Framework 版本 4.0.30319.42000]
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+生成启动时间为 2018/7/14 17:07:15。
+节点 1 上的项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_3f0de.vcxproj”(默认目标)。
+PrepareForBuild:
+  正在创建目录“cmTC_3f0de.dir\Debug\”。
+  正在创建目录“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\”。
+  正在创建目录“cmTC_3f0de.dir\Debug\cmTC_3f0de.tlog\”。
+InitializeBuildStatus:
+  正在创建“cmTC_3f0de.dir\Debug\cmTC_3f0de.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+ClCompile:
+  D:\VS2013\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_3f0de.dir\Debug\\" /Fd"cmTC_3f0de.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  用于 x86 的 Microsoft (R) C/C++ 优化编译器 18.00.21005.1 版版权所有(C) Microsoft Corporation。  保留所有权利。
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTC_3f0de.dir\Debug\\" /Fd"cmTC_3f0de.dir\Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:queue "E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  
+  CheckIncludeFiles.c
+Link:
+  D:\VS2013\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_3f0de.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_3f0de.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:/RayTracing/GPUPathTracing/lib/freeglut-3.0.0/CMakeFiles/CMakeTmp/Debug/cmTC_3f0de.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_3f0de.dir\Debug\CheckIncludeFiles.obj
+  cmTC_3f0de.vcxproj -> E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\Debug\cmTC_3f0de.exe
+FinalizeBuildStatus:
+  正在删除文件“cmTC_3f0de.dir\Debug\cmTC_3f0de.tlog\unsuccessfulbuild”。
+  正在对“cmTC_3f0de.dir\Debug\cmTC_3f0de.tlog\cmTC_3f0de.lastbuildstate”执行 Touch 任务。
+已完成生成项目“E:\RayTracing\GPUPathTracing\lib\freeglut-3.0.0\CMakeFiles\CMakeTmp\cmTC_3f0de.vcxproj”(默认目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:01.66
+
+
