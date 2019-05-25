@@ -13,6 +13,8 @@ Material* dev_materials;
 Area* dev_lights;
 float* dev_light_distribution;
 float4* hdr_map;
+uchar4** dev_textures;
+int* texture_size;//0 1为第一张图的长宽， 2 3为第二张图的长宽，以此类推
 texture<float4, 1, cudaReadModeElementType> hdr_texture;
 
 __device__ Camera* kernel_camera;
@@ -22,6 +24,8 @@ __device__ LinearBVHNode* kernel_linear;
 __device__ Triangle* kernel_triangles;
 __device__ Material* kernel_materials;
 __device__ Area* kernel_lights;
+__device__ uchar4** kernel_textures;
+__device__ int* kernel_texture_size;
 __device__ float* kernel_light_distribution;
 __device__ int kernel_light_distribution_size;
 __device__ bool kernel_hdr_isvalid;
@@ -218,6 +222,28 @@ __device__ bool IntersectP(Ray& ray){
 	return false;
 }
 
+__device__ inline float4 GetTexel(Material material, float2 uv){
+	if (material.textureIdx == -1)
+		return make_float4(material.diffuse, 1.f);
+
+	float inv = 1.f / 255.f;
+	int w = kernel_texture_size[material.textureIdx * 2];
+	int h = kernel_texture_size[material.textureIdx * 2 + 1];
+	int x = uv.x*w, y = uv.y*h;
+	x = x == w ? w - 1 : x;
+	y = y == h ? h - 1 : y;
+	float rx = x - (x / w)*w;
+	float ry = y - (y / h)*h;
+	x = (rx < 0) ? rx + w : rx;
+	y = (ry < 0) ? ry + h : ry;
+	if (x < 0) x = 0;
+	if (x > w - 1) x = w - 1;
+	if (y < 0) y = 0;
+	if (y > h - 1) y = h - 1;
+	uchar4 c = kernel_textures[material.textureIdx][y*w + x];
+	return make_float4(c.x*inv, c.y*inv, c.z*inv, c.w * inv);
+}
+
 __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, float2 u, float3& out, float3& fr, float& pdf){
 	switch(material.type){
 	case MT_LAMBERTIAN:{
@@ -226,7 +252,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 			n = -n;
 
 		out = CosineHemiSphere(u.x, u.y, n, pdf);
-		fr = material.diffuse * ONE_OVER_PI;
+		fr = make_float3(GetTexel(material, uv)) * ONE_OVER_PI;
 		break;
 	}
 	
@@ -325,7 +351,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		}
 		float c0 = fabs(dot(in, n));
 		float c1 = fabs(dot(out, n));
-		float3 Rd = material.diffuse;
+		float3 Rd = make_float3(GetTexel(material, uv));
 		float3 Rs = material.specular;
 		float cons0 = 1 - 0.5f * c0;
 		float cons1 = 1 - 0.5f * c1;
@@ -354,7 +380,7 @@ __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 
 			return;
 		}
 
-		fr = material.diffuse * ONE_OVER_PI;
+		fr = make_float3(GetTexel(material, uv)) * ONE_OVER_PI;
 		pdf = fabs(dot(out, nor)) * ONE_OVER_PI;
 		break;
 
@@ -402,7 +428,7 @@ __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 
 
 		float c0 = fabs(dot(in, n));
 		float c1 = fabs(dot(out, n));
-		float3 Rd = material.diffuse;
+		float3 Rd = make_float3(GetTexel(material, uv));
 		float3 Rs = material.specular;
 		float cons0 = 1 - 0.5f * c0;
 		float cons1 = 1 - 0.5f * c1;
@@ -561,8 +587,10 @@ __global__ void InitRender(
 	Triangle* triangles,
 	Material* materials,
 	Area* lights,
+	uchar4** texs,
 	float* light_distribution,
 	int ld_size,
+	int* tex_size,
 	float3* image, 
 	float3* color,
 	int hdr_w, 
@@ -573,8 +601,10 @@ __global__ void InitRender(
 	kernel_triangles = triangles;
 	kernel_materials = materials;
 	kernel_lights = lights;
+	kernel_textures = texs;
 	kernel_light_distribution = light_distribution;
 	kernel_light_distribution_size = ld_size;
+	kernel_texture_size = tex_size;
 	kernel_acc_image = image;
 	kernel_color = color;
 	kernel_hdr_width = hdr_w;
@@ -622,6 +652,24 @@ void BeginRender(
 	HANDLE_ERROR(cudaMemcpy(dev_lights, &scene.lights[0], num_lights*sizeof(Area), cudaMemcpyHostToDevice));
 	light_memory_use+= num_lights*sizeof(Area);
 
+	//copy textures
+	if (scene.textures.size()){
+		HANDLE_ERROR(cudaMalloc(&texture_size, scene.textures.size() * 2 * sizeof(int)));
+		vector<int> texSize;
+		HANDLE_ERROR(cudaMalloc(&dev_textures, scene.textures.size()*sizeof(uchar4*)));
+		for (int i = 0; i < scene.textures.size(); ++i){
+			Texture tex = scene.textures[i];
+			texSize.push_back(tex.width);
+			texSize.push_back(tex.height);
+			uchar4* t;
+			HANDLE_ERROR(cudaMalloc(&t, tex.width*tex.height*sizeof(uchar4)));
+			texture_memory_use += tex.width*tex.height*sizeof(uchar4);
+			HANDLE_ERROR(cudaMemcpy(t, &tex.data[0], tex.width*tex.height*sizeof(uchar4), cudaMemcpyHostToDevice));
+			HANDLE_ERROR(cudaMemcpy(&dev_textures[i], &t, sizeof(uchar4*), cudaMemcpyHostToDevice));
+		}
+		HANDLE_ERROR(cudaMemcpy(texture_size, &texSize[0], scene.textures.size() * 2 * sizeof(int), cudaMemcpyHostToDevice));
+	}
+
 	int num_pixel = width*height;
 	HANDLE_ERROR(cudaMalloc(&dev_image, num_pixel*sizeof(float3)));
 	texture_memory_use += num_pixel*sizeof(float3);
@@ -642,7 +690,8 @@ void BeginRender(
 	texture_memory_use += ld_size*sizeof(float);
 	
 	InitRender << <1, 1 >> >(dev_camera, dev_bvh_nodes,
-		dev_triangles, dev_materials, dev_lights, dev_light_distribution, ld_size, dev_image, dev_color, hdrmap.width, hdrmap.height, hdrmap.isvalid);
+		dev_triangles, dev_materials, dev_lights, dev_textures, dev_light_distribution, ld_size, 
+		texture_size, dev_image, dev_color, hdrmap.width, hdrmap.height, hdrmap.isvalid);
 
 	HANDLE_ERROR(cudaDeviceSynchronize());
 
@@ -665,7 +714,7 @@ void EndRender(){
 }
 
 void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsigned iter, bool reset, float3* output){
-	HANDLE_ERROR(cudaMemcpy(dev_camera, camera, sizeof(Camera), cudaMemcpyHostToDevice));
+	//HANDLE_ERROR(cudaMemcpy(dev_camera, camera, sizeof(Camera), cudaMemcpyHostToDevice));
 	int block_x = 32, block_y = 4;
 	dim3 block(block_x, block_y);
 	dim3 grid(width / block.x, height / block.y);

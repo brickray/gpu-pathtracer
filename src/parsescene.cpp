@@ -110,6 +110,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			matMap["dielectric"] = MT_DIELECTRIC;
 			matMap["roughconduct"] = MT_ROUGHCONDUCTOR;
 			matMap["substrate"] = MT_SUBSTRATE;
+			map<string, int> texMap;
 
 			Value::ValueIterator it = mat.Begin();
 			for (; it != mat.End(); ++it){
@@ -121,17 +122,24 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 				float3 k = (*it).HasMember("k") ? getFloat3((*it)["k"]) : make_float3(0, 0, 0);
 				float3 eta = (*it).HasMember("eta") ? getFloat3((*it)["eta"]) : make_float3(0, 0, 0);
 				float3 specular = (*it).HasMember("specular") ? getFloat3((*it)["specular"]) : make_float3(1.f, 1.f, 1.f);
-				float3 diffuse;
+				float3 diffuse = make_float3(1.f, 1.f, 1.f);
+				int texIdx = -1;
 				if ((*it).HasMember("diffuse")){
 					if ((*it)["diffuse"].IsString()){
-
+						string file = (*it)["diffuse"].GetString();
+						if (texMap.find(file) == texMap.end()){
+							Texture tex((base + file).c_str());
+							scene.textures.push_back(tex);
+							texIdx = scene.textures.size() - 1;
+							texMap[file] = scene.textures.size() - 1;
+						}
+						else
+							texIdx = texMap[file];
 					}
 					else{
 						diffuse = getFloat3((*it)["diffuse"]);
 					}
 				}
-				else
-					diffuse = make_float3(1.f, 1.f, 1.f);
 				Material mat;
 				mat.type = matMap[bsdf];
 				mat.roughness = roughness;
@@ -141,6 +149,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 				mat.eta = eta;
 				mat.diffuse = diffuse;
 				mat.specular = specular;
+				mat.textureIdx = texIdx;
 				scene.materials.push_back(mat);
 				matName.push_back(mat_name);
 			}

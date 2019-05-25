@@ -20,6 +20,7 @@ public:
 	float insideIOR, outsideIOR;
 	float3 k, eta; //metal
 	float3 diffuse, specular;
+	int textureIdx = -1; //该值等于-1说明直接使用diffuse，若不为-1则使用texture
 };
 
 __host__ __device__ inline bool IsDiffuse(MaterialType type){

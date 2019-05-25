@@ -50,8 +50,10 @@ bool ImageIO::LoadTexture(const char* filename, int& width, int& height, bool sr
 
 		stbi_image_free(tex);
 	}
-	else
+	else{
+		fprintf(stderr, "Error when load texture [%s]\n", filename);
 		return false;
+	}
 
 	return true;
 }

@@ -4,6 +4,7 @@
 #include <vector>
 #include "mesh.h"
 #include "material.h"
+#include "texture.h"
 #include "area.h"
 #include "camera.h"
 
@@ -12,6 +13,7 @@ public:
 	vector<Triangle> triangles;
 	vector<Material> materials;
 	vector<Area> lights;
+	vector<Texture> textures;
 	vector<float> lightDistribution;
 	Camera camera;
 
