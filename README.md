@@ -3,7 +3,7 @@ GPUPathtracer
 
 physically based path tracer on gpu
 
-![glass_of_water](result/glass_of_water.png)
+![whiteroom](result/whiteroom.png)
 
 特点
 ----
@@ -25,6 +25,7 @@ physically based path tracer on gpu
 
 图集
 ---
+![glass_of_water](result/glass_of_water.png)
 ![coffee](result/coffee.png)
 ![spaceship](result/spaceship.png)
 ![conference](result/conference.png)
