@@ -2,9 +2,7 @@
 #include "camera.h"
 #include "scene.h"
 #include "bvh.h"
-#include "saveimage.h"
-#include "lodepng.h"
-#include "hdrloader.h"
+#include "imageio.h"
 #include "parsescene.h"
 #include <gl\glew.h>
 #include <gl\glut.h>
@@ -26,14 +24,12 @@ BVH bvh;
 GLuint buffer;
 cudaGraphicsResource* resource = NULL;
 
-void test();
-
 void SaveImage(){
 	glReadPixels(0, 0,config. width, config.height, GL_RGB, GL_FLOAT, image);
 	char buffer[2048] = { 0 };
 	
 	sprintf(buffer, "../result/%ds iteration %dpx-%dpx.png", iteration, config.width, config.height);
-	save_png(buffer, config.width, config.height, image);
+	ImageIO::SavePng(buffer, config.width, config.height, image);
 }
 
 void InitOpengl(int argc, char**argv){
@@ -225,7 +221,7 @@ static void motion(int x, int y){
 }
 
 void InitHDR(const char* hdr){
-	HDRImage image;
+	/*HDRImage image;
 	if (!HDRLoader::load(hdr, image)){
 		fprintf(stderr, "could not find hdr file");
 	}
@@ -243,7 +239,7 @@ void InitHDR(const char* hdr){
 
 			hdrmap.image[idx] = make_float4(c, 0.f);
 		}
-	}
+	}*/
 }
 
 bool InitScene(string file){
@@ -257,7 +253,7 @@ bool InitScene(string file){
 	scene.Init();
 
 	if (config.skybox)
-		InitHDR(config.hdr.c_str());
+		;// InitHDR(config.hdr.c_str());
 	else
 		hdrmap.isvalid = false;
 
@@ -284,8 +280,6 @@ int main(int argc, char**argv){
 	if (!InitScene(f)){
 		return 1;
 	}
-
-//	tracing(0, 5);
 
 	//then init opengl
 	InitOpengl(argc, argv);

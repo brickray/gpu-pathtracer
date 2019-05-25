@@ -539,11 +539,14 @@ __global__ void Tracing(int iter, int maxDepth){
 		kernel_color[pixel] = Li;
 }
 
-__global__ void Output(int iter, float3* output){
+__global__ void Output(int iter, float3* output, bool reset){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
 	unsigned pixel = x + y*blockDim.x*gridDim.x;
 
+	if (reset){
+		kernel_acc_image[pixel] = { 0, 0, 0 };
+	}
 	float3 color = kernel_color[pixel];
 	kernel_acc_image[pixel] += color;
 
@@ -591,7 +594,7 @@ void BeginRender(
 	int material_memory_use = 0;
 	int bvh_memory_use = 0;
 	int light_memory_use = 0;
-	int other_memory_use = 0;
+	int texture_memory_use = 0;
 	maxDepth = max_depth;
 	int num_triangles = bvh.tris.size();
 	HANDLE_ERROR(cudaMalloc(&dev_camera, sizeof(Camera)));
@@ -621,12 +624,12 @@ void BeginRender(
 
 	int num_pixel = width*height;
 	HANDLE_ERROR(cudaMalloc(&dev_image, num_pixel*sizeof(float3)));
-	other_memory_use += num_pixel*sizeof(float3);
+	texture_memory_use += num_pixel*sizeof(float3);
 	HANDLE_ERROR(cudaMalloc(&dev_color, num_pixel*sizeof(float3)));
-	other_memory_use += num_pixel*sizeof(float3);
+	texture_memory_use += num_pixel*sizeof(float3);
 	if (hdrmap.isvalid){
 		HANDLE_ERROR(cudaMalloc(&hdr_map, hdrmap.width*hdrmap.height*sizeof(float4)));
-		other_memory_use += num_pixel*sizeof(float4);
+		texture_memory_use += num_pixel*sizeof(float4);
 		HANDLE_ERROR(cudaMemcpy(hdr_map, hdrmap.image, hdrmap.width*hdrmap.height*sizeof(float4), cudaMemcpyHostToDevice));
 		hdr_texture.filterMode = cudaFilterModeLinear;
 		cudaChannelFormatDesc channel4desc = cudaCreateChannelDesc<float4>();
@@ -636,7 +639,7 @@ void BeginRender(
 	int ld_size = scene.lightDistribution.size();
 	HANDLE_ERROR(cudaMalloc(&dev_light_distribution, ld_size*sizeof(float)));
 	HANDLE_ERROR(cudaMemcpy(dev_light_distribution, &scene.lightDistribution[0], ld_size*sizeof(float), cudaMemcpyHostToDevice));
-	other_memory_use += ld_size*sizeof(float);
+	texture_memory_use += ld_size*sizeof(float);
 	
 	InitRender << <1, 1 >> >(dev_camera, dev_bvh_nodes,
 		dev_triangles, dev_materials, dev_lights, dev_light_distribution, ld_size, dev_image, dev_color, hdrmap.width, hdrmap.height, hdrmap.isvalid);
@@ -647,8 +650,8 @@ void BeginRender(
 	fprintf(stderr, "Bvh video memory use:[%.3fM]\n", (float)bvh_memory_use / (1024 * 1024));
 	fprintf(stderr, "Material video memory use:[%.3fM]\n", (float)material_memory_use / (1024 * 1024));
 	fprintf(stderr, "Light video memory use:[%.3fM]\n", (float)light_memory_use / (1024 * 1024));
-	fprintf(stderr, "Other video memory use:[%.2fM]\n", (float)other_memory_use / (1024 * 1024));
-	fprintf(stderr, "total video memory use:[%.3fM]\n", (float)(mesh_memory_use + bvh_memory_use + material_memory_use + light_memory_use + other_memory_use) / (1024 * 1024));
+	fprintf(stderr, "Texture video memory use:[%.2fM]\n", (float)texture_memory_use / (1024 * 1024));
+	fprintf(stderr, "Total video memory use:[%.3fM]\n", (float)(mesh_memory_use + bvh_memory_use + material_memory_use + light_memory_use + texture_memory_use) / (1024 * 1024));
 }
 
 void EndRender(){
@@ -662,7 +665,7 @@ void EndRender(){
 }
 
 void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsigned iter, bool reset, float3* output){
-	//HANDLE_ERROR(cudaMemcpy(dev_camera, camera, sizeof(Camera), cudaMemcpyHostToDevice));
+	HANDLE_ERROR(cudaMemcpy(dev_camera, camera, sizeof(Camera), cudaMemcpyHostToDevice));
 	int block_x = 32, block_y = 4;
 	dim3 block(block_x, block_y);
 	dim3 grid(width / block.x, height / block.y);
@@ -671,5 +674,5 @@ void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsig
 
 	grid.x = width / block.x;
 	grid.y = height / block.y;
-	Output << <grid, block >> >(iter, output);
+	Output << <grid, block >> >(iter, output, reset);
 }

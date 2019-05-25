@@ -120,8 +120,18 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 				float outsideIOR = (*it).HasMember("outsideIOR") ? (*it)["outsideIOR"].GetDouble() : 1.f;
 				float3 k = (*it).HasMember("k") ? getFloat3((*it)["k"]) : make_float3(0, 0, 0);
 				float3 eta = (*it).HasMember("eta") ? getFloat3((*it)["eta"]) : make_float3(0, 0, 0);
-				float3 diffuse = (*it).HasMember("diffuse") ? getFloat3((*it)["diffuse"]) : make_float3(1.f, 1.f, 1.f);
 				float3 specular = (*it).HasMember("specular") ? getFloat3((*it)["specular"]) : make_float3(1.f, 1.f, 1.f);
+				float3 diffuse;
+				if ((*it).HasMember("diffuse")){
+					if ((*it)["diffuse"].IsString()){
+
+					}
+					else{
+						diffuse = getFloat3((*it)["diffuse"]);
+					}
+				}
+				else
+					diffuse = make_float3(1.f, 1.f, 1.f);
 				Material mat;
 				mat.type = matMap[bsdf];
 				mat.roughness = roughness;
