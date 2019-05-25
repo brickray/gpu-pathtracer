@@ -1,0 +1,77 @@
+{
+    "screen_width": 512,
+    "screen_height": 512,
+    "maxDepth": 7,
+    "camera": {
+        "position": [ 0, 1.0, 6.8 ],
+        "lookat": [ 0, 1.0, 0 ],
+        "fov": 19.5,
+        "apertureRadius": 0.5,
+        "focalDistance": 7.0,
+        "move_speed": 0.1
+    },
+    "material": [
+        {
+            "name": "Left",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.63, 0.065, 0.05 ]
+        },
+        {
+            "name": "Right",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.140000, 0.450000, 0.091000 ]
+        },
+        {
+            "name": "General",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.725, 0.725, 0.725 ]
+        },
+        {
+            "name": "Emission",
+            "bsdf": "lambertian",
+            "diffuse": [ 0, 0, 0 ]
+        },
+        {
+            "name": "Mirror",
+            "bsdf": "mirror",
+            "specular": [ 1.0, 1.0, 1.0 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "geometry/floor.obj",
+            "material": "General"
+        },
+        {
+            "mesh": "geometry/ceil.obj",
+            "material": "General"
+        },
+        {
+            "mesh": "geometry/back.obj",
+            "material": "General"
+        },
+        {
+            "mesh": "geometry/right.obj",
+            "material": "Right"
+        },
+        {
+            "mesh": "geometry/left.obj",
+            "material": "Left"
+        },
+        {
+            "mesh": "geometry/short.obj",
+            "material": "General"
+        },
+        {
+            "mesh": "geometry/tall.obj",
+            "material": "General"
+        }
+    ],
+    "light" : [
+        {
+            "mesh": "geometry/light.obj",
+            "material": "Emission",
+            "radiance": [17.0, 12.0, 4.0]
+        }
+    ]
+}
