@@ -19,6 +19,10 @@ physically based path tracer on gpu
 ----
 需要CUDA9.1以上
 
+关于场景
+------
+鉴于场景太大，所以只放了一个简单的测试场景供使用，如果需要，可以联系我将其余场景提供给你
+
 图集
 ---
 ![coffee](result/coffee.png)
