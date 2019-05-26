@@ -26,6 +26,8 @@ physically based path tracer on gpu
 图集
 ---
 ![glass_of_water](result/glass_of_water.png)
+![bathroom](result/bathroom.png)
+![bathroom2](result/bathroom2.png)
 ![coffee](result/coffee.png)
 ![spaceship](result/spaceship.png)
 ![conference](result/conference.png)
