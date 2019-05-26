@@ -29,6 +29,8 @@ __device__ int* kernel_texture_size;
 __device__ float* kernel_light_distribution;
 __device__ int kernel_light_distribution_size;
 __device__ bool kernel_hdr_isvalid;
+//不同场景需要不同的epsilon，不知道怎么样优雅的实现
+__device__ float kernel_epsilon;
 
 __device__ inline bool Max(float c0, float c1){
 	return c0 > c1 ? c0 : c1;
@@ -471,7 +473,8 @@ __global__ void Tracing(int iter, int maxDepth){
 	float unuse;
 	float2 aperture = UniformDisk(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), unuse);//for dof
 	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, aperture);
-	
+	ray.tmin = kernel_epsilon;
+
 	float3 Li = make_float3(0.f, 0.f, 0.f);
 	float3 beta = make_float3(1.f, 1.f, 1.f);
 	Ray r = ray;
@@ -504,7 +507,7 @@ __global__ void Tracing(int iter, int maxDepth){
 			float3 radiance, lightNor;
 			Ray shadowRay;
 			float lightPdf;
-			light.SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf);
+			light.SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
 
 			bool invisible = IntersectP(shadowRay);
 			if (!IsBlack(radiance) && !invisible){
@@ -522,7 +525,7 @@ __global__ void Tracing(int iter, int maxDepth){
 			SampleBSDF(material, -r.d, nor, uv, u1, out, fr, pdf);
 			if (!(IsBlack(fr) || pdf == 0)){
 				Intersection lightIsect;
-				Ray lightRay(pos, out);
+				Ray lightRay(pos, out, kernel_epsilon);
 				if (Intersect(lightRay, &lightIsect)){
 					float3 p = lightIsect.pos;
 					float3 n = lightIsect.nor;
@@ -531,7 +534,7 @@ __global__ void Tracing(int iter, int maxDepth){
 						radiance = kernel_lights[lightIsect.lightIdx].Le(n, -lightRay.d);
 					if (!IsBlack(radiance)){
 						float pdfA, pdfW;
-						kernel_lights[lightIsect.lightIdx].Pdf(Ray(p, -out), n, pdfA, pdfW);
+						kernel_lights[lightIsect.lightIdx].Pdf(Ray(p, -out, kernel_epsilon), n, pdfA, pdfW);
 						float choicePdf = PdfFromLightDistribution(lightIsect.lightIdx);
 						float lenSquare = dot(p - pos, p - pos);
 						float costheta = fabs(dot(n, lightRay.d));
@@ -564,7 +567,7 @@ __global__ void Tracing(int iter, int maxDepth){
 			beta /= (1 - illumate);
 		}
 
-		r = Ray(pos, out);
+		r = Ray(pos, out, kernel_epsilon);
 	}
 
 	if (!(isnan(Li.x) || isnan(Li.y) || isnan(Li.z)))
@@ -599,6 +602,7 @@ __global__ void InitRender(
 	int* tex_size,
 	float3* image, 
 	float3* color,
+	float ep,
 	int hdr_w, 
 	int hdr_h, 
 	bool isvalid){
@@ -613,17 +617,19 @@ __global__ void InitRender(
 	kernel_texture_size = tex_size;
 	kernel_acc_image = image;
 	kernel_color = color;
+	kernel_epsilon = ep;
 	kernel_hdr_width = hdr_w;
 	kernel_hdr_height = hdr_h;
 	kernel_hdr_isvalid = isvalid;
 }
 
 void BeginRender(
-	Scene& scene, 
-	BVH& bvh, 
+	Scene& scene,
+	BVH& bvh,
 	Camera cam,
-	unsigned width, 
-	unsigned height, 
+	unsigned width,
+	unsigned height,
+	float ep,
 	int max_depth, 
 	HDRMap& hdrmap){
 	int mesh_memory_use = 0;
@@ -697,7 +703,7 @@ void BeginRender(
 	
 	InitRender << <1, 1 >> >(dev_camera, dev_bvh_nodes,
 		dev_triangles, dev_materials, dev_lights, dev_textures, dev_light_distribution, ld_size, 
-		texture_size, dev_image, dev_color, hdrmap.width, hdrmap.height, hdrmap.isvalid);
+		texture_size, dev_image, dev_color, ep, hdrmap.width, hdrmap.height, hdrmap.isvalid);
 
 	HANDLE_ERROR(cudaDeviceSynchronize());
 

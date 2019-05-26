@@ -67,6 +67,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 		}
 		
 		config.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
+		config.epsilon = doc.HasMember("epsilon") ? doc["epsilon"].GetDouble() : 0.01f;
 
 		if (doc.HasMember("camera")){
 			Value& camera = doc["camera"];

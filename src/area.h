@@ -13,11 +13,11 @@ public:
 	__host__ Area(){
 	}
 
-	__host__ __device__ void SampleLight(float3& pos, float2& u, float3& rad, Ray& ray, float3& nor, float& pdf) const{
+	__host__ __device__ void SampleLight(float3& pos, float2& u, float3& rad, Ray& ray, float3& nor, float& pdf, float epsilon = 0.01) const{
 		float3 dir;
 		triangle.SampleShape(pos, u, dir, nor, pdf);
 		rad = pdf != 0.f ? radiance : make_float3(0.f, 0.f, 0.f);
-		ray = Ray(pos, normalize(dir), EPSILON, sqrtf(dot(dir, dir) - EPSILON));
+		ray = Ray(pos, normalize(dir), epsilon, sqrtf(dot(dir, dir) - epsilon));
 	}
 
 	__host__ __device__ void Pdf(Ray& ray, float3& nor, float& pdfA, float& pdfW) const{

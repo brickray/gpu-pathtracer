@@ -21,6 +21,8 @@ struct GlobalConfig{
 	//focalDistance [0]
 	Camera camera;
 	float camera_move_speed;
+	//default 0.01
+	float epsilon;
 
 	//skybox
 	bool skybox;

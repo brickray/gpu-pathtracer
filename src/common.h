@@ -18,7 +18,6 @@
 using namespace std;
 using namespace glm;
 
-#define EPSILON				0.001
 #define PI                  3.14159265358f
 #define TWOPI               6.28318530716f
 #define FOURPI              12.56637061432f 
