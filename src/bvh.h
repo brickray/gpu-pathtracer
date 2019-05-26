@@ -33,6 +33,7 @@ public:
 	LinearBVHNode* linear_root;
 	int total_nodes;
 	vector<Triangle> tris;
+	BBox root_box;
 
 public:
 	BVH();

@@ -8,7 +8,7 @@ BVH::BVH(){
 void BVH::Build(vector<Triangle>& triangles){
 	if (triangles.size() == 0)
 		return;
-	BBox root_box;
+
 	root_box.Reset();
 	for (int i = 0; i < triangles.size(); ++i){
 		root_box.Expand(triangles[i].GetBBox());
@@ -95,7 +95,7 @@ BVHNode* BVH::split(vector<Triangle>& triangles, BBox& bbox){
 			}
 		}
 	}
-	
+
 	//can't find axis to split,hence just create a leaf node
 	if (best_axis == -1){
 		BVHNode* leaf = new BVHNode();
@@ -114,17 +114,18 @@ BVHNode* BVH::split(vector<Triangle>& triangles, BBox& bbox){
 	float value_end = (best_axis == 0) ? bbox.fmax.x : (best_axis == 1) ? bbox.fmax.y : bbox.fmax.z;
 	for (int i = 0; i < triangles.size(); ++i){
 		Triangle tri = triangles[i];
-		float3 center = tri.GetBBox().Centric();
+		BBox bounds = tri.GetBBox();
+		float3 center = bounds.Centric();
 		float value = (best_axis == 0) ? center.x : (best_axis == 1) ? center.y : center.z;
 		int no = (int)((value - value_start) / (value_end - value_start)*bucket_num);
 		no = (no == bucket_num) ? no - 1 : no;
 		if (no < best_bucket){
 			left.push_back(tri);
-			best_left.Expand(tri.GetBBox());
+			best_left.Expand(bounds);
 		}
 		else{
 			right.push_back(tri);
-			best_right.Expand(tri.GetBBox());
+			best_right.Expand(bounds);
 		}
 	}
 

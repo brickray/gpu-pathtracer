@@ -110,6 +110,7 @@ public:
 class Scene;
 class Mesh{
 public:
+	vector<Vertex> vertices;
 	vector<Triangle> triangles;
 	int matIdx;
 

@@ -68,9 +68,15 @@ __device__ inline float GGX_D(float3& wh, float3& normal, float alpha){
 		return 0.f;
 	costheta = clamp(costheta, 0.f, 1.f);
 
+	float theta = acosf(costheta);
+	float cos4theta = costheta*costheta*costheta*costheta;
+	float tantheta = tanf(theta);
+	if (isinf(tantheta))
+		return 0.f;
+
 	float alpha2 = alpha*alpha;
-	float sqrD = costheta*costheta*(alpha2 - 1.f) + 1.f;
-	return alpha2 / (PI*sqrD*sqrD);
+	float sqrD = alpha2 + tantheta*tantheta;
+	return alpha2 / (PI*cos4theta*sqrD*sqrD);
 }
 
 __device__ inline float SmithG(float3& w, float3& normal, float3& wh, float alpha){
@@ -714,7 +720,7 @@ void EndRender(){
 }
 
 void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsigned iter, bool reset, float3* output){
-	//HANDLE_ERROR(cudaMemcpy(dev_camera, camera, sizeof(Camera), cudaMemcpyHostToDevice));
+	HANDLE_ERROR(cudaMemcpy(dev_camera, camera, sizeof(Camera), cudaMemcpyHostToDevice));
 	int block_x = 32, block_y = 4;
 	dim3 block(block_x, block_y);
 	dim3 grid(width / block.x, height / block.y);

@@ -27,7 +27,6 @@ void Mesh::processNode(aiNode* node, const aiScene* scene, mat4& trs){
 }
 
 void Mesh::processMesh(aiMesh* aimesh, const aiScene* scene, mat4& trs){
-	vector<Vertex> vertices;
 	for (int i = 0; i < aimesh->mNumVertices; ++i){
 		Vertex vertex;
 		vertex.v.x = aimesh->mVertices[i].x;
@@ -59,9 +58,12 @@ void Mesh::processMesh(aiMesh* aimesh, const aiScene* scene, mat4& trs){
 	for (int i = 0; i < aimesh->mNumFaces; ++i){
 		aiFace face = aimesh->mFaces[i];
 		Triangle tri;
-		tri.v1 = vertices[face.mIndices[0]];
-		tri.v2 = vertices[face.mIndices[1]];
-		tri.v3 = vertices[face.mIndices[2]];
+		int idx1 = face.mIndices[0];
+		int idx2 = face.mIndices[1];
+		int idx3 = face.mIndices[2];
+		tri.v1 = vertices[idx1];
+		tri.v2 = vertices[idx2];
+		tri.v3 = vertices[idx3];
 		tri.matIdx = matIdx;
 		triangles.push_back(tri);
 	}

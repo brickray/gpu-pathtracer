@@ -117,6 +117,13 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 				string mat_name = (*it)["name"].GetString();
 				string bsdf = (*it)["bsdf"].GetString();
 				float roughness = (*it).HasMember("roughness") ? (*it)["roughness"].GetDouble() : 0.f;
+				bool remap = (*it).HasMember("remap") ? (*it)["remap"].GetBool() : false;
+				if (remap){
+					roughness = std::max(roughness, (float)1e-3);
+					float x = log(roughness);
+					roughness = 1.62142f + 0.819955f * x + 0.1734f * x * x +
+						0.0171201f * x * x * x + 0.000640711f * x * x * x * x;
+				}
 				float insideIOR = (*it).HasMember("insideIOR") ? (*it)["insideIOR"].GetDouble() : 1.f;
 				float outsideIOR = (*it).HasMember("outsideIOR") ? (*it)["outsideIOR"].GetDouble() : 1.f;
 				float3 k = (*it).HasMember("k") ? getFloat3((*it)["k"]) : make_float3(0, 0, 0);

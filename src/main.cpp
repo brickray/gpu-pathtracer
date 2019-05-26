@@ -261,11 +261,15 @@ bool InitScene(string file){
 	camera = new Camera(cam.position, cam.u, cam.v, cam.w, make_float2(config.width, config.height), 0.1f, cam.fov, cam.apertureRadius, cam.focalDistance);
 
 	printf("Load scene using %.3fms\n", float(clock() - now));
+	printf("Triangles [%d]\n", scene.triangles.size());
 
 	now = clock();
 	bvh.Build(scene.triangles);
 	printf("Build bvh using %.3fms\n", float(clock() - now));
 	printf("Bvh total nodes:%d\n", bvh.total_nodes);
+	printf("Scene Bounds [%.3f, %.3f, %.3f]-[%.3f, %.3f, %.3f]\n", 
+		bvh.root_box.fmin.x, bvh.root_box.fmin.y, bvh.root_box.fmin.z,
+		bvh.root_box.fmax.x, bvh.root_box.fmax.y, bvh.root_box.fmax.z);
 
 	return true;
 }
