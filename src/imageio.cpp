@@ -10,7 +10,7 @@
 
 bool ImageIO::LoadTexture(const char* filename, int& width, int& height, bool srgb, vector<float4>& output){
 	int component;
-	//stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(true);
 	unsigned char* tex = stbi_load(filename, &width, &height, &component, 0);
 	if (tex){
 		output.resize(width*height);
