@@ -25,7 +25,7 @@ GLuint buffer;
 cudaGraphicsResource* resource = NULL;
 
 void SaveImage(){
-	glReadPixels(0, 0,config. width, config.height, GL_RGB, GL_FLOAT, image);
+	glReadPixels(0, 0,config.width, config.height, GL_RGB, GL_FLOAT, image);
 	char buffer[2048] = { 0 };
 	
 	sprintf(buffer, "../result/%ds iteration %dpx-%dpx.png", iteration, config.width, config.height);

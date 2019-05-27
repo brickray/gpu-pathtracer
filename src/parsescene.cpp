@@ -109,6 +109,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			matMap["lambertian"] = MT_LAMBERTIAN;
 			matMap["mirror"] = MT_MIRROR;
 			matMap["dielectric"] = MT_DIELECTRIC;
+			matMap["roughdielectric"] = MT_ROUGHDIELECTRIC;
 			matMap["roughconduct"] = MT_ROUGHCONDUCTOR;
 			matMap["substrate"] = MT_SUBSTRATE;
 			map<string, int> texMap;

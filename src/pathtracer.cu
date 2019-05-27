@@ -230,16 +230,10 @@ __device__ bool IntersectP(Ray& ray){
 	return false;
 }
 
-__device__ inline float4 GetTexel(Material material, float2 uv){
-	if (material.textureIdx == -1)
-		return make_float4(material.diffuse, 1.f);
-
+__device__ inline float4 getTexel(Material material, int w, int h, int2 uv){
 	float inv = 1.f / 255.f;
-	int w = kernel_texture_size[material.textureIdx * 2];
-	int h = kernel_texture_size[material.textureIdx * 2 + 1];
-	int x = uv.x*w, y = uv.y*h;
-	x = x == w ? w - 1 : x;
-	y = y == h ? h - 1 : y;
+
+	int x = uv.x, y = uv.y;
 	float rx = x - (x / w)*w;
 	float ry = y - (y / h)*h;
 	x = (rx < 0) ? rx + w : rx;
@@ -248,8 +242,29 @@ __device__ inline float4 GetTexel(Material material, float2 uv){
 	if (x > w - 1) x = w - 1;
 	if (y < 0) y = 0;
 	if (y > h - 1) y = h - 1;
+
 	uchar4 c = kernel_textures[material.textureIdx][y*w + x];
 	return make_float4(c.x*inv, c.y*inv, c.z*inv, c.w * inv);
+}
+
+__device__ inline float4 GetTexel(Material material, float2 uv){
+	if (material.textureIdx == -1)
+		return make_float4(material.diffuse, 1.f);
+
+	int w = kernel_texture_size[material.textureIdx * 2];
+	int h = kernel_texture_size[material.textureIdx * 2 + 1];
+	float xx = w * uv.x;
+	float yy = h * uv.y;
+	int x = floor(xx);
+	int y = floor(yy);
+	float dx = fabs(xx - x);
+	float dy = fabs(yy - y);
+	float4 c00 = getTexel(material, w, h, make_int2(x, y));
+	float4 c10 = getTexel(material, w, h, make_int2(x + 1, y));
+	float4 c01 = getTexel(material, w, h, make_int2(x, y + 1));
+	float4 c11 = getTexel(material, w, h, make_int2(x + 1, y + 1));
+	return (1 - dy)*((1 - dx)*c00 + dx*c10)
+		+ dy*((1 - dx)*c01 + dx*c11);
 }
 
 __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, float2 u, float3& out, float3& fr, float& pdf){
