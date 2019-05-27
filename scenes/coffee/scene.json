@@ -1,0 +1,150 @@
+{
+    "screen_width": 640,
+    "screen_height": 800,
+    "maxDepth": 8,
+    "camera": {
+        "position": [ -0.002960, 0.198303, 0.828151 ],
+        "lookat": [ 0.002897, 0.166609, 0.022717 ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 30.000000
+    },
+    "material": [
+        {
+            "name": "Floor",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Glass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "Metal",
+            "bsdf": "mirror",
+            "specular": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "Plastic_Black",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.006310, 0.006310, 0.006310 ]
+        },
+        {
+            "name": "Plastic_Orange",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 1.000000, 0.378676, 0.013473 ]
+        },
+        {
+            "name": "emitter",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "models/Mesh013.obj",
+            "material": "Plastic_Black"
+        },
+        {
+            "mesh": "models/Mesh008.obj",
+            "material": "Plastic_Black"
+        },
+        {
+            "mesh": "models/Mesh010.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh009.obj",
+            "material": "Plastic_Orange"
+        },
+        {
+            "mesh": "models/Mesh015.obj",
+            "material": "Metal"
+        },
+        {
+            "mesh": "models/Mesh012.obj",
+            "material": "Plastic_Orange"
+        },
+        {
+            "mesh": "models/Mesh016.obj",
+            "material": "Plastic_Orange"
+        },
+        {
+            "mesh": "models/Mesh017.obj",
+            "material": "Plastic_Black"
+        },
+        {
+            "mesh": "models/Mesh018.obj",
+            "material": "Plastic_Black"
+        },
+        {
+            "mesh": "models/Mesh019.obj",
+            "material": "Plastic_Black"
+        },
+        {
+            "mesh": "models/Mesh007.obj",
+            "material": "Plastic_Black"
+        },
+        {
+            "mesh": "models/Mesh006.obj",
+            "material": "Plastic_Orange"
+        },
+        {
+            "mesh": "models/Mesh005.obj",
+            "material": "Plastic_Black"
+        },
+        {
+            "mesh": "models/Mesh003.obj",
+            "material": "Plastic_Black"
+        },
+        {
+            "mesh": "models/Mesh002.obj",
+            "material": "Metal"
+        },
+        {
+            "mesh": "models/Mesh001.obj",
+            "material": "Plastic_Orange"
+        },
+        {
+            "mesh": "models/Mesh011.obj",
+            "material": "Plastic_Black"
+        },
+        {
+            "mesh": "models/Mesh000.obj",
+            "material": "Plastic_Orange"
+        },
+        {
+            "mesh": "models/Mesh014.obj",
+            "material": "Plastic_Black"
+        },
+        {
+            "mesh": "models/Mesh004.obj",
+            "material": "Floor"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "models/light1.obj",
+            "material": "emitter",
+            "radiance": [ 2.000000, 2.000000, 2.000000 ]
+        },
+        {
+            "mesh": "models/light2.obj",
+            "material": "emitter",
+            "radiance": [ 2.000000, 2.000000, 2.000000 ]
+        },
+        {
+            "mesh": "models/light3.obj",
+            "material": "emitter",
+            "radiance": [ 2.000000, 2.000000, 2.000000 ]
+        }
+    ]
+}

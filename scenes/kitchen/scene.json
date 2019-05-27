@@ -1,0 +1,1740 @@
+{
+    "screen_width": 960,
+    "screen_height": 540,
+    "maxDepth": 17,
+    "camera": {
+        "position": [ 1.211005, 1.804751, 3.852390 ],
+        "lookat": [ -1.261659, 1.569562, -1.215745 ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 35.983398
+    },
+    "material": [
+        {
+            "name": "BlindEnds",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.047366, 0.047366, 0.047366 ]
+        },
+        {
+            "name": "BlindString",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.217638, 0.217638, 0.217638 ]
+        },
+        {
+            "name": "BlindStringKnob",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "BlindWoodStrip",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Blinds",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.612066, 0.499505, 0.378676 ]
+        },
+        {
+            "name": "BookCover",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.080564, 0.081309, 0.080147 ]
+        },
+        {
+            "name": "BookPages",
+            "bsdf": "substrate",
+            "roughness": 0.050000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/Kitchen-bookpage-large.jpg"
+        },
+        {
+            "name": "BreadBinFront",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Worktopt-light.jpg"
+        },
+        {
+            "name": "BreadBinHandle",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 4.369683, 2.916703, 1.654701 ],
+            "k": [ 5.206434, 4.231365, 3.754947 ]
+        },
+        {
+            "name": "BreadBinSides",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Worktopt-light.jpg"
+        },
+        {
+            "name": "BreadBinTop",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Worktopt-light.jpg"
+        },
+        {
+            "name": "Bulb",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        },
+        {
+            "name": "Burners",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "BurnersTop",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.006310, 0.006310, 0.006310 ]
+        },
+        {
+            "name": "BushLogo",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "Cable",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.612066, 0.612066, 0.612066 ]
+        },
+        {
+            "name": "Carrots",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Kitchen-carrot-uv.png"
+        },
+        {
+            "name": "Ceiling",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.612066, 0.612066, 0.612066 ]
+        },
+        {
+            "name": "CeilingLightFitting",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "ChoppingBoard",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Chopping-Board.jpg"
+        },
+        {
+            "name": "ChoppingKnifeBlade",
+            "bsdf": "roughconduct",
+            "roughness": 0.020000,
+            "eta": [ 4.369683, 2.916703, 1.654701 ],
+            "k": [ 5.206434, 4.231365, 3.754947 ]
+        },
+        {
+            "name": "ChoppingKnifeEdge",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "ChoppingKnifeHandle",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.028991, 0.028991, 0.028991 ]
+        },
+        {
+            "name": "ChromeHandle",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.640000, 0.640000, 0.640000 ]
+        },
+        {
+            "name": "CookerBlack",
+            "bsdf": "substrate",
+            "roughness": 0.080000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.015396, 0.015396, 0.015396 ]
+        },
+        {
+            "name": "CookerChrome",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 4.369683, 2.916703, 1.654701 ],
+            "k": [ 5.206434, 4.231365, 3.754947 ]
+        },
+        {
+            "name": "CookerGlass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "CookerIron",
+            "bsdf": "substrate",
+            "roughness": 0.020000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.001373, 0.001373, 0.001373 ]
+        },
+        {
+            "name": "CupboardUnits",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.547857, 0.547857, 0.547857 ]
+        },
+        {
+            "name": "Cushion1",
+            "bsdf": "lambertian",
+            "diffuse": "textures/cushion-red.jpg"
+        },
+        {
+            "name": "CushionTies",
+            "bsdf": "lambertian",
+            "diffuse": "textures/cushion-red.jpg"
+        },
+        {
+            "name": "Cutlery",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 4.369683, 2.916703, 1.654701 ],
+            "k": [ 5.206434, 4.231365, 3.754947 ]
+        },
+        {
+            "name": "ExtractorHood",
+            "bsdf": "roughconduct",
+            "roughness": 0.080000,
+            "eta": [ 4.369683, 2.916703, 1.654701 ],
+            "k": [ 5.206434, 4.231365, 3.754947 ]
+        },
+        {
+            "name": "Floor",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/wood.jpg"
+        },
+        {
+            "name": "Grout",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.793110, 0.793110, 0.793110 ]
+        },
+        {
+            "name": "Home",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Kettle",
+            "bsdf": "roughconduct",
+            "roughness": 0.050000,
+            "eta": [ 4.369683, 2.916703, 1.654701 ],
+            "k": [ 5.206434, 4.231365, 3.754947 ]
+        },
+        {
+            "name": "KettleGreen",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.039947, 0.141980, 0.003303 ]
+        },
+        {
+            "name": "KettleHandle",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.006310, 0.006310, 0.006310 ]
+        },
+        {
+            "name": "Lamp",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.541798, 0.297653, 0.052842 ]
+        },
+        {
+            "name": "LampCable",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.479179, 0.479179, 0.479179 ]
+        },
+        {
+            "name": "LampInside",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "LeftPage",
+            "bsdf": "substrate",
+            "roughness": 0.050000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/Kitchen-book-leftpage.jpg"
+        },
+        {
+            "name": "MetalHandles",
+            "bsdf": "roughconduct",
+            "roughness": 0.075000,
+            "eta": [ 4.369683, 2.916703, 1.654701 ],
+            "k": [ 5.206434, 4.231365, 3.754947 ]
+        },
+        {
+            "name": "Microwave",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "MicrowaveBack",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "MicrowaveDigital",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "MicrowaveGlass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "MushroomEnds",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Kitchen-mushroom-texture.png"
+        },
+        {
+            "name": "Mushrooms",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.300837, 0.281435, 0.243189 ]
+        },
+        {
+            "name": "Pepper-Green",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.030257, 0.197516, 0.000000 ]
+        },
+        {
+            "name": "Pepper-Red",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.476177, 0.000000, 0.000000 ]
+        },
+        {
+            "name": "Pepper-Yellow",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 1.000000, 0.204710, 0.000000 ]
+        },
+        {
+            "name": "PepperStems",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.136099, 0.284452, 0.005522 ]
+        },
+        {
+            "name": "Plates",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "PotHandles",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.006310, 0.006310, 0.006310 ]
+        },
+        {
+            "name": "RadioDialBack",
+            "bsdf": "lambertian",
+            "diffuse": "textures/radio-dial-idea.jpg"
+        },
+        {
+            "name": "RadioDialLine",
+            "bsdf": "mirror",
+            "specular": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "RadioEdges",
+            "bsdf": "mirror",
+            "specular": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "RadioGlass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "RadioHandle",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.389509, 0.372589, 0.293747 ]
+        },
+        {
+            "name": "RadioInside",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.015078, 0.015078, 0.015078 ]
+        },
+        {
+            "name": "RadioKnob",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.358375, 0.300936, 0.128617 ]
+        },
+        {
+            "name": "RadioMetalRing",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 4.369683, 2.916703, 1.654701 ],
+            "k": [ 5.206434, 4.231365, 3.754947 ]
+        },
+        {
+            "name": "RadioPlastic",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.640000, 0.600153, 0.434490 ]
+        },
+        {
+            "name": "RadioSurround",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.066822, 0.028495, 0.013827 ]
+        },
+        {
+            "name": "Skirting",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578913, 0.578913, 0.578913 ]
+        },
+        {
+            "name": "SlicedMushroms",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Kitchen-mushroom-texture.png"
+        },
+        {
+            "name": "SmallWorktop",
+            "bsdf": "substrate",
+            "roughness": 0.040000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/Worktopt-light.jpg"
+        },
+        {
+            "name": "SteelPot",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "TableCross",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.612066, 0.612066, 0.612066 ]
+        },
+        {
+            "name": "TableMats",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.047366, 0.047366, 0.047366 ]
+        },
+        {
+            "name": "Tabletop",
+            "bsdf": "substrate",
+            "roughness": 0.025000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/Tabletop-light.jpg"
+        },
+        {
+            "name": "Tiles",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.394083, 0.325037, 0.263175 ]
+        },
+        {
+            "name": "Tomatoes",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.592438, 0.000000, 0.002932 ]
+        },
+        {
+            "name": "Towel",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Tea-Towel.jpg"
+        },
+        {
+            "name": "Utensils",
+            "bsdf": "roughconduct",
+            "roughness": 0.050000,
+            "eta": [ 4.369683, 2.916703, 1.654701 ],
+            "k": [ 5.206434, 4.231365, 3.754947 ]
+        },
+        {
+            "name": "WallSocket",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.571765, 0.563535, 0.559972 ]
+        },
+        {
+            "name": "Walls",
+            "bsdf": "lambertian",
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "WhitePot",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Window",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.571765, 0.563535, 0.559972 ]
+        },
+        {
+            "name": "WindowFrame",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.572423, 0.572423, 0.572423 ]
+        },
+        {
+            "name": "WindowLock",
+            "bsdf": "mirror",
+            "specular": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "WineGlasses",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "WoodTop",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/Tabletop-light.jpg"
+        },
+        {
+            "name": "Worktops",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/Worktopt-light.jpg"
+        },
+        {
+            "name": "emitter",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "models/Mesh129.obj",
+            "material": "WallSocket"
+        },
+        {
+            "mesh": "models/Mesh165.obj",
+            "material": "WindowLock"
+        },
+        {
+            "mesh": "models/Mesh263.obj",
+            "material": "ExtractorHood"
+        },
+        {
+            "mesh": "models/Mesh126.obj",
+            "material": "CushionTies"
+        },
+        {
+            "mesh": "models/Mesh087.obj",
+            "material": "CushionTies"
+        },
+        {
+            "mesh": "models/Mesh130.obj",
+            "material": "CushionTies"
+        },
+        {
+            "mesh": "models/Mesh088.obj",
+            "material": "Cable"
+        },
+        {
+            "mesh": "models/Mesh124.obj",
+            "material": "Cushion1"
+        },
+        {
+            "mesh": "models/Mesh136.obj",
+            "material": "Cushion1"
+        },
+        {
+            "mesh": "models/Mesh251.obj",
+            "material": "Cushion1"
+        },
+        {
+            "mesh": "models/Mesh164.obj",
+            "material": "Cushion1"
+        },
+        {
+            "mesh": "models/Mesh147.obj",
+            "material": "CeilingLightFitting"
+        },
+        {
+            "mesh": "models/Mesh171.obj",
+            "material": "WallSocket"
+        },
+        {
+            "mesh": "models/Mesh140.obj",
+            "material": "BreadBinTop"
+        },
+        {
+            "mesh": "models/Mesh122.obj",
+            "material": "WineGlasses"
+        },
+        {
+            "mesh": "models/Mesh172.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh113.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh139.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh174.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh144.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh175.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh247.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh083.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh178.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh167.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh183.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh099.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh284.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh173.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh184.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh155.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh159.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh232.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh121.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh278.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh120.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh235.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh243.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh117.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh157.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh116.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh207.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh107.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh112.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh287.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh105.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh103.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh102.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh100.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh095.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh098.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh259.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh143.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh255.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh128.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh150.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh200.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh085.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh114.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh182.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh082.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh106.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh132.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh166.obj",
+            "material": "Tabletop"
+        },
+        {
+            "mesh": "models/Mesh161.obj",
+            "material": "WoodTop"
+        },
+        {
+            "mesh": "models/Mesh137.obj",
+            "material": "ExtractorHood"
+        },
+        {
+            "mesh": "models/Mesh145.obj",
+            "material": "Tiles"
+        },
+        {
+            "mesh": "models/Mesh133.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh074.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh068.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh125.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh079.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh169.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh093.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh097.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh181.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh260.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh274.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh066.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh141.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh238.obj",
+            "material": "CookerIron"
+        },
+        {
+            "mesh": "models/Mesh076.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh177.obj",
+            "material": "CookerBlack"
+        },
+        {
+            "mesh": "models/Mesh185.obj",
+            "material": "CookerChrome"
+        },
+        {
+            "mesh": "models/Mesh186.obj",
+            "material": "CookerChrome"
+        },
+        {
+            "mesh": "models/Mesh188.obj",
+            "material": "CookerBlack"
+        },
+        {
+            "mesh": "models/Mesh189.obj",
+            "material": "CookerChrome"
+        },
+        {
+            "mesh": "models/Mesh115.obj",
+            "material": "CookerBlack"
+        },
+        {
+            "mesh": "models/Mesh162.obj",
+            "material": "LeftPage"
+        },
+        {
+            "mesh": "models/Mesh134.obj",
+            "material": "BreadBinSides"
+        },
+        {
+            "mesh": "models/Mesh192.obj",
+            "material": "BreadBinHandle"
+        },
+        {
+            "mesh": "models/Mesh131.obj",
+            "material": "BreadBinTop"
+        },
+        {
+            "mesh": "models/Mesh077.obj",
+            "material": "BreadBinSides"
+        },
+        {
+            "mesh": "models/Mesh229.obj",
+            "material": "BreadBinFront"
+        },
+        {
+            "mesh": "models/Mesh281.obj",
+            "material": "PotHandles"
+        },
+        {
+            "mesh": "models/Mesh194.obj",
+            "material": "SteelPot"
+        },
+        {
+            "mesh": "models/Mesh195.obj",
+            "material": "SlicedMushroms"
+        },
+        {
+            "mesh": "models/Mesh104.obj",
+            "material": "SlicedMushroms"
+        },
+        {
+            "mesh": "models/Mesh196.obj",
+            "material": "SlicedMushroms"
+        },
+        {
+            "mesh": "models/Mesh197.obj",
+            "material": "SlicedMushroms"
+        },
+        {
+            "mesh": "models/Mesh256.obj",
+            "material": "SlicedMushroms"
+        },
+        {
+            "mesh": "models/Mesh081.obj",
+            "material": "SlicedMushroms"
+        },
+        {
+            "mesh": "models/Mesh209.obj",
+            "material": "SlicedMushroms"
+        },
+        {
+            "mesh": "models/Mesh210.obj",
+            "material": "SlicedMushroms"
+        },
+        {
+            "mesh": "models/Mesh211.obj",
+            "material": "Carrots"
+        },
+        {
+            "mesh": "models/Mesh213.obj",
+            "material": "Carrots"
+        },
+        {
+            "mesh": "models/Mesh216.obj",
+            "material": "Carrots"
+        },
+        {
+            "mesh": "models/Mesh146.obj",
+            "material": "Carrots"
+        },
+        {
+            "mesh": "models/Mesh219.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh220.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh221.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh268.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh223.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh227.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh199.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh271.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh233.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh202.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh230.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh240.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh176.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh234.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh142.obj",
+            "material": "TableCross"
+        },
+        {
+            "mesh": "models/Mesh069.obj",
+            "material": "Worktops"
+        },
+        {
+            "mesh": "models/Mesh236.obj",
+            "material": "Worktops"
+        },
+        {
+            "mesh": "models/Mesh135.obj",
+            "material": "Floor"
+        },
+        {
+            "mesh": "models/Mesh153.obj",
+            "material": "Ceiling"
+        },
+        {
+            "mesh": "models/Mesh239.obj",
+            "material": "Walls"
+        },
+        {
+            "mesh": "models/Mesh242.obj",
+            "material": "Tomatoes"
+        },
+        {
+            "mesh": "models/Mesh244.obj",
+            "material": "MushroomEnds"
+        },
+        {
+            "mesh": "models/Mesh249.obj",
+            "material": "MushroomEnds"
+        },
+        {
+            "mesh": "models/Mesh075.obj",
+            "material": "SlicedMushroms"
+        },
+        {
+            "mesh": "models/Mesh291.obj",
+            "material": "Mushrooms"
+        },
+        {
+            "mesh": "models/Mesh254.obj",
+            "material": "Pepper-Yellow"
+        },
+        {
+            "mesh": "models/Mesh257.obj",
+            "material": "PepperStems"
+        },
+        {
+            "mesh": "models/Mesh258.obj",
+            "material": "Pepper-Green"
+        },
+        {
+            "mesh": "models/Mesh089.obj",
+            "material": "PepperStems"
+        },
+        {
+            "mesh": "models/Mesh261.obj",
+            "material": "Pepper-Red"
+        },
+        {
+            "mesh": "models/Mesh119.obj",
+            "material": "PepperStems"
+        },
+        {
+            "mesh": "models/Mesh264.obj",
+            "material": "PepperStems"
+        },
+        {
+            "mesh": "models/Mesh127.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh091.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh225.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh266.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh190.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh245.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh267.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh179.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh269.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh270.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh214.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh108.obj",
+            "material": "Cutlery"
+        },
+        {
+            "mesh": "models/Mesh080.obj",
+            "material": "SteelPot"
+        },
+        {
+            "mesh": "models/Mesh272.obj",
+            "material": "PotHandles"
+        },
+        {
+            "mesh": "models/Mesh273.obj",
+            "material": "KettleHandle"
+        },
+        {
+            "mesh": "models/Mesh275.obj",
+            "material": "KettleHandle"
+        },
+        {
+            "mesh": "models/Mesh086.obj",
+            "material": "KettleGreen"
+        },
+        {
+            "mesh": "models/Mesh241.obj",
+            "material": "Kettle"
+        },
+        {
+            "mesh": "models/Mesh222.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh276.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh279.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh248.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh282.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh277.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh180.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh285.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh170.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh293.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh215.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh252.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh204.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh286.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh096.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh288.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh253.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh109.obj",
+            "material": "Utensils"
+        },
+        {
+            "mesh": "models/Mesh289.obj",
+            "material": "MicrowaveBack"
+        },
+        {
+            "mesh": "models/Mesh152.obj",
+            "material": "Microwave"
+        },
+        {
+            "mesh": "models/Mesh226.obj",
+            "material": "Microwave"
+        },
+        {
+            "mesh": "models/Mesh290.obj",
+            "material": "Microwave"
+        },
+        {
+            "mesh": "models/Mesh292.obj",
+            "material": "Microwave"
+        },
+        {
+            "mesh": "models/Mesh208.obj",
+            "material": "Microwave"
+        },
+        {
+            "mesh": "models/Mesh191.obj",
+            "material": "MicrowaveGlass"
+        },
+        {
+            "mesh": "models/Mesh201.obj",
+            "material": "MicrowaveDigital"
+        },
+        {
+            "mesh": "models/Mesh294.obj",
+            "material": "Microwave"
+        },
+        {
+            "mesh": "models/Mesh065.obj",
+            "material": "WineGlasses"
+        },
+        {
+            "mesh": "models/Mesh064.obj",
+            "material": "TableMats"
+        },
+        {
+            "mesh": "models/Mesh094.obj",
+            "material": "Plates"
+        },
+        {
+            "mesh": "models/Mesh063.obj",
+            "material": "BookPages"
+        },
+        {
+            "mesh": "models/Mesh062.obj",
+            "material": "BookCover"
+        },
+        {
+            "mesh": "models/Mesh092.obj",
+            "material": "BookPages"
+        },
+        {
+            "mesh": "models/Mesh061.obj",
+            "material": "ChoppingKnifeBlade"
+        },
+        {
+            "mesh": "models/Mesh059.obj",
+            "material": "ChoppingKnifeHandle"
+        },
+        {
+            "mesh": "models/Mesh058.obj",
+            "material": "ChoppingKnifeEdge"
+        },
+        {
+            "mesh": "models/Mesh057.obj",
+            "material": "ChoppingBoard"
+        },
+        {
+            "mesh": "models/Mesh056.obj",
+            "material": "WallSocket"
+        },
+        {
+            "mesh": "models/Mesh055.obj",
+            "material": "Bulb"
+        },
+        {
+            "mesh": "models/Mesh138.obj",
+            "material": "Grout"
+        },
+        {
+            "mesh": "models/Mesh224.obj",
+            "material": "WoodTop"
+        },
+        {
+            "mesh": "models/Mesh054.obj",
+            "material": "Tiles"
+        },
+        {
+            "mesh": "models/Mesh053.obj",
+            "material": "LampCable"
+        },
+        {
+            "mesh": "models/Mesh052.obj",
+            "material": "Lamp"
+        },
+        {
+            "mesh": "models/Mesh050.obj",
+            "material": "LampInside"
+        },
+        {
+            "mesh": "models/Mesh049.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh163.obj",
+            "material": "Window"
+        },
+        {
+            "mesh": "models/Mesh154.obj",
+            "material": "Window"
+        },
+        {
+            "mesh": "models/Mesh078.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh246.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh048.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh047.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh046.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh045.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh044.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh043.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh041.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh193.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh040.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh218.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh039.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh187.obj",
+            "material": "Skirting"
+        },
+        {
+            "mesh": "models/Mesh073.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh042.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh037.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh035.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh034.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh033.obj",
+            "material": "MetalHandles"
+        },
+        {
+            "mesh": "models/Mesh038.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh072.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh231.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh032.obj",
+            "material": "SmallWorktop"
+        },
+        {
+            "mesh": "models/Mesh031.obj",
+            "material": "SmallWorktop"
+        },
+        {
+            "mesh": "models/Mesh030.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh029.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh028.obj",
+            "material": "Burners"
+        },
+        {
+            "mesh": "models/Mesh027.obj",
+            "material": "BurnersTop"
+        },
+        {
+            "mesh": "models/Mesh198.obj",
+            "material": "Burners"
+        },
+        {
+            "mesh": "models/Mesh026.obj",
+            "material": "BurnersTop"
+        },
+        {
+            "mesh": "models/Mesh071.obj",
+            "material": "Burners"
+        },
+        {
+            "mesh": "models/Mesh149.obj",
+            "material": "BurnersTop"
+        },
+        {
+            "mesh": "models/Mesh025.obj",
+            "material": "Burners"
+        },
+        {
+            "mesh": "models/Mesh203.obj",
+            "material": "BurnersTop"
+        },
+        {
+            "mesh": "models/Mesh024.obj",
+            "material": "Burners"
+        },
+        {
+            "mesh": "models/Mesh023.obj",
+            "material": "BurnersTop"
+        },
+        {
+            "mesh": "models/Mesh022.obj",
+            "material": "Burners"
+        },
+        {
+            "mesh": "models/Mesh020.obj",
+            "material": "BurnersTop"
+        },
+        {
+            "mesh": "models/Mesh084.obj",
+            "material": "CookerBlack"
+        },
+        {
+            "mesh": "models/Mesh019.obj",
+            "material": "CookerChrome"
+        },
+        {
+            "mesh": "models/Mesh017.obj",
+            "material": "CookerChrome"
+        },
+        {
+            "mesh": "models/Mesh280.obj",
+            "material": "CookerBlack"
+        },
+        {
+            "mesh": "models/Mesh015.obj",
+            "material": "CookerBlack"
+        },
+        {
+            "mesh": "models/Mesh014.obj",
+            "material": "CookerChrome"
+        },
+        {
+            "mesh": "models/Mesh090.obj",
+            "material": "CookerBlack"
+        },
+        {
+            "mesh": "models/Mesh206.obj",
+            "material": "CookerGlass"
+        },
+        {
+            "mesh": "models/Mesh228.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh111.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh168.obj",
+            "material": "ExtractorHood"
+        },
+        {
+            "mesh": "models/Mesh148.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh013.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh012.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh158.obj",
+            "material": "Worktops"
+        },
+        {
+            "mesh": "models/Mesh237.obj",
+            "material": "Worktops"
+        },
+        {
+            "mesh": "models/Mesh011.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh018.obj",
+            "material": "CupboardUnits"
+        },
+        {
+            "mesh": "models/Mesh262.obj",
+            "material": "Walls"
+        },
+        {
+            "mesh": "models/Mesh010.obj",
+            "material": "Walls"
+        },
+        {
+            "mesh": "models/Mesh212.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh156.obj",
+            "material": "BlindStringKnob"
+        },
+        {
+            "mesh": "models/Mesh151.obj",
+            "material": "BlindString"
+        },
+        {
+            "mesh": "models/Mesh009.obj",
+            "material": "BlindWoodStrip"
+        },
+        {
+            "mesh": "models/Mesh110.obj",
+            "material": "Blinds"
+        },
+        {
+            "mesh": "models/Mesh118.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh008.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh007.obj",
+            "material": "Blinds"
+        },
+        {
+            "mesh": "models/Mesh250.obj",
+            "material": "RadioHandle"
+        },
+        {
+            "mesh": "models/Mesh021.obj",
+            "material": "RadioPlastic"
+        },
+        {
+            "mesh": "models/Mesh205.obj",
+            "material": "BushLogo"
+        },
+        {
+            "mesh": "models/Mesh067.obj",
+            "material": "BushLogo"
+        },
+        {
+            "mesh": "models/Mesh283.obj",
+            "material": "RadioDialLine"
+        },
+        {
+            "mesh": "models/Mesh005.obj",
+            "material": "RadioDialBack"
+        },
+        {
+            "mesh": "models/Mesh016.obj",
+            "material": "RadioMetalRing"
+        },
+        {
+            "mesh": "models/Mesh265.obj",
+            "material": "RadioGlass"
+        },
+        {
+            "mesh": "models/Mesh006.obj",
+            "material": "RadioPlastic"
+        },
+        {
+            "mesh": "models/Mesh004.obj",
+            "material": "RadioPlastic"
+        },
+        {
+            "mesh": "models/Mesh060.obj",
+            "material": "ChromeHandle"
+        },
+        {
+            "mesh": "models/Mesh123.obj",
+            "material": "RadioPlastic"
+        },
+        {
+            "mesh": "models/Mesh160.obj",
+            "material": "RadioInside"
+        },
+        {
+            "mesh": "models/Mesh051.obj",
+            "material": "RadioKnob"
+        },
+        {
+            "mesh": "models/Mesh003.obj",
+            "material": "RadioSurround"
+        },
+        {
+            "mesh": "models/Mesh002.obj",
+            "material": "RadioEdges"
+        },
+        {
+            "mesh": "models/Mesh001.obj",
+            "material": "RadioEdges"
+        },
+        {
+            "mesh": "models/Mesh036.obj",
+            "material": "WhitePot"
+        },
+        {
+            "mesh": "models/Mesh070.obj",
+            "material": "Towel"
+        },
+        {
+            "mesh": "models/Mesh101.obj",
+            "material": "Towel"
+        },
+        {
+            "mesh": "models/Mesh000.obj",
+            "material": "WallSocket"
+        },
+        {
+            "mesh": "models/Mesh217.obj",
+            "material": "Home"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "models/mesh_0.obj",
+            "material": "emitter",
+            "radiance": [ 16.032043, 16.032043, 16.032043 ]
+        },
+        {
+            "mesh": "models/mesh_1.obj",
+            "material": "emitter",
+            "radiance": [ 11.221238, 11.221238, 11.221238 ]
+        },
+        {
+            "mesh": "models/mesh_2.obj",
+            "material": "emitter",
+            "radiance": [ 11.221238, 11.221238, 11.221238 ]
+        },
+        {
+            "mesh": "models/mesh_3.obj",
+            "material": "emitter",
+            "radiance": [ 11.221238, 11.221238, 11.221238 ]
+        }
+    ]
+}

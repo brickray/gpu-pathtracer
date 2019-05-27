@@ -1,0 +1,3627 @@
+{
+    "screen_width": 800,
+    "screen_height": 800,
+    "maxDepth": 17,
+    "epsilon": 0.000001,
+    "camera": {
+        "position": [ 0.007241, 0.912405, -0.227584 ],
+        "lookat": [ -2.787563, 0.969912, -2.677590 ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 55.000000
+    },
+    "material": [
+        {
+            "name": "Bathtube",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.612066, 0.612066, 0.612066 ]
+        },
+        {
+            "name": "BlackPlastic",
+            "bsdf": "substrate",
+            "roughness": 0.200000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.006310, 0.006310, 0.006310 ]
+        },
+        {
+            "name": "Blinds",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.893289, 0.893289, 0.893289 ]
+        },
+        {
+            "name": "BlindsString",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "BulbGlass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "Ceiling",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.684615, 0.684615, 0.684615 ]
+        },
+        {
+            "name": "Floor",
+            "bsdf": "substrate",
+            "roughness": 0.200000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/floor_tiles.png"
+        },
+        {
+            "name": "Foam",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.531049, 0.531049, 0.531049 ]
+        },
+        {
+            "name": "Gold",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.648469, 1.150448, 1.379779 ],
+            "k": [ 3.368460, 1.943489, 1.102012 ]
+        },
+        {
+            "name": "GreyWall",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.893289, 0.893289, 0.893289 ]
+        },
+        {
+            "name": "LeaveStems",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.063815, 0.022013, 0.001202 ]
+        },
+        {
+            "name": "Leaves",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.573159, 0.215764, 0.022013 ]
+        },
+        {
+            "name": "Light",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        },
+        {
+            "name": "Marble",
+            "bsdf": "lambertian",
+            "diffuse": "textures/marble.jpg"
+        },
+        {
+            "name": "MetalPlate",
+            "bsdf": "roughconduct",
+            "roughness": 0.050000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "Mirror",
+            "bsdf": "mirror",
+            "specular": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "Painting1",
+            "bsdf": "lambertian",
+            "diffuse": "textures/picture1.jpg"
+        },
+        {
+            "name": "Painting2",
+            "bsdf": "lambertian",
+            "diffuse": "textures/wallpaper-2.jpg"
+        },
+        {
+            "name": "Painting3",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.058187, 0.034230, 0.017936 ]
+        },
+        {
+            "name": "Painting4",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.047776, 0.020951, 0.007155 ]
+        },
+        {
+            "name": "Paper",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Pots",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.006310, 0.006310, 0.006310 ]
+        },
+        {
+            "name": "Rug",
+            "bsdf": "lambertian",
+            "diffuse": "textures/rug.png"
+        },
+        {
+            "name": "StainlessRough",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "StainlessSmooth",
+            "bsdf": "roughconduct",
+            "roughness": 0.010000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "Vase",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.612066, 0.612066, 0.612066 ]
+        },
+        {
+            "name": "Wallpaper",
+            "bsdf": "lambertian",
+            "diffuse": "textures/wallpaper-1.jpg"
+        },
+        {
+            "name": "WhiteWood",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.893289, 0.893289, 0.893289 ]
+        },
+        {
+            "name": "WindowFrame",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.006310, 0.006310, 0.006310 ]
+        },
+        {
+            "name": "Wood",
+            "bsdf": "substrate",
+            "roughness": 0.150000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/wood.jpg"
+        },
+        {
+            "name": "WoodDiffuse",
+            "bsdf": "lambertian",
+            "diffuse": "textures/wood.jpg"
+        },
+        {
+            "name": "WoodFrame",
+            "bsdf": "lambertian",
+            "diffuse": "textures/wood2.jpg"
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "models/Mesh381.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh252.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh238.obj",
+            "material": "Foam"
+        },
+        {
+            "mesh": "models/Mesh633.obj",
+            "material": "WhiteWood"
+        },
+        {
+            "mesh": "models/Mesh235.obj",
+            "material": "WhiteWood"
+        },
+        {
+            "mesh": "models/Mesh351.obj",
+            "material": "WhiteWood"
+        },
+        {
+            "mesh": "models/Mesh233.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh688.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh444.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh101.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh151.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh308.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh327.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh341.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh290.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh080.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh227.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh309.obj",
+            "material": "BulbGlass"
+        },
+        {
+            "mesh": "models/Mesh199.obj",
+            "material": "BlackPlastic"
+        },
+        {
+            "mesh": "models/Mesh342.obj",
+            "material": "BulbGlass"
+        },
+        {
+            "mesh": "models/Mesh317.obj",
+            "material": "Light"
+        },
+        {
+            "mesh": "models/Mesh726.obj",
+            "material": "BulbGlass"
+        },
+        {
+            "mesh": "models/Mesh540.obj",
+            "material": "Light"
+        },
+        {
+            "mesh": "models/Mesh276.obj",
+            "material": "BulbGlass"
+        },
+        {
+            "mesh": "models/Mesh349.obj",
+            "material": "BlackPlastic"
+        },
+        {
+            "mesh": "models/Mesh254.obj",
+            "material": "BulbGlass"
+        },
+        {
+            "mesh": "models/Mesh229.obj",
+            "material": "BlackPlastic"
+        },
+        {
+            "mesh": "models/Mesh359.obj",
+            "material": "BulbGlass"
+        },
+        {
+            "mesh": "models/Mesh166.obj",
+            "material": "Light"
+        },
+        {
+            "mesh": "models/Mesh369.obj",
+            "material": "Paper"
+        },
+        {
+            "mesh": "models/Mesh372.obj",
+            "material": "Painting1"
+        },
+        {
+            "mesh": "models/Mesh793.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh378.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh380.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh363.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh046.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh118.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh345.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh251.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh219.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh589.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh659.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh344.obj",
+            "material": "Marble"
+        },
+        {
+            "mesh": "models/Mesh602.obj",
+            "material": "Mirror"
+        },
+        {
+            "mesh": "models/Mesh367.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh206.obj",
+            "material": "Rug"
+        },
+        {
+            "mesh": "models/Mesh031.obj",
+            "material": "WoodDiffuse"
+        },
+        {
+            "mesh": "models/Mesh515.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh377.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh205.obj",
+            "material": "Painting2"
+        },
+        {
+            "mesh": "models/Mesh424.obj",
+            "material": "BlackPlastic"
+        },
+        {
+            "mesh": "models/Mesh425.obj",
+            "material": "MetalPlate"
+        },
+        {
+            "mesh": "models/Mesh474.obj",
+            "material": "MetalPlate"
+        },
+        {
+            "mesh": "models/Mesh209.obj",
+            "material": "Painting3"
+        },
+        {
+            "mesh": "models/Mesh203.obj",
+            "material": "Painting4"
+        },
+        {
+            "mesh": "models/Mesh263.obj",
+            "material": "Blinds"
+        },
+        {
+            "mesh": "models/Mesh405.obj",
+            "material": "BlindsString"
+        },
+        {
+            "mesh": "models/Mesh253.obj",
+            "material": "BlindsString"
+        },
+        {
+            "mesh": "models/Mesh197.obj",
+            "material": "Blinds"
+        },
+        {
+            "mesh": "models/Mesh052.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh629.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh268.obj",
+            "material": "WindowFrame"
+        },
+        {
+            "mesh": "models/Mesh195.obj",
+            "material": "Vase"
+        },
+        {
+            "mesh": "models/Mesh295.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh434.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh193.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh357.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh136.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh450.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh269.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh592.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh192.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh191.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh331.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh297.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh343.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh304.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh815.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh293.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh282.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh226.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh189.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh463.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh709.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh361.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh247.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh236.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh595.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh301.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh386.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh387.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh324.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh299.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh126.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh763.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh217.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh390.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh244.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh392.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh393.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh336.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh218.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh401.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh577.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh364.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh259.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh409.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh414.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh320.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh816.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh224.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh723.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh210.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh036.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh419.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh421.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh699.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh404.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh590.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh608.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh427.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh430.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh111.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh412.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh432.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh439.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh440.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh433.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh575.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh473.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh447.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh064.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh137.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh220.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh354.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh415.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh438.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh250.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh853.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh454.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh033.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh456.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh458.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh394.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh200.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh462.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh841.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh330.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh464.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh468.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh728.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh820.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh472.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh242.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh504.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh476.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh053.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh484.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh311.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh485.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh232.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh162.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh365.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh489.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh264.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh582.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh491.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh493.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh167.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh461.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh437.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh285.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh497.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh465.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh410.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh667.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh370.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh068.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh211.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh411.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh294.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh321.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh507.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh514.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh179.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh516.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh358.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh606.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh183.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh180.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh501.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh178.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh355.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh176.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh175.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh174.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh460.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh172.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh284.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh420.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh266.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh124.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh170.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh744.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh455.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh249.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh169.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh429.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh204.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh448.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh332.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh313.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh165.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh642.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh100.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh267.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh164.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh163.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh469.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh146.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh337.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh161.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh160.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh154.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh318.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh152.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh442.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh481.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh045.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh500.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh148.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh145.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh107.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh142.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh079.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh721.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh724.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh129.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh128.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh486.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh123.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh201.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh093.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh799.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh121.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh119.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh553.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh431.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh373.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh490.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh114.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh185.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh325.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh216.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh112.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh049.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh085.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh374.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh138.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh159.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh110.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh551.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh449.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh215.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh399.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh196.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh134.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh248.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh466.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh271.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh106.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh104.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh495.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh347.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh102.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh208.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh243.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh622.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh673.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh801.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh231.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh099.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh258.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh322.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh260.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh092.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh090.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh087.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh832.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh720.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh400.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh082.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh181.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh529.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh078.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh117.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh509.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh255.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh077.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh225.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh122.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh303.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh656.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh482.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh687.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh083.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh483.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh075.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh073.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh646.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh116.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh156.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh705.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh506.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh237.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh071.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh823.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh069.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh418.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh329.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh065.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh240.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh188.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh738.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh063.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh280.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh062.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh061.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh141.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh060.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh849.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh144.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh312.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh305.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh133.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh067.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh479.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh730.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh648.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh207.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh499.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh057.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh452.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh487.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh055.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh155.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh139.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh054.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh413.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh222.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh095.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh127.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh310.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh830.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh278.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh422.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh669.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh048.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh214.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh089.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh212.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh086.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh047.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh459.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh292.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh043.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh070.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh279.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh042.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh040.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh423.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh619.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh503.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh202.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh694.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh108.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh616.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh035.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh113.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh034.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh428.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh105.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh652.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh528.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh477.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh296.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh288.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh030.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh028.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh389.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh027.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh150.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh051.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh025.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh024.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh754.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh356.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh022.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh518.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh519.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh520.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh710.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh522.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh526.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh527.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh319.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh532.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh533.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh508.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh534.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh536.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh538.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh467.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh541.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh543.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh352.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh512.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh545.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh023.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh539.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh029.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh547.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh544.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh376.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh548.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh362.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh475.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh157.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh549.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh554.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh517.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh555.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh125.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh109.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh239.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh076.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh556.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh557.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh634.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh559.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh561.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh562.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh088.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh395.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh563.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh565.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh568.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh569.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh072.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh571.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh572.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh573.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh574.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh576.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh182.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh579.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh581.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh059.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh283.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh446.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh570.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh583.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh586.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh591.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh593.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh594.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh348.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh597.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh601.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh605.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh607.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh186.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh115.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh609.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh610.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh612.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh558.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh050.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh190.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh614.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh850.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh812.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh617.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh470.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh618.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh620.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh621.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh158.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh623.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh492.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh435.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh624.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh625.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh135.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh627.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh657.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh306.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh782.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh628.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh834.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh631.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh326.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh245.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh636.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh505.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh791.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh637.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh391.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh638.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh639.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh265.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh230.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh748.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh228.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh168.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh766.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh478.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh643.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh647.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh261.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh796.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh768.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh649.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh651.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh789.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh653.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh655.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh658.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh660.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh234.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh314.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh661.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh177.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh626.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh131.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh662.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh494.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh396.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh663.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh081.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh032.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh664.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh560.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh665.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh416.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh471.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh281.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh674.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh666.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh670.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh671.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh672.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh675.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh397.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh511.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh388.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh676.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh678.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh453.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh198.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh598.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh513.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh679.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh680.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh681.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh718.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh701.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh683.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh340.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh241.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh256.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh684.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh221.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh689.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh690.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh691.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh692.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh350.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh530.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh693.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh368.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh496.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh686.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh546.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh406.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh695.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh379.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh382.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh074.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh696.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh697.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh700.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh613.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh702.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh644.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh704.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh677.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh706.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh707.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh708.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh525.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh603.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh566.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh058.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh091.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh366.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh712.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh587.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh426.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh714.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh140.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh147.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh713.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh143.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh716.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh149.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh719.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh722.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh725.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh727.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh731.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh632.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh103.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh732.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh550.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh746.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh761.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh316.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh443.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh735.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh715.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh084.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh026.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh277.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh703.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh403.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh153.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh041.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh736.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh535.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh737.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh510.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh739.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh480.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh096.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh274.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh654.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh740.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh682.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh741.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh742.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh743.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh747.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh750.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh751.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh752.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh745.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh334.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh753.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh044.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh711.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh273.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh398.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh650.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh756.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh488.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh640.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh384.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh758.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh759.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh760.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh762.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh764.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh596.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh767.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh611.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh769.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh323.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh770.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh771.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh772.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh773.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh775.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh580.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh037.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh776.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh777.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh779.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh781.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh784.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh289.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh585.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh729.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh328.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh785.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh786.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh270.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh788.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh790.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh552.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh275.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh780.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh039.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh335.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh523.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh792.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh778.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh794.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh795.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh797.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh846.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh800.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh802.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh272.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh734.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh803.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh804.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh806.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh765.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh807.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh808.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh809.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh056.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh307.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh749.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh564.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh338.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh811.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh615.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh685.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh813.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh291.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh814.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh173.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh223.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh817.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh120.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh818.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh733.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh298.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh819.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh821.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh066.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh531.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh822.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh194.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh824.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh698.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh339.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh825.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh826.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh097.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh407.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh827.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh098.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh828.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh286.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh831.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh833.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh502.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh668.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh645.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh783.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh835.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh521.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh838.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh717.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh524.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh787.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh836.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh257.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh171.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh353.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh839.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh346.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh840.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh315.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh130.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh578.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh842.obj",
+            "material": "LeaveStems"
+        },
+        {
+            "mesh": "models/Mesh287.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh436.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh187.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh383.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh371.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh246.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh457.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh843.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh588.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh132.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh441.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh635.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh844.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh845.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh805.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh810.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh641.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh630.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh847.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh755.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh360.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh848.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh584.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh599.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh184.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh600.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh851.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh757.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh852.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh262.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh333.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh854.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh021.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh020.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh445.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh019.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh498.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh537.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh451.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh829.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh094.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh018.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh017.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh774.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh213.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh016.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh015.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh417.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh014.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh385.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh013.obj",
+            "material": "Leaves"
+        },
+        {
+            "mesh": "models/Mesh798.obj",
+            "material": "WoodFrame"
+        },
+        {
+            "mesh": "models/Mesh012.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh837.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh402.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh604.obj",
+            "material": "Pots"
+        },
+        {
+            "mesh": "models/Mesh011.obj",
+            "material": "Pots"
+        },
+        {
+            "mesh": "models/Mesh567.obj",
+            "material": "Marble"
+        },
+        {
+            "mesh": "models/Mesh010.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh038.obj",
+            "material": "WhiteWood"
+        },
+        {
+            "mesh": "models/Mesh300.obj",
+            "material": "WhiteWood"
+        },
+        {
+            "mesh": "models/Mesh009.obj",
+            "material": "WhiteWood"
+        },
+        {
+            "mesh": "models/Mesh302.obj",
+            "material": "Bathtube"
+        },
+        {
+            "mesh": "models/Mesh008.obj",
+            "material": "Bathtube"
+        },
+        {
+            "mesh": "models/Mesh007.obj",
+            "material": "Floor"
+        },
+        {
+            "mesh": "models/Mesh006.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh005.obj",
+            "material": "GreyWall"
+        },
+        {
+            "mesh": "models/Mesh004.obj",
+            "material": "Wallpaper"
+        },
+        {
+            "mesh": "models/Mesh003.obj",
+            "material": "Ceiling"
+        },
+        {
+            "mesh": "models/Mesh542.obj",
+            "material": "WhiteWood"
+        },
+        {
+            "mesh": "models/Mesh375.obj",
+            "material": "BulbGlass"
+        },
+        {
+            "mesh": "models/Mesh408.obj",
+            "material": "Light"
+        },
+        {
+            "mesh": "models/Mesh002.obj",
+            "material": "Light"
+        },
+        {
+            "mesh": "models/Mesh001.obj",
+            "material": "BulbGlass"
+        },
+        {
+            "mesh": "models/Mesh000.obj",
+            "material": "BlackPlastic"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "models/mesh_0.obj",
+            "material": "Light",
+            "radiance": [ 30.000000, 30.000000, 30.000000 ]
+        }
+    ]
+}

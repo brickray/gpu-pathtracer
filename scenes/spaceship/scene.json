@@ -1,0 +1,454 @@
+{
+    "screen_width": 960,
+    "screen_height": 540,
+    "maxDepth": 17,
+    "camera": {
+        "position": [ -0.519664, 0.817007, 3.824390 ],
+        "lookat": [ -0.066870, 0.644896, 0.529279 ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 35.983398
+    },
+    "material": [
+        {
+            "name": "Backdrop",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.100000, 0.100000, 0.100000 ]
+        },
+        {
+            "name": "Black",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        },
+        {
+            "name": "BrightPinkLeather",
+            "bsdf": "substrate",
+            "roughness": 0.400000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.772000, 0.175000, 0.262000 ]
+        },
+        {
+            "name": "DarkPlastic",
+            "bsdf": "substrate",
+            "roughness": 0.200000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.010000, 0.010000, 0.010000 ]
+        },
+        {
+            "name": "DarkRubber",
+            "bsdf": "substrate",
+            "roughness": 0.400000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.025000, 0.025000, 0.025000 ]
+        },
+        {
+            "name": "Glass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "Leather",
+            "bsdf": "substrate",
+            "roughness": 0.400000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.034000, 0.014000, 0.008000 ]
+        },
+        {
+            "name": "PinkLeather",
+            "bsdf": "substrate",
+            "roughness": 0.400000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.256000, 0.013000, 0.080000 ]
+        },
+        {
+            "name": "RedLeather",
+            "bsdf": "substrate",
+            "roughness": 0.400000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.163000, 0.030000, 0.037000 ]
+        },
+        {
+            "name": "RoughAluminium",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "RoughSteel",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 2.000000, 2.000000, 2.000000 ],
+            "k": [ 0.000000, 0.000000, 0.000000 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "models/Mesh050.obj",
+            "material": "Backdrop"
+        },
+        {
+            "mesh": "models/Mesh042.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh044.obj",
+            "material": "Leather"
+        },
+        {
+            "mesh": "models/Mesh038.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh040.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh072.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh033.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh028.obj",
+            "material": "Leather"
+        },
+        {
+            "mesh": "models/Mesh055.obj",
+            "material": "RedLeather"
+        },
+        {
+            "mesh": "models/Mesh053.obj",
+            "material": "DarkPlastic"
+        },
+        {
+            "mesh": "models/Mesh036.obj",
+            "material": "RedLeather"
+        },
+        {
+            "mesh": "models/Mesh035.obj",
+            "material": "PinkLeather"
+        },
+        {
+            "mesh": "models/Mesh031.obj",
+            "material": "RedLeather"
+        },
+        {
+            "mesh": "models/Mesh030.obj",
+            "material": "PinkLeather"
+        },
+        {
+            "mesh": "models/Mesh027.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh064.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh058.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh080.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh067.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh060.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh026.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh047.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh061.obj",
+            "material": "DarkPlastic"
+        },
+        {
+            "mesh": "models/Mesh063.obj",
+            "material": "DarkRubber"
+        },
+        {
+            "mesh": "models/Mesh065.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh048.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh066.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh068.obj",
+            "material": "DarkRubber"
+        },
+        {
+            "mesh": "models/Mesh071.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh046.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh076.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh059.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh057.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh062.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh074.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh075.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh078.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh081.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh034.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh084.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh085.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh073.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh077.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh087.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh052.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh025.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh024.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh086.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh023.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh021.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh039.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh020.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh032.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh019.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh018.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh070.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh016.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh015.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh054.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh013.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh079.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh041.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh012.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh011.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh083.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh010.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh069.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh009.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh007.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh017.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh006.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh037.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh008.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh045.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh005.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh004.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh049.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh082.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh014.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh003.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh002.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh051.obj",
+            "material": "RoughSteel"
+        },
+        {
+            "mesh": "models/Mesh001.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh056.obj",
+            "material": "RoughAluminium"
+        },
+        {
+            "mesh": "models/Mesh000.obj",
+            "material": "BrightPinkLeather"
+        },
+        {
+            "mesh": "models/Mesh022.obj",
+            "material": "RedLeather"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "models/Mesh043.obj",
+            "material": "Black",
+            "radiance": [ 20.000000, 3.000000, 3.000000 ]
+        },
+        {
+            "mesh": "models/Mesh029.obj",
+            "material": "Black",
+            "radiance": [ 3.886280, 3.772550, 3.431370 ]
+        },
+        {
+            "mesh": "models/light1.obj",
+            "material": "Black",
+            "radiance": [ 9.000000, 9.000000, 10.000000 ]
+        },
+        {
+            "mesh": "models/light2.obj",
+            "material": "Black",
+            "radiance": [ 9.000000, 9.000000, 10.000000 ]
+        }
+    ]
+}

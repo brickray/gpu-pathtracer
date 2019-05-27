@@ -1,0 +1,410 @@
+{
+    "screen_width": 960,
+    "screen_height": 540,
+    "maxDepth": 65,
+    "camera": {
+        "position": [ 4.443148, 16.934431, 49.910233 ],
+        "lookat": [ -2.573490, 9.991770, -10.588200 ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 35.983398
+    },
+    "material": [
+        {
+            "name": "Bin",
+            "bsdf": "mirror",
+            "specular": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "BlackWoodLacquer",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.050000, 0.050000, 0.050000 ]
+        },
+        {
+            "name": "Ceramic",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "DarkBorder",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.050000, 0.050000, 0.050000 ]
+        },
+        {
+            "name": "DarkPlastic",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.050000, 0.050000, 0.050000 ]
+        },
+        {
+            "name": "Label",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Label.png"
+        },
+        {
+            "name": "Mirror",
+            "bsdf": "mirror",
+            "specular": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Plastic",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "RoughGlass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.000000,
+            "outsideIOR": 1.500000
+        },
+        {
+            "name": "StainlessRough",
+            "bsdf": "roughconduct",
+            "roughness": 0.010000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "Towel",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Trims",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Wall",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "WallRight",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Wood",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/WoodPanel.png"
+        },
+        {
+            "name": "WoodFloor",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/WoodFloor.jpg"
+        },
+        {
+            "name": "emitter",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        },
+        {
+            "name": "white",
+            "bsdf": "lambertian",
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "models/Mesh029.obj",
+            "material": "RoughGlass"
+        },
+        {
+            "mesh": "models/Mesh038.obj",
+            "material": "Plastic"
+        },
+        {
+            "mesh": "models/Mesh036.obj",
+            "material": "Label"
+        },
+        {
+            "mesh": "models/Mesh028.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh035.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh016.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh026.obj",
+            "material": "Towel"
+        },
+        {
+            "mesh": "models/Mesh021.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh023.obj",
+            "material": "BlackWoodLacquer"
+        },
+        {
+            "mesh": "models/Mesh020.obj",
+            "material": "BlackWoodLacquer"
+        },
+        {
+            "mesh": "models/Mesh032.obj",
+            "material": "BlackWoodLacquer"
+        },
+        {
+            "mesh": "models/Mesh019.obj",
+            "material": "BlackWoodLacquer"
+        },
+        {
+            "mesh": "models/Mesh033.obj",
+            "material": "BlackWoodLacquer"
+        },
+        {
+            "mesh": "models/Mesh056.obj",
+            "material": "BlackWoodLacquer"
+        },
+        {
+            "mesh": "models/Mesh018.obj",
+            "material": "Wall"
+        },
+        {
+            "mesh": "models/Mesh030.obj",
+            "material": "Wall"
+        },
+        {
+            "mesh": "models/Mesh051.obj",
+            "material": "BlackWoodLacquer"
+        },
+        {
+            "mesh": "models/Mesh043.obj",
+            "material": "Wall"
+        },
+        {
+            "mesh": "models/Mesh015.obj",
+            "material": "Wall"
+        },
+        {
+            "mesh": "models/Mesh059.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh039.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh027.obj",
+            "material": "Wall"
+        },
+        {
+            "mesh": "models/Mesh055.obj",
+            "material": "Wall"
+        },
+        {
+            "mesh": "models/Mesh024.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh031.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh022.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh040.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh041.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh017.obj",
+            "material": "Mirror"
+        },
+        {
+            "mesh": "models/Mesh042.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh044.obj",
+            "material": "Towel"
+        },
+        {
+            "mesh": "models/Mesh047.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh034.obj",
+            "material": "DarkPlastic"
+        },
+        {
+            "mesh": "models/Mesh049.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh025.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh037.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh050.obj",
+            "material": "Towel"
+        },
+        {
+            "mesh": "models/Mesh052.obj",
+            "material": "Towel"
+        },
+        {
+            "mesh": "models/Mesh054.obj",
+            "material": "Bin"
+        },
+        {
+            "mesh": "models/Mesh053.obj",
+            "material": "DarkPlastic"
+        },
+        {
+            "mesh": "models/Mesh057.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh058.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh060.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh014.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh013.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh012.obj",
+            "material": "StainlessRough"
+        },
+        {
+            "mesh": "models/Mesh011.obj",
+            "material": "Ceramic"
+        },
+        {
+            "mesh": "models/Mesh010.obj",
+            "material": "Ceramic"
+        },
+        {
+            "mesh": "models/Mesh009.obj",
+            "material": "Wall"
+        },
+        {
+            "mesh": "models/Mesh007.obj",
+            "material": "Wall"
+        },
+        {
+            "mesh": "models/Mesh006.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh005.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh004.obj",
+            "material": "Ceramic"
+        },
+        {
+            "mesh": "models/Mesh003.obj",
+            "material": "DarkBorder"
+        },
+        {
+            "mesh": "models/Mesh002.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh001.obj",
+            "material": "WoodFloor"
+        },
+        {
+            "mesh": "models/Mesh008.obj",
+            "material": "WallRight"
+        },
+        {
+            "mesh": "models/Mesh046.obj",
+            "material": "Wall"
+        },
+        {
+            "mesh": "models/Mesh045.obj",
+            "material": "Mirror"
+        },
+        {
+            "mesh": "models/Mesh000.obj",
+            "material": "Trims"
+        },
+        {
+            "mesh": "models/Mesh048.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/mesh_0.obj",
+            "material": "white"
+        },
+        {
+            "mesh": "models/mesh_1.obj",
+            "material": "white"
+        },
+        {
+            "mesh": "models/mesh_2.obj",
+            "material": "white"
+        },
+        {
+            "mesh": "models/mesh_3.obj",
+            "material": "white"
+        },
+        {
+            "mesh": "models/mesh_4.obj",
+            "material": "white"
+        },
+        {
+            "mesh": "models/mesh_5.obj",
+            "material": "white"
+        },
+        {
+            "mesh": "models/mesh_6.obj",
+            "material": "white"
+        },
+        {
+            "mesh": "models/mesh_7.obj",
+            "material": "white"
+        },
+        {
+            "mesh": "models/mesh_8.obj",
+            "material": "white"
+        },
+        {
+            "mesh": "models/mesh_9.obj",
+            "material": "white"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "models/mesh_10.obj",
+            "material": "emitter",
+            "radiance": [ 125.000000, 100.000000, 75.000000 ]
+        }
+    ]
+}

@@ -1,0 +1,3276 @@
+{
+    "screen_width": 640,
+    "screen_height": 960,
+    "maxDepth": 7,
+    "camera": {
+        "position": [
+            0.03242092579603195,
+            1.526729941368103,
+            4.881969451904297
+        ],
+        "lookat": [
+            -0.018809299916028976,
+            1.8286099433898926,
+            -1.8112800121307373
+
+        ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 60.000000
+    },
+    "material": [
+        {
+            "name": "Black",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.010000, 0.010000, 0.010000 ]
+        },
+        {
+            "name": "Brass",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 2.865601, 2.119182, 1.940077 ],
+            "k": [ 3.032326, 2.056108, 1.616293 ]
+        },
+        {
+            "name": "BrushedAluminium",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "Candles",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "ChairSeat",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.117647, 0.054902, 0.066667 ]
+        },
+        {
+            "name": "Copper",
+            "bsdf": "roughconduct",
+            "roughness": 0.010000,
+            "eta": [ 0.265787, 0.195610, 0.220920 ],
+            "k": [ 3.540174, 2.311131, 1.668593 ]
+        },
+        {
+            "name": "Emission",
+            "bsdf": "lambertian",
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "Glass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "Gold",
+            "bsdf": "roughconduct",
+            "roughness": 0.010000,
+            "eta": [ 0.143119, 0.374957, 1.442479 ],
+            "k": [ 3.983160, 2.385721, 1.603215 ]
+        },
+        {
+            "name": "Lampshade",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Fabric.jpg"
+        },
+        {
+            "name": "Light",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        },
+        {
+            "name": "MagnoliaPaint",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Painting1",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Painting1.jpg"
+        },
+        {
+            "name": "Painting2",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Painting2.jpg"
+        },
+        {
+            "name": "Painting3",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Painting3.jpg"
+        },
+        {
+            "name": "StainlessSteel",
+            "bsdf": "roughconduct",
+            "roughness": 0.010000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "Wallpaper",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Wallpaper.jpg"
+        },
+        {
+            "name": "White",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.691535, 0.691535, 0.691535 ]
+        },
+        {
+            "name": "WhitePaint",
+            "bsdf": "substrate",
+            "roughness": 0.200000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "WhitePaint2",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "WhitePlastic",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "WoodChair",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/Wood.jpg"
+        },
+        {
+            "name": "WoodFloor",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/WoodFloor.jpg"
+        },
+        {
+            "name": "WoodLamp",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/WoodChair.jpg"
+        },
+        {
+            "name": "WoodStairs",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/WoodPanel.jpg"
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "models/Mesh524.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh286.obj",
+            "material": "MagnoliaPaint"
+        },
+        {
+            "mesh": "models/Mesh334.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh489.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh429.obj",
+            "material": "Painting1"
+        },
+        {
+            "mesh": "models/Mesh423.obj",
+            "material": "Painting2"
+        },
+        {
+            "mesh": "models/Mesh473.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh346.obj",
+            "material": "MagnoliaPaint"
+        },
+        {
+            "mesh": "models/Mesh405.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh530.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh385.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh361.obj",
+            "material": "MagnoliaPaint"
+        },
+        {
+            "mesh": "models/Mesh355.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh328.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh252.obj",
+            "material": "Painting3"
+        },
+        {
+            "mesh": "models/Mesh403.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh270.obj",
+            "material": "MagnoliaPaint"
+        },
+        {
+            "mesh": "models/Mesh344.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh251.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh305.obj",
+            "material": "Painting1"
+        },
+        {
+            "mesh": "models/Mesh253.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh339.obj",
+            "material": "MagnoliaPaint"
+        },
+        {
+            "mesh": "models/Mesh409.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh491.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh624.obj",
+            "material": "Painting3"
+        },
+        {
+            "mesh": "models/Mesh517.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh329.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh384.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh382.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh391.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh752.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh318.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh353.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh374.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh315.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh386.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh432.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh445.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh401.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh363.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh439.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh508.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh523.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh456.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh379.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh511.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh542.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh675.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh419.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh466.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh467.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh320.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh393.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh470.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh474.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh483.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh486.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh500.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh490.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh505.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh494.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh545.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh468.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh496.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh516.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh376.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh378.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh659.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh360.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh292.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh501.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh283.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh321.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh513.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh428.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh498.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh510.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh514.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh411.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh690.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh482.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh518.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh422.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh450.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh507.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh434.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh312.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh311.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh309.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh308.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh726.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh356.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh303.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh300.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh277.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh296.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh452.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh333.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh295.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh243.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh289.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh288.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh604.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh314.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh287.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh404.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh430.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh745.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh502.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh723.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh258.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh414.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh367.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh307.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh284.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh282.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh302.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh240.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh279.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh366.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh276.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh326.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh447.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh477.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh273.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh522.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh616.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh568.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh358.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh262.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh632.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh399.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh261.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh460.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh521.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh443.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh304.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh705.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh586.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh387.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh472.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh538.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh749.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh254.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh425.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh235.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh679.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh736.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh249.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh364.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh248.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh667.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh301.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh715.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh236.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh718.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh246.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh712.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh576.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh631.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh674.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh245.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh381.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh654.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh244.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh728.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh242.obj",
+            "material": "WoodFloor"
+        },
+        {
+            "mesh": "models/Mesh342.obj",
+            "material": "WoodFloor"
+        },
+        {
+            "mesh": "models/Mesh653.obj",
+            "material": "WoodFloor"
+        },
+        {
+            "mesh": "models/Mesh737.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh290.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh416.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh239.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh559.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh418.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh350.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh337.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh338.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh234.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh458.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh229.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh257.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh269.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh336.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh267.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh227.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh226.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh230.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh529.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh531.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh536.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh685.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh539.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh541.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh543.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh550.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh553.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh275.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh555.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh556.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh638.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh560.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh561.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh563.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh565.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh469.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh569.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh571.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh574.obj",
+            "material": "Wallpaper"
+        },
+        {
+            "mesh": "models/Mesh389.obj",
+            "material": "WhitePaint2"
+        },
+        {
+            "mesh": "models/Mesh731.obj",
+            "material": "WoodFloor"
+        },
+        {
+            "mesh": "models/Mesh579.obj",
+            "material": "Wallpaper"
+        },
+        {
+            "mesh": "models/Mesh672.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh408.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh709.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh583.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh515.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh584.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh546.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh587.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh297.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh377.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh595.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh395.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh598.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh487.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh607.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh610.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh397.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh573.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh503.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh525.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh710.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh649.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh352.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh578.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh614.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh444.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh644.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh417.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh620.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh625.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh570.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh601.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh455.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh630.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh635.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh533.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh657.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh340.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh637.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh426.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh280.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh640.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh645.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh618.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh441.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh446.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh476.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh707.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh588.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh256.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh648.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh373.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh650.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh652.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh655.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh464.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh299.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh641.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh461.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh656.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh658.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh660.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh323.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh663.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh313.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh390.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh265.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh228.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh233.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh264.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh747.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh324.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh497.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh437.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh478.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh665.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh668.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh306.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh602.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh627.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh670.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh673.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh677.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh760.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh681.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh520.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh424.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh400.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh683.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh581.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh684.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh753.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh686.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh368.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh702.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh572.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh691.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh293.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh512.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh696.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh605.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh697.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh706.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh699.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh763.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh703.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh680.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh558.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh662.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh331.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh708.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh575.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh711.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh492.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh713.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh547.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh577.obj",
+            "material": "WoodChair"
+        },
+        {
+            "mesh": "models/Mesh694.obj",
+            "material": "ChairSeat"
+        },
+        {
+            "mesh": "models/Mesh716.obj",
+            "material": "Lampshade"
+        },
+        {
+            "mesh": "models/Mesh719.obj",
+            "material": "Lampshade"
+        },
+        {
+            "mesh": "models/Mesh633.obj",
+            "material": "Lampshade"
+        },
+        {
+            "mesh": "models/Mesh724.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh727.obj",
+            "material": "WhitePlastic"
+        },
+        {
+            "mesh": "models/Mesh440.obj",
+            "material": "WhitePlastic"
+        },
+        {
+            "mesh": "models/Mesh729.obj",
+            "material": "WhitePlastic"
+        },
+        {
+            "mesh": "models/Mesh590.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh732.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh372.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh734.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh738.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh636.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh741.obj",
+            "material": "WoodLamp"
+        },
+        {
+            "mesh": "models/Mesh742.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh701.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh744.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh600.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh628.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh746.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh566.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh294.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh748.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh535.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh750.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh506.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh410.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh617.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh695.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh554.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh751.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh754.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh622.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh493.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh412.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh621.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh755.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh509.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh757.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh281.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh421.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh639.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh676.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh402.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh567.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh759.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh451.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh548.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh761.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh764.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh768.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh687.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh534.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh593.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh767.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh606.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh647.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh717.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh465.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh770.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh611.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh348.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh688.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh396.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh552.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh643.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh771.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh773.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh223.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh222.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh220.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh219.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh218.obj",
+            "material": "Gold"
+        },
+        {
+            "mesh": "models/Mesh629.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh217.obj",
+            "material": "WhitePaint2"
+        },
+        {
+            "mesh": "models/Mesh216.obj",
+            "material": "Painting2"
+        },
+        {
+            "mesh": "models/Mesh392.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh215.obj",
+            "material": "MagnoliaPaint"
+        },
+        {
+            "mesh": "models/Mesh214.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh704.obj",
+            "material": "WoodStairs"
+        },
+        {
+            "mesh": "models/Mesh427.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh213.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh212.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh210.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh609.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh678.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh209.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh260.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh208.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh207.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh597.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh562.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh689.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh205.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh592.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh420.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh204.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh202.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh345.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh285.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh225.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh201.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh200.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh263.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh398.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh330.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh599.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh198.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh197.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh196.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh195.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh193.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh371.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh191.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh189.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh188.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh722.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh186.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh185.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh184.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh183.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh349.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh181.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh250.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh180.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh608.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh178.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh266.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh176.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh175.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh174.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh171.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh758.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh169.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh698.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh651.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh166.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh322.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh164.obj",
+            "material": "BrushedAluminium"
+        },
+        {
+            "mesh": "models/Mesh232.obj",
+            "material": "BrushedAluminium"
+        },
+        {
+            "mesh": "models/Mesh772.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh163.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh162.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh161.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh730.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh159.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh194.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh158.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh540.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh544.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh375.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh157.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh357.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh156.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh155.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh407.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh153.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh152.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh721.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh151.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh231.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh664.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh160.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh182.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh150.obj",
+            "material": "Black"
+        },
+        {
+            "mesh": "models/Mesh459.obj",
+            "material": "White"
+        },
+        {
+            "mesh": "models/Mesh149.obj",
+            "material": "Copper"
+        },
+        {
+            "mesh": "models/Mesh148.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh146.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh438.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh457.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh144.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh143.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh142.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh141.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh199.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh310.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh140.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh138.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh343.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh471.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh137.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh238.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh187.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh693.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh532.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh537.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh211.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh135.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh134.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh132.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh131.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh129.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh128.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh354.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh431.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh127.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh126.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh125.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh190.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh130.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh124.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh733.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh123.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh136.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh388.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh121.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh120.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh119.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh117.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh116.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh298.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh714.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh740.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh114.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh111.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh110.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh109.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh108.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh551.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh582.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh454.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh415.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh449.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh107.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh106.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh105.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh104.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh103.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh173.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh206.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh102.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh101.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh100.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh626.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh669.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh099.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh098.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh743.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh097.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh613.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh413.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh096.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh095.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh094.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh370.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh177.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh463.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh272.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh093.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh495.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh092.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh359.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh091.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh090.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh089.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh088.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh087.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh203.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh596.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh615.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh086.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh085.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh084.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh082.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh081.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh154.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh080.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh079.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh485.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh078.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh172.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh317.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh347.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh077.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh076.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh075.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh481.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh083.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh073.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh072.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh612.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh071.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh069.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh068.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh067.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh278.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh332.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh436.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh168.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh066.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh499.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh394.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh274.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh065.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh380.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh070.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh585.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh316.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh692.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh064.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh335.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh756.obj",
+            "material": "Candles"
+        },
+        {
+            "mesh": "models/Mesh224.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh063.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh062.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh725.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh271.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh061.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh642.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh589.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh060.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh247.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh059.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh433.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh221.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh058.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh057.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh327.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh682.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh056.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh055.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh054.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh735.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh167.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh053.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh052.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh268.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh739.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh623.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh580.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh051.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh769.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh671.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh050.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh049.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh369.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh528.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh048.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh341.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh047.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh046.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh133.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh603.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh442.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh504.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh045.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh480.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh564.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh192.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh362.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh044.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh591.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh043.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh766.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh365.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh042.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh488.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh113.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh041.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh170.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh351.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh040.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh549.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh720.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh634.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh039.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh038.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh383.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh037.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh036.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh035.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh406.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh557.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh112.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh165.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh034.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh032.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh115.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh145.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh527.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh237.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh031.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh479.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh030.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh453.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh029.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh028.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh027.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh026.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh025.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh646.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh484.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh255.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh765.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh448.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh139.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh024.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh325.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh074.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh023.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh022.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh021.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh020.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh019.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh661.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh018.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh017.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh147.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh016.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh015.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh291.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh319.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh526.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh014.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh013.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh033.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh011.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh179.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh010.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh009.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh008.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh118.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh007.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh762.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh594.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh475.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh006.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh005.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh012.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh619.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh519.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh004.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh241.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh700.obj",
+            "material": "Brass"
+        },
+        {
+            "mesh": "models/Mesh435.obj",
+            "material": "Emission"
+        },
+        {
+            "mesh": "models/Mesh003.obj",
+            "material": "Emission"
+        },
+        {
+            "mesh": "models/Mesh122.obj",
+            "material": "Emission"
+        },
+        {
+            "mesh": "models/Mesh666.obj",
+            "material": "Emission"
+        },
+        {
+            "mesh": "models/Mesh002.obj",
+            "material": "Emission"
+        },
+        {
+            "mesh": "models/Mesh001.obj",
+            "material": "Emission"
+        },
+        {
+            "mesh": "models/Mesh000.obj",
+            "material": "Emission"
+        },
+        {
+            "mesh": "models/Mesh259.obj",
+            "material": "Emission"
+        },
+        {
+            "mesh": "models/Mesh462.obj",
+            "material": "Emission"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "models/mesh_0.obj",
+            "material": "Light",
+            "radiance": [ 30.000000, 30.000000, 30.000000 ]
+        }
+    ]
+}

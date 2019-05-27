@@ -1,0 +1,92 @@
+{
+    "screen_width": 768,
+    "screen_height": 576,
+    "maxDepth": 7,
+    "camera": {
+        "position": [ -0.223944, -6.642450, 0.366128 ],
+        "lookat": [ -0.261616, -5.644770, 0.309317 ],
+        "up": [ 0.000000, 0.000000, 1.000000 ],
+        "fov": 34.156548
+    },
+    "material": [
+        {
+            "name": "glass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "lamp",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.616000, 0.475200, 0.352000 ]
+        },
+        {
+            "name": "lamp1",
+            "bsdf": "roughconduct",
+            "roughness": 0.200000,
+            "eta": [ 2.865601, 2.119182, 1.940077 ],
+            "k": [ 3.032326, 2.056108, 1.616293 ]
+        },
+        {
+            "name": "matte",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.500000, 0.500000, 0.500000 ]
+        },
+        {
+            "name": "wood",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.329630, 0.257976, 0.150292 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "../veach_bidir/geometry/bidir_0.ply",
+            "material": "glass"
+        },
+        {
+            "mesh": "../veach_bidir/geometry/bidir_1.ply",
+            "material": "lamp"
+        },
+        {
+            "mesh": "../veach_bidir/geometry/bidir_2.ply",
+            "material": "matte"
+        },
+        {
+            "mesh": "../veach_bidir/geometry/bidir_3.ply",
+            "material": "matte"
+        },
+        {
+            "mesh": "../veach_bidir/geometry/bidir_4.ply",
+            "material": "matte"
+        },
+        {
+            "mesh": "../veach_bidir/geometry/bidir_5.ply",
+            "material": "matte"
+        },
+        {
+            "mesh": "../veach_bidir/geometry/bidir_8.ply",
+            "material": "lamp1"
+        },
+        {
+            "mesh": "../veach_bidir/geometry/bidir_9.ply",
+            "material": "wood"
+        },
+        {
+            "mesh": "../veach_bidir/geometry/bidir_10.ply",
+            "material": "wood"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "../veach_bidir/geometry/bidir_6.ply",
+            "material": "lamp",
+            "radiance": [ 7000.000000, 5450.000000, 3630.000000 ]
+        },
+        {
+            "mesh": "../veach_bidir/geometry/bidir_7.ply",
+            "material": "lamp",
+            "radiance": [ 500.000000, 500.000000, 500.000000 ]
+        }
+    ]
+}

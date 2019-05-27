@@ -1,0 +1,276 @@
+{
+    "screen_width": 768,
+    "screen_height": 576,
+    "maxDepth": 7,
+    "camera": {
+        "position": [ 14.449900, 6.894150, -3.185470 ],
+        "lookat": [ 13.456300, 6.784380, -3.158610 ],
+        "up": [ -0.109708, 0.993957, 0.003744 ],
+        "fov": 90.470100
+    },
+    "material": [
+        {
+            "name": "sp_00_luk_mal1",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/01_St_kp.JPG"
+        },
+        {
+            "name": "sp_00_luk_mali",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/sp_luk.JPG"
+        },
+        {
+            "name": "sp_00_pod",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/KAMEN.JPG"
+        },
+        {
+            "name": "sp_00_prozor",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/prozor1.JPG"
+        },
+        {
+            "name": "sp_00_stup",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/01_STUB.JPG"
+        },
+        {
+            "name": "sp_00_svod",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/KAMEN-stup.JPG"
+        },
+        {
+            "name": "sp_00_vrata_kock",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/vrata_ko.JPG"
+        },
+        {
+            "name": "sp_00_vrata_krug",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/vrata_kr.JPG"
+        },
+        {
+            "name": "sp_00_zid",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/KAMEN.JPG"
+        },
+        {
+            "name": "sp_01_luk_a",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/sp_luk.JPG"
+        },
+        {
+            "name": "sp_01_stub",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/01_STUB.JPG"
+        },
+        {
+            "name": "sp_01_stub_baza",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/01_S_ba.JPG"
+        },
+        {
+            "name": "sp_01_stub_baza_",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.784314, 0.784314, 0.784314 ]
+        },
+        {
+            "name": "sp_01_stub_kut",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/01_STUB.JPG"
+        },
+        {
+            "name": "sp_01_stup",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/x01_st.JPG"
+        },
+        {
+            "name": "sp_01_stup_baza",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/01_S_ba.JPG"
+        },
+        {
+            "name": "sp_02_reljef",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/reljef.JPG"
+        },
+        {
+            "name": "sp_svod_kapitel",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/00_skap.JPG"
+        },
+        {
+            "name": "sp_vijenac",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/00_skap.JPG"
+        },
+        {
+            "name": "sp_zid_vani",
+            "bsdf": "lambertian",
+            "diffuse": "../sponza/texture/KAMEN.JPG"
+        },
+        {
+            "name": "white",
+            "bsdf": "lambertian",
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "../sponza/geometry/mesh_0.obj",
+            "material": "sp_01_stub_baza"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_1.obj",
+            "material": "sp_00_zid"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_2.obj",
+            "material": "sp_00_pod"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_3.obj",
+            "material": "sp_00_prozor"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_4.obj",
+            "material": "sp_00_vrata_krug"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_5.obj",
+            "material": "sp_02_reljef"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_6.obj",
+            "material": "sp_00_vrata_kock"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_7.obj",
+            "material": "sp_00_vrata_krug"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_8.obj",
+            "material": "sp_01_luk_a"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_9.obj",
+            "material": "sp_00_prozor"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_10.obj",
+            "material": "sp_01_stup_baza"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_11.obj",
+            "material": "sp_00_luk_mal1"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_12.obj",
+            "material": "sp_00_stup"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_13.obj",
+            "material": "sp_svod_kapitel"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_14.obj",
+            "material": "sp_00_luk_mal1"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_15.obj",
+            "material": "sp_01_luk_a"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_16.obj",
+            "material": "sp_00_stup"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_17.obj",
+            "material": "sp_svod_kapitel"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_18.obj",
+            "material": "sp_01_stub_baza_"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_19.obj",
+            "material": "sp_01_luk_a"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_20.obj",
+            "material": "sp_01_stup"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_21.obj",
+            "material": "sp_01_luk_a"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_22.obj",
+            "material": "sp_svod_kapitel"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_23.obj",
+            "material": "sp_01_stub_kut"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_24.obj",
+            "material": "sp_01_luk_a"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_25.obj",
+            "material": "sp_00_luk_mali"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_26.obj",
+            "material": "sp_00_luk_mal1"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_27.obj",
+            "material": "sp_01_luk_a"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_28.obj",
+            "material": "sp_00_luk_mali"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_29.obj",
+            "material": "sp_00_svod"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_30.obj",
+            "material": "sp_01_stup"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_31.obj",
+            "material": "sp_01_stub"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_32.obj",
+            "material": "sp_00_luk_mali"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_33.obj",
+            "material": "sp_vijenac"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_34.obj",
+            "material": "sp_00_luk_mali"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_35.obj",
+            "material": "sp_00_svod"
+        },
+        {
+            "mesh": "../sponza/geometry/mesh_36.obj",
+            "material": "sp_zid_vani"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "geometry/light.obj",
+            "material": "white",
+            "translate": [ 0, 15.0, 0 ],
+            "radiance": [ 5000, 5000, 5000 ]
+        }
+    ]
+}

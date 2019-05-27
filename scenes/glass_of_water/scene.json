@@ -1,0 +1,133 @@
+{
+    "screen_width": 960,
+    "screen_height": 540,
+    "maxDepth": 33,
+    "camera": {
+        "position": [ -0.089358, 2.694122, 25.672550 ],
+        "lookat": [ 0.006515, 3.101069, 0.010185 ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 20.114292
+    },
+    "material": [
+        {
+            "name": "AirIce",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 0.763000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "Backdrop",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 4.277513, 3.513154, 2.761126 ],
+            "k": [ 3.491184, 2.889358, 3.111696 ]
+        },
+        {
+            "name": "Floor",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "Glass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "IceAir",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.310000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "WaterAir",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.330000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "emitter",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "models/Mesh008.obj",
+            "material": "WaterAir"
+        },
+        {
+            "mesh": "models/Mesh005.obj",
+            "material": "WaterAir"
+        },
+        {
+            "mesh": "models/Mesh004.obj",
+            "material": "IceAir"
+        },
+        {
+            "mesh": "models/Mesh003.obj",
+            "material": "AirIce"
+        },
+        {
+            "mesh": "models/Mesh010.obj",
+            "material": "IceAir"
+        },
+        {
+            "mesh": "models/Mesh009.obj",
+            "material": "AirIce"
+        },
+        {
+            "mesh": "models/Mesh012.obj",
+            "material": "AirIce"
+        },
+        {
+            "mesh": "models/Mesh014.obj",
+            "material": "IceAir"
+        },
+        {
+            "mesh": "models/Mesh015.obj",
+            "material": "AirIce"
+        },
+        {
+            "mesh": "models/Mesh006.obj",
+            "material": "IceAir"
+        },
+        {
+            "mesh": "models/Mesh002.obj",
+            "material": "AirIce"
+        },
+        {
+            "mesh": "models/Mesh001.obj",
+            "material": "IceAir"
+        },
+        {
+            "mesh": "models/Mesh007.obj",
+            "material": "Backdrop"
+        },
+        {
+            "mesh": "models/Mesh011.obj",
+            "material": "Floor"
+        },
+        {
+            "mesh": "models/Mesh013.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh000.obj",
+            "material": "WaterAir"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "models/mesh_0.obj",
+            "material": "emitter",
+            "radiance": [ 15.915494, 27.056339, 31.830988 ]
+        }
+    ]
+}

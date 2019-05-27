@@ -1,0 +1,1120 @@
+{
+    "screen_width": 960,
+    "screen_height": 540,
+    "maxDepth": 7,
+    "camera": {
+        "position": [ 2.250090, 1.311707, 6.178716 ],
+        "lookat": [ 0.022981, 1.123811, 1.561732 ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 58.715508
+    },
+    "material": [
+        {
+            "name": "Apple",
+            "bsdf": "lambertian",
+            "diffuse": "textures/apple.jpg"
+        },
+        {
+            "name": "BlackMarble",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "BlackRaughtIron",
+            "bsdf": "roughconduct",
+            "roughness": 0.400000,
+            "eta": [ 4.370703, 3.300297, 2.998267 ],
+            "k": [ 3.500678, 2.604865, 2.273193 ]
+        },
+        {
+            "name": "BlindEnds",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "BlindMaterial",
+            "bsdf": "lambertian",
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "BlindString",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "BlindStringKnob",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "BlindWoodStrip",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Books",
+            "bsdf": "lambertian",
+            "diffuse": "textures/book-spines.jpg"
+        },
+        {
+            "name": "BushLogo",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "CandleHolders",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "Carpet",
+            "bsdf": "lambertian",
+            "diffuse": "textures/carpet-text3b.jpg"
+        },
+        {
+            "name": "CeilingLampshade",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Shade-paper.jpg"
+        },
+        {
+            "name": "CeilingShadeWire",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Ceramic",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "ChromeHandle",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "Cushion",
+            "bsdf": "lambertian",
+            "diffuse": "textures/cushion-green-circles.jpg"
+        },
+        {
+            "name": "Cushion1",
+            "bsdf": "lambertian",
+            "diffuse": "textures/cushion-stripe-purple.jpg"
+        },
+        {
+            "name": "Cushion3",
+            "bsdf": "lambertian",
+            "diffuse": "textures/cushion-purple-yellow-stripe.jpg"
+        },
+        {
+            "name": "Dishes",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "DrawerHandles",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "DullSteel",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "Floor",
+            "bsdf": "substrate",
+            "roughness": 0.150000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/wood4.jpg"
+        },
+        {
+            "name": "LampStand",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "LampshadeInner",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.684615, 0.684615, 0.684615 ]
+        },
+        {
+            "name": "LampshaderOuter",
+            "bsdf": "lambertian",
+            "diffuse": "textures/shade-stripes.jpg"
+        },
+        {
+            "name": "LargePicture",
+            "bsdf": "lambertian",
+            "diffuse": "textures/picure4-grey.jpg"
+        },
+        {
+            "name": "Light",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        },
+        {
+            "name": "LightFitting",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "LoveLetters",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "LoveLettersBack",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.078431, 0.039216, 0.039216 ]
+        },
+        {
+            "name": "Magazine",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.217638, 0.217638, 0.217638 ]
+        },
+        {
+            "name": "Picture",
+            "bsdf": "lambertian",
+            "diffuse": "textures/picture11-vert.jpg"
+        },
+        {
+            "name": "PictureFrame",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "RadiatorBase",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "RadiatorKnobCentre",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "RadiatorKnobOuter",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ -0.048523, 4.142755, 4.669769 ],
+            "k": [ -0.036374, 0.093767, 1.300739 ]
+        },
+        {
+            "name": "RadiatorPanelsEnamel",
+            "bsdf": "substrate",
+            "roughness": 0.150000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.793110, 0.793110, 0.793110 ]
+        },
+        {
+            "name": "RadioDialBack",
+            "bsdf": "lambertian",
+            "diffuse": "textures/radio-dial-idea.jpg"
+        },
+        {
+            "name": "RadioDialLine",
+            "bsdf": "mirror",
+            "specular": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "RadioDialRed",
+            "bsdf": "lambertian",
+            "diffuse": "textures/radio-dial-idea.jpg"
+        },
+        {
+            "name": "RadioEdges",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "RadioGlass",
+            "bsdf": "substrate",
+            "roughness": 0.150000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        },
+        {
+            "name": "RadioHandle",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.389509, 0.372589, 0.293747 ]
+        },
+        {
+            "name": "RadioInside",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.015078, 0.015078, 0.015078 ]
+        },
+        {
+            "name": "RadioKnob",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.358375, 0.300936, 0.128617 ]
+        },
+        {
+            "name": "RadioMetalRing",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.640514, 0.625417, 0.580126 ]
+        },
+        {
+            "name": "RadioPlastic",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.640000, 0.600153, 0.434490 ]
+        },
+        {
+            "name": "RadioSurround",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.066822, 0.028495, 0.013827 ]
+        },
+        {
+            "name": "SmallPictureA",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Frame.jpg"
+        },
+        {
+            "name": "SmallPictureB",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Frame.jpg"
+        },
+        {
+            "name": "SmallPictureC",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Frame.jpg"
+        },
+        {
+            "name": "SmallPictureD",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Frame.jpg"
+        },
+        {
+            "name": "SmallPictureFrame",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.010000, 0.010000, 0.010000 ]
+        },
+        {
+            "name": "Socket",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "SofaLeather",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.793110, 0.793110, 0.793110 ]
+        },
+        {
+            "name": "Steel",
+            "bsdf": "mirror",
+            "specular": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Table",
+            "bsdf": "substrate",
+            "roughness": 0.001000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "TableLegs",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "TvBevel",
+            "bsdf": "dielectric",
+            "specular": [ 0.496145, 0.496145, 0.496145 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "TvScreen",
+            "bsdf": "substrate",
+            "roughness": 0.150000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        },
+        {
+            "name": "Walls",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.600000, 0.600000, 0.600000 ]
+        },
+        {
+            "name": "WhitePaint",
+            "bsdf": "substrate",
+            "roughness": 0.150000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "models/Mesh138.obj",
+            "material": "LampStand"
+        },
+        {
+            "mesh": "models/Mesh113.obj",
+            "material": "CandleHolders"
+        },
+        {
+            "mesh": "models/Mesh087.obj",
+            "material": "CandleHolders"
+        },
+        {
+            "mesh": "models/Mesh110.obj",
+            "material": "CandleHolders"
+        },
+        {
+            "mesh": "models/Mesh128.obj",
+            "material": "Magazine"
+        },
+        {
+            "mesh": "models/Mesh095.obj",
+            "material": "LampshadeInner"
+        },
+        {
+            "mesh": "models/Mesh076.obj",
+            "material": "Apple"
+        },
+        {
+            "mesh": "models/Mesh108.obj",
+            "material": "Apple"
+        },
+        {
+            "mesh": "models/Mesh080.obj",
+            "material": "Apple"
+        },
+        {
+            "mesh": "models/Mesh166.obj",
+            "material": "Apple"
+        },
+        {
+            "mesh": "models/Mesh088.obj",
+            "material": "Ceramic"
+        },
+        {
+            "mesh": "models/Mesh059.obj",
+            "material": "LoveLettersBack"
+        },
+        {
+            "mesh": "models/Mesh073.obj",
+            "material": "LoveLettersBack"
+        },
+        {
+            "mesh": "models/Mesh099.obj",
+            "material": "LoveLettersBack"
+        },
+        {
+            "mesh": "models/Mesh103.obj",
+            "material": "LoveLettersBack"
+        },
+        {
+            "mesh": "models/Mesh155.obj",
+            "material": "LoveLettersBack"
+        },
+        {
+            "mesh": "models/Mesh065.obj",
+            "material": "LoveLettersBack"
+        },
+        {
+            "mesh": "models/Mesh069.obj",
+            "material": "LoveLetters"
+        },
+        {
+            "mesh": "models/Mesh090.obj",
+            "material": "LoveLetters"
+        },
+        {
+            "mesh": "models/Mesh063.obj",
+            "material": "LoveLetters"
+        },
+        {
+            "mesh": "models/Mesh062.obj",
+            "material": "LoveLetters"
+        },
+        {
+            "mesh": "models/Mesh068.obj",
+            "material": "SmallPictureC"
+        },
+        {
+            "mesh": "models/Mesh131.obj",
+            "material": "SmallPictureFrame"
+        },
+        {
+            "mesh": "models/Mesh098.obj",
+            "material": "SmallPictureFrame"
+        },
+        {
+            "mesh": "models/Mesh056.obj",
+            "material": "SmallPictureB"
+        },
+        {
+            "mesh": "models/Mesh077.obj",
+            "material": "SmallPictureA"
+        },
+        {
+            "mesh": "models/Mesh055.obj",
+            "material": "SmallPictureFrame"
+        },
+        {
+            "mesh": "models/Mesh118.obj",
+            "material": "Cushion1"
+        },
+        {
+            "mesh": "models/Mesh064.obj",
+            "material": "LightFitting"
+        },
+        {
+            "mesh": "models/Mesh052.obj",
+            "material": "LightFitting"
+        },
+        {
+            "mesh": "models/Mesh112.obj",
+            "material": "LightFitting"
+        },
+        {
+            "mesh": "models/Mesh066.obj",
+            "material": "CeilingShadeWire"
+        },
+        {
+            "mesh": "models/Mesh122.obj",
+            "material": "CeilingLampshade"
+        },
+        {
+            "mesh": "models/Mesh127.obj",
+            "material": "SmallPictureFrame"
+        },
+        {
+            "mesh": "models/Mesh129.obj",
+            "material": "SmallPictureD"
+        },
+        {
+            "mesh": "models/Mesh132.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh140.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh156.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh135.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh175.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh136.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh078.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh141.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh147.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh071.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh148.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh149.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh150.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh153.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh109.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh083.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh157.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh159.obj",
+            "material": "Books"
+        },
+        {
+            "mesh": "models/Mesh161.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh143.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh176.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh107.obj",
+            "material": "DrawerHandles"
+        },
+        {
+            "mesh": "models/Mesh139.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh162.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh126.obj",
+            "material": "TvBevel"
+        },
+        {
+            "mesh": "models/Mesh152.obj",
+            "material": "TvScreen"
+        },
+        {
+            "mesh": "models/Mesh104.obj",
+            "material": "Cushion3"
+        },
+        {
+            "mesh": "models/Mesh167.obj",
+            "material": "SofaLeather"
+        },
+        {
+            "mesh": "models/Mesh091.obj",
+            "material": "SofaLeather"
+        },
+        {
+            "mesh": "models/Mesh145.obj",
+            "material": "SofaLeather"
+        },
+        {
+            "mesh": "models/Mesh160.obj",
+            "material": "Cushion"
+        },
+        {
+            "mesh": "models/Mesh171.obj",
+            "material": "LampshaderOuter"
+        },
+        {
+            "mesh": "models/Mesh092.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh067.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh172.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh173.obj",
+            "material": "DrawerHandles"
+        },
+        {
+            "mesh": "models/Mesh177.obj",
+            "material": "Table"
+        },
+        {
+            "mesh": "models/Mesh054.obj",
+            "material": "Table"
+        },
+        {
+            "mesh": "models/Mesh165.obj",
+            "material": "Socket"
+        },
+        {
+            "mesh": "models/Mesh100.obj",
+            "material": "Socket"
+        },
+        {
+            "mesh": "models/Mesh096.obj",
+            "material": "PictureFrame"
+        },
+        {
+            "mesh": "models/Mesh169.obj",
+            "material": "LargePicture"
+        },
+        {
+            "mesh": "models/Mesh085.obj",
+            "material": "Socket"
+        },
+        {
+            "mesh": "models/Mesh116.obj",
+            "material": "Socket"
+        },
+        {
+            "mesh": "models/Mesh105.obj",
+            "material": "Picture"
+        },
+        {
+            "mesh": "models/Mesh170.obj",
+            "material": "PictureFrame"
+        },
+        {
+            "mesh": "models/Mesh179.obj",
+            "material": "BlindStringKnob"
+        },
+        {
+            "mesh": "models/Mesh125.obj",
+            "material": "BlindString"
+        },
+        {
+            "mesh": "models/Mesh144.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh072.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh124.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh050.obj",
+            "material": "BlindWoodStrip"
+        },
+        {
+            "mesh": "models/Mesh117.obj",
+            "material": "BlindMaterial"
+        },
+        {
+            "mesh": "models/Mesh047.obj",
+            "material": "BlindMaterial"
+        },
+        {
+            "mesh": "models/Mesh046.obj",
+            "material": "BlindMaterial"
+        },
+        {
+            "mesh": "models/Mesh045.obj",
+            "material": "BlindMaterial"
+        },
+        {
+            "mesh": "models/Mesh043.obj",
+            "material": "BlindWoodStrip"
+        },
+        {
+            "mesh": "models/Mesh070.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh042.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh041.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh039.obj",
+            "material": "BlindString"
+        },
+        {
+            "mesh": "models/Mesh038.obj",
+            "material": "BlindStringKnob"
+        },
+        {
+            "mesh": "models/Mesh037.obj",
+            "material": "BlindStringKnob"
+        },
+        {
+            "mesh": "models/Mesh036.obj",
+            "material": "BlindString"
+        },
+        {
+            "mesh": "models/Mesh034.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh033.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh031.obj",
+            "material": "BlindEnds"
+        },
+        {
+            "mesh": "models/Mesh094.obj",
+            "material": "BlindWoodStrip"
+        },
+        {
+            "mesh": "models/Mesh102.obj",
+            "material": "BlindMaterial"
+        },
+        {
+            "mesh": "models/Mesh058.obj",
+            "material": "BlindMaterial"
+        },
+        {
+            "mesh": "models/Mesh030.obj",
+            "material": "Steel"
+        },
+        {
+            "mesh": "models/Mesh028.obj",
+            "material": "BlackRaughtIron"
+        },
+        {
+            "mesh": "models/Mesh027.obj",
+            "material": "BlackRaughtIron"
+        },
+        {
+            "mesh": "models/Mesh026.obj",
+            "material": "Steel"
+        },
+        {
+            "mesh": "models/Mesh097.obj",
+            "material": "BlackRaughtIron"
+        },
+        {
+            "mesh": "models/Mesh035.obj",
+            "material": "BlackRaughtIron"
+        },
+        {
+            "mesh": "models/Mesh024.obj",
+            "material": "BlackRaughtIron"
+        },
+        {
+            "mesh": "models/Mesh023.obj",
+            "material": "BlackRaughtIron"
+        },
+        {
+            "mesh": "models/Mesh089.obj",
+            "material": "BlackRaughtIron"
+        },
+        {
+            "mesh": "models/Mesh022.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh137.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh121.obj",
+            "material": "BlackMarble"
+        },
+        {
+            "mesh": "models/Mesh021.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh115.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh120.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh020.obj",
+            "material": "Walls"
+        },
+        {
+            "mesh": "models/Mesh019.obj",
+            "material": "Floor"
+        },
+        {
+            "mesh": "models/Mesh017.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh016.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh015.obj",
+            "material": "Walls"
+        },
+        {
+            "mesh": "models/Mesh119.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh014.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh151.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh013.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh111.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh101.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh011.obj",
+            "material": "Socket"
+        },
+        {
+            "mesh": "models/Mesh053.obj",
+            "material": "Socket"
+        },
+        {
+            "mesh": "models/Mesh010.obj",
+            "material": "SofaLeather"
+        },
+        {
+            "mesh": "models/Mesh082.obj",
+            "material": "SofaLeather"
+        },
+        {
+            "mesh": "models/Mesh086.obj",
+            "material": "SofaLeather"
+        },
+        {
+            "mesh": "models/Mesh134.obj",
+            "material": "SofaLeather"
+        },
+        {
+            "mesh": "models/Mesh057.obj",
+            "material": "SofaLeather"
+        },
+        {
+            "mesh": "models/Mesh081.obj",
+            "material": "SofaLeather"
+        },
+        {
+            "mesh": "models/Mesh114.obj",
+            "material": "Cushion1"
+        },
+        {
+            "mesh": "models/Mesh008.obj",
+            "material": "Carpet"
+        },
+        {
+            "mesh": "models/Mesh158.obj",
+            "material": "Table"
+        },
+        {
+            "mesh": "models/Mesh174.obj",
+            "material": "DrawerHandles"
+        },
+        {
+            "mesh": "models/Mesh079.obj",
+            "material": "TableLegs"
+        },
+        {
+            "mesh": "models/Mesh007.obj",
+            "material": "Table"
+        },
+        {
+            "mesh": "models/Mesh006.obj",
+            "material": "RadiatorBase"
+        },
+        {
+            "mesh": "models/Mesh005.obj",
+            "material": "RadiatorBase"
+        },
+        {
+            "mesh": "models/Mesh032.obj",
+            "material": "RadiatorKnobOuter"
+        },
+        {
+            "mesh": "models/Mesh025.obj",
+            "material": "RadiatorKnobCentre"
+        },
+        {
+            "mesh": "models/Mesh168.obj",
+            "material": "RadiatorPanelsEnamel"
+        },
+        {
+            "mesh": "models/Mesh146.obj",
+            "material": "RadiatorPanelsEnamel"
+        },
+        {
+            "mesh": "models/Mesh049.obj",
+            "material": "RadiatorPanelsEnamel"
+        },
+        {
+            "mesh": "models/Mesh040.obj",
+            "material": "RadiatorPanelsEnamel"
+        },
+        {
+            "mesh": "models/Mesh130.obj",
+            "material": "RadiatorPanelsEnamel"
+        },
+        {
+            "mesh": "models/Mesh075.obj",
+            "material": "RadiatorPanelsEnamel"
+        },
+        {
+            "mesh": "models/Mesh164.obj",
+            "material": "RadiatorPanelsEnamel"
+        },
+        {
+            "mesh": "models/Mesh044.obj",
+            "material": "RadiatorPanelsEnamel"
+        },
+        {
+            "mesh": "models/Mesh004.obj",
+            "material": "Dishes"
+        },
+        {
+            "mesh": "models/Mesh003.obj",
+            "material": "Dishes"
+        },
+        {
+            "mesh": "models/Mesh061.obj",
+            "material": "DullSteel"
+        },
+        {
+            "mesh": "models/Mesh002.obj",
+            "material": "Ceramic"
+        },
+        {
+            "mesh": "models/Mesh051.obj",
+            "material": "Ceramic"
+        },
+        {
+            "mesh": "models/Mesh123.obj",
+            "material": "RadioHandle"
+        },
+        {
+            "mesh": "models/Mesh178.obj",
+            "material": "RadioPlastic"
+        },
+        {
+            "mesh": "models/Mesh084.obj",
+            "material": "BushLogo"
+        },
+        {
+            "mesh": "models/Mesh012.obj",
+            "material": "BushLogo"
+        },
+        {
+            "mesh": "models/Mesh001.obj",
+            "material": "RadioDialLine"
+        },
+        {
+            "mesh": "models/Mesh018.obj",
+            "material": "RadioDialBack"
+        },
+        {
+            "mesh": "models/Mesh000.obj",
+            "material": "RadioDialRed"
+        },
+        {
+            "mesh": "models/Mesh074.obj",
+            "material": "RadioMetalRing"
+        },
+        {
+            "mesh": "models/Mesh106.obj",
+            "material": "RadioGlass"
+        },
+        {
+            "mesh": "models/Mesh029.obj",
+            "material": "RadioPlastic"
+        },
+        {
+            "mesh": "models/Mesh163.obj",
+            "material": "RadioPlastic"
+        },
+        {
+            "mesh": "models/Mesh154.obj",
+            "material": "ChromeHandle"
+        },
+        {
+            "mesh": "models/Mesh060.obj",
+            "material": "RadioPlastic"
+        },
+        {
+            "mesh": "models/Mesh048.obj",
+            "material": "RadioInside"
+        },
+        {
+            "mesh": "models/Mesh009.obj",
+            "material": "RadioKnob"
+        },
+        {
+            "mesh": "models/Mesh093.obj",
+            "material": "RadioSurround"
+        },
+        {
+            "mesh": "models/Mesh133.obj",
+            "material": "RadioEdges"
+        },
+        {
+            "mesh": "models/Mesh142.obj",
+            "material": "RadioEdges"
+        },
+        {
+            "mesh": "models/mesh_0.obj",
+            "material": "Walls"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "models/mesh_1.obj",
+            "material": "Light",
+            "radiance": [ 13.748016, 13.748016, 13.748016 ]
+        },
+        {
+            "mesh": "models/mesh_2.obj",
+            "material": "Light",
+            "radiance": [ 17.776966, 17.776966, 17.776966 ]
+        },
+        {
+            "mesh": "models/mesh_3.obj",
+            "material": "Light",
+            "radiance": [ 17.776966, 17.776966, 17.776966 ]
+        },
+        {
+            "mesh": "models/mesh_4.obj",
+            "material": "Light",
+            "radiance": [ 1.080590, 1.080590, 1.080590 ]
+        }
+    ]
+}

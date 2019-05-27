@@ -1,0 +1,366 @@
+{
+    "screen_width": 960,
+    "screen_height": 540,
+    "maxDepth": 10,
+    "camera": {
+        "position": [ 15.560000, -4.790000, 4.370000 ],
+        "lookat": [ 1.150000, 2.280000, 1.760000 ],
+        "up": [ 0.000000, 0.000000, 1.000000 ],
+        "fov": 70.000000
+    },
+    "material": [
+        {
+            "name": "Material__0",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.047059, 0.047059, 0.047059 ]
+        },
+        {
+            "name": "mesh0_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.639216, 0.600000, 0.607843 ]
+        },
+        {
+            "name": "mesh10_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.600000, 0.600000, 0.600000 ]
+        },
+        {
+            "name": "mesh11_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.117647, 0.258824, 0.149020 ]
+        },
+        {
+            "name": "mesh12_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.427451, 0.427451, 0.427451 ]
+        },
+        {
+            "name": "mesh13_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.517647, 0.447059, 0.337255 ]
+        },
+        {
+            "name": "mesh15_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.447059, 0.447059, 0.447059 ]
+        },
+        {
+            "name": "mesh16_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.625767, 0.625767, 0.625767 ]
+        },
+        {
+            "name": "mesh17_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.498039, 0.498039, 0.498039 ]
+        },
+        {
+            "name": "mesh18_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.400000, 0.400000, 0.400000 ]
+        },
+        {
+            "name": "mesh19_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.745424, 0.608985, 0.489185 ]
+        },
+        {
+            "name": "mesh1_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.639216, 0.400000, 0.129412 ]
+        },
+        {
+            "name": "mesh20_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.733913, 0.619130, 0.379130 ]
+        },
+        {
+            "name": "mesh21_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.286275, 0.149020, 0.129412 ]
+        },
+        {
+            "name": "mesh22_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.078431, 0.078431, 0.078431 ]
+        },
+        {
+            "name": "mesh23_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.732049, 0.077058, 0.059545 ]
+        },
+        {
+            "name": "mesh24_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.466579, 0.466579, 0.466579 ]
+        },
+        {
+            "name": "mesh25_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.461538, 0.461538, 0.461538 ]
+        },
+        {
+            "name": "mesh26_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.098039, 0.098039, 0.098039 ]
+        },
+        {
+            "name": "mesh27_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.466667, 0.447059, 0.427451 ]
+        },
+        {
+            "name": "mesh28_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.639216, 0.439216, 0.317647 ]
+        },
+        {
+            "name": "mesh29_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.769231, 0.769231, 0.769231 ]
+        },
+        {
+            "name": "mesh2_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.737255, 0.400000, 0.156863 ]
+        },
+        {
+            "name": "mesh30_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.058824, 0.058824, 0.058824 ]
+        },
+        {
+            "name": "mesh31_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.764977, 0.138249, 0.132104 ]
+        },
+        {
+            "name": "mesh32_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.461538, 0.461538, 0.461538 ]
+        },
+        {
+            "name": "mesh33_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.478431, 0.239216, 0.117647 ]
+        },
+        {
+            "name": "mesh34_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.047059, 0.047059, 0.047059 ]
+        },
+        {
+            "name": "mesh35_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.600000, 0.600000, 0.600000 ]
+        },
+        {
+            "name": "mesh4_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.176471, 0.058824, 0.058824 ]
+        },
+        {
+            "name": "mesh5_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.749591, 0.749591, 0.749591 ]
+        },
+        {
+            "name": "mesh6_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.066667, 0.066667, 0.066667 ]
+        },
+        {
+            "name": "mesh7_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.698039, 0.698039, 0.698039 ]
+        },
+        {
+            "name": "mesh8_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.686275, 0.427451, 0.168627 ]
+        },
+        {
+            "name": "mesh9_SG",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.467097, 0.467097, 0.467097 ]
+        },
+        {
+            "name": "white",
+            "bsdf": "lambertian",
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "geometry/mesh_0.obj",
+            "material": "mesh27_SG"
+        },
+        {
+            "mesh": "geometry/mesh_1.obj",
+            "material": "Material__0"
+        },
+        {
+            "mesh": "geometry/mesh_2.obj",
+            "material": "Material__0"
+        },
+        {
+            "mesh": "geometry/mesh_3.obj",
+            "material": "mesh26_SG"
+        },
+        {
+            "mesh": "geometry/mesh_4.obj",
+            "material": "mesh25_SG"
+        },
+        {
+            "mesh": "geometry/mesh_5.obj",
+            "material": "mesh16_SG"
+        },
+        {
+            "mesh": "geometry/mesh_6.obj",
+            "material": "mesh35_SG"
+        },
+        {
+            "mesh": "geometry/mesh_7.obj",
+            "material": "mesh34_SG"
+        },
+        {
+            "mesh": "geometry/mesh_8.obj",
+            "material": "mesh34_SG"
+        },
+        {
+            "mesh": "geometry/mesh_9.obj",
+            "material": "mesh33_SG"
+        },
+        {
+            "mesh": "geometry/mesh_10.obj",
+            "material": "mesh33_SG"
+        },
+        {
+            "mesh": "geometry/mesh_11.obj",
+            "material": "mesh33_SG"
+        },
+        {
+            "mesh": "geometry/mesh_12.obj",
+            "material": "mesh32_SG"
+        },
+        {
+            "mesh": "geometry/mesh_13.obj",
+            "material": "mesh31_SG"
+        },
+        {
+            "mesh": "geometry/mesh_14.obj",
+            "material": "mesh30_SG"
+        },
+        {
+            "mesh": "geometry/mesh_15.obj",
+            "material": "mesh29_SG"
+        },
+        {
+            "mesh": "geometry/mesh_16.obj",
+            "material": "mesh28_SG"
+        },
+        {
+            "mesh": "geometry/mesh_17.obj",
+            "material": "mesh25_SG"
+        },
+        {
+            "mesh": "geometry/mesh_18.obj",
+            "material": "mesh24_SG"
+        },
+        {
+            "mesh": "geometry/mesh_19.obj",
+            "material": "mesh23_SG"
+        },
+        {
+            "mesh": "geometry/mesh_20.obj",
+            "material": "mesh22_SG"
+        },
+        {
+            "mesh": "geometry/mesh_21.obj",
+            "material": "mesh21_SG"
+        },
+        {
+            "mesh": "geometry/mesh_22.obj",
+            "material": "mesh20_SG"
+        },
+        {
+            "mesh": "geometry/mesh_23.obj",
+            "material": "mesh19_SG"
+        },
+        {
+            "mesh": "geometry/mesh_24.obj",
+            "material": "mesh18_SG"
+        },
+        {
+            "mesh": "geometry/mesh_25.obj",
+            "material": "mesh17_SG"
+        },
+        {
+            "mesh": "geometry/mesh_26.obj",
+            "material": "mesh16_SG"
+        },
+        {
+            "mesh": "geometry/mesh_27.obj",
+            "material": "mesh15_SG"
+        },
+        {
+            "mesh": "geometry/mesh_28.obj",
+            "material": "mesh13_SG"
+        },
+        {
+            "mesh": "geometry/mesh_29.obj",
+            "material": "mesh12_SG"
+        },
+        {
+            "mesh": "geometry/mesh_30.obj",
+            "material": "mesh11_SG"
+        },
+        {
+            "mesh": "geometry/mesh_31.obj",
+            "material": "mesh10_SG"
+        },
+        {
+            "mesh": "geometry/mesh_32.obj",
+            "material": "mesh9_SG"
+        },
+        {
+            "mesh": "geometry/mesh_33.obj",
+            "material": "mesh8_SG"
+        },
+        {
+            "mesh": "geometry/mesh_34.obj",
+            "material": "mesh7_SG"
+        },
+        {
+            "mesh": "geometry/mesh_35.obj",
+            "material": "mesh6_SG"
+        },
+        {
+            "mesh": "geometry/mesh_36.obj",
+            "material": "mesh5_SG"
+        },
+        {
+            "mesh": "geometry/mesh_37.obj",
+            "material": "mesh4_SG"
+        },
+        {
+            "mesh": "geometry/mesh_38.obj",
+            "material": "mesh2_SG"
+        },
+        {
+            "mesh": "geometry/mesh_39.obj",
+            "material": "mesh1_SG"
+        },
+        {
+            "mesh": "geometry/mesh_40.obj",
+            "material": "mesh0_SG"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "geometry/conference_exported_lights.obj",
+            "material": "white",
+            "radiance": [ 17.000000, 12.000000, 4.000000 ]
+        }
+    ]
+}
