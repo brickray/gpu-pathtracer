@@ -533,7 +533,7 @@ __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 
 			et = t;
 		}
 
-		float3 wh = -(ei*in + et*out);
+		float3 wh = normalize(-(ei*in + et*out));
 		float eta = ei / et, cost;
 		cosi = dot(wi, wh);
 		float sint2 = eta*eta*(1.f - cosi*cosi);
@@ -550,7 +550,7 @@ __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 
 		else{
 			float G = GGX_G(in, out, n, wh, material.roughness);
 			fr = material.specular * fresnel * D * G / (4.f * fabs(dot(in, n)) * fabs(dot(out, n)));
-			pdf = D*fabs(dot(wh, n)) / (4.f*fabs(dot(wh, in))) * fresnel;
+			pdf = fresnel * D*fabs(dot(wh, n)) / (4.f*fabs(dot(wh, in)));
 
 		}
 		break;
