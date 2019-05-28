@@ -1,0 +1,505 @@
+{
+    "screen_width": 960,
+    "screen_height": 540,
+    "maxDepth": 17,
+    "epsilon": 0.0001,
+    "camera": {
+        "position": [ 3.455579, 1.212436, 3.298965 ],
+        "lookat": [ 0.094270, 1.136988, 0.396231 ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 39.430485
+    },
+    "material": [
+        {
+            "name": "Aluminium",
+            "bsdf": "roughconduct",
+            "roughness": 0.200000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "Bedsheets",
+            "bsdf": "lambertian",
+            "diffuse": "textures/wallpaper-1.jpg"
+        },
+        {
+            "name": "Blankets",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.485435, 0.456263, 0.428075 ]
+        },
+        {
+            "name": "BookCover",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        },
+        {
+            "name": "BookPages",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.567027, 0.567027, 0.567027 ]
+        },
+        {
+            "name": "Boxes",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.483044, 0.384664, 0.301561 ]
+        },
+        {
+            "name": "Carpet",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.034499, 0.034499, 0.034499 ]
+        },
+        {
+            "name": "CurtainRod",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "DecoPlant",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.041772, 0.011306, 0.007575 ]
+        },
+        {
+            "name": "Glass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "LampEmitter",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.640000, 0.640000, 0.640000 ]
+        },
+        {
+            "name": "LampGlass",
+            "bsdf": "roughdielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000,
+            "roughness": 0.1
+        },
+        {
+            "name": "LampMetal",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "Matress",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.893289, 0.893289, 0.893289 ]
+        },
+        {
+            "name": "Mirror",
+            "bsdf": "mirror",
+            "specular": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "Painting",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.015396, 0.015396, 0.015396 ]
+        },
+        {
+            "name": "Picture",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Teapot.png"
+        },
+        {
+            "name": "PictureBacking",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.111567, 0.037068, 0.017016 ]
+        },
+        {
+            "name": "PictureFrame",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "PlasticCable",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.558543, 0.558543, 0.558543 ]
+        },
+        {
+            "name": "Rocks1",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.350827, 0.242986, 0.178830 ]
+        },
+        {
+            "name": "Rocks2",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.098964, 0.098964, 0.098964 ]
+        },
+        {
+            "name": "Rocks3",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.558544, 0.558544, 0.558544 ]
+        },
+        {
+            "name": "StainlessSmooth",
+            "bsdf": "mirror",
+            "specular": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "Vase",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "Walls",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.799999, 0.799999, 0.799999 ]
+        },
+        {
+            "name": "Walls2",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.799999, 0.799999, 0.799999 ]
+        },
+        {
+            "name": "Window",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.028173, 0.028173, 0.028173 ]
+        },
+        {
+            "name": "WoodFloor",
+            "bsdf": "substrate",
+            "roughness": 0.150000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/wood4.jpg"
+        },
+        {
+            "name": "WoodFurniture",
+            "bsdf": "substrate",
+            "roughness": 0.150000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/panel-wood-3.jpg"
+        },
+        {
+            "name": "Curtains",
+            "bsdf": "dielectric",
+            "insideIOR": 1.5,
+            "outsideIOR": 1.0
+        },
+        {
+            "name": "light",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "models/Mesh044.obj",
+            "material": "Aluminium"
+        },
+        {
+            "mesh": "models/Mesh047.obj",
+            "material": "Aluminium"
+        },
+        {
+            "mesh": "models/Mesh032.obj",
+            "material": "WoodFurniture"
+        },
+        {
+            "mesh": "models/Mesh028.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh046.obj",
+            "material": "Aluminium"
+        },
+        {
+            "mesh": "models/Mesh027.obj",
+            "material": "Aluminium"
+        },
+        {
+            "mesh": "models/Mesh022.obj",
+            "material": "Aluminium"
+        },
+        {
+            "mesh": "models/Mesh042.obj",
+            "material": "Aluminium"
+        },
+        {
+            "mesh": "models/Mesh036.obj",
+            "material": "Aluminium"
+        },
+        {
+            "mesh": "models/Mesh043.obj",
+            "material": "Aluminium"
+        },
+        {
+            "mesh": "models/Mesh040.obj",
+            "material": "Aluminium"
+        },
+        {
+            "mesh": "models/Mesh037.obj",
+            "material": "LampGlass"
+        },
+        {
+            "mesh": "models/Mesh026.obj",
+            "material": "LampGlass"
+        },
+        {
+            "mesh": "models/Mesh023.obj",
+            "material": "LampMetal"
+        },
+        {
+            "mesh": "models/Mesh059.obj",
+            "material": "LampEmitter"
+        },
+        {
+            "mesh": "models/Mesh049.obj",
+            "material": "LampGlass"
+        },
+        {
+            "mesh": "models/Mesh060.obj",
+            "material": "WoodFloor"
+        },
+        {
+            "mesh": "models/Mesh033.obj",
+            "material": "DecoPlant"
+        },
+        {
+            "mesh": "models/Mesh025.obj",
+            "material": "Rocks1"
+        },
+        {
+            "mesh": "models/Mesh055.obj",
+            "material": "Rocks2"
+        },
+        {
+            "mesh": "models/Mesh035.obj",
+            "material": "Rocks3"
+        },
+        {
+            "mesh": "models/Mesh048.obj",
+            "material": "LampGlass"
+        },
+        {
+            "mesh": "models/Mesh056.obj",
+            "material": "LampMetal"
+        },
+        {
+            "mesh": "models/Mesh058.obj",
+            "material": "PlasticCable"
+        },
+        {
+            "mesh": "models/Mesh061.obj",
+            "material": "LampEmitter"
+        },
+        {
+            "mesh": "models/Mesh051.obj",
+            "material": "LampGlass"
+        },
+        {
+            "mesh": "models/Mesh066.obj",
+            "material": "LampMetal"
+        },
+        {
+            "mesh": "models/Mesh062.obj",
+            "material": "PlasticCable"
+        },
+        {
+            "mesh": "models/Mesh054.obj",
+            "material": "LampEmitter"
+        },
+        {
+            "mesh": "models/Mesh063.obj",
+            "material": "BookCover"
+        },
+        {
+            "mesh": "models/Mesh064.obj",
+            "material": "BookPages"
+        },
+        {
+            "mesh": "models/Mesh041.obj",
+            "material": "Bedsheets"
+        },
+        {
+            "mesh": "models/Mesh052.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh065.obj",
+            "material": "Vase"
+        },
+        {
+            "mesh": "models/Mesh067.obj",
+            "material": "Vase"
+        },
+        {
+            "mesh": "models/Mesh068.obj",
+            "material": "Bedsheets"
+        },
+        {
+            "mesh": "models/Mesh034.obj",
+            "material": "Bedsheets"
+        },
+        {
+            "mesh": "models/Mesh021.obj",
+            "material": "Matress"
+        },
+        {
+            "mesh": "models/Mesh020.obj",
+            "material": "Carpet",
+            "translate": [
+                -0.4418520927429199,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": "models/Mesh019.obj",
+            "material": "Carpet",
+            "translate": [
+                -0.4418520927429199,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": "models/Mesh018.obj",
+            "material": "Painting",
+            "translate": [
+                -0.10999999940395355,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": "models/Mesh017.obj",
+            "material": "Painting",
+            "translate": [
+                -0.2358992099761963,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "mesh": "models/Mesh015.obj",
+            "material": "CurtainRod"
+        },
+        {
+            "mesh": "models/Mesh014.obj",
+            "material": "CurtainRod"
+        },
+        {
+            "mesh": "models/Mesh012.obj",
+            "material": "WoodFurniture"
+        },
+        {
+            "mesh": "models/Mesh011.obj",
+            "material": "Mirror"
+        },
+        {
+            "mesh": "models/Mesh013.obj",
+            "material": "Walls"
+        },
+        {
+            "mesh": "models/Mesh039.obj",
+            "material": "Window"
+        },
+        {
+            "mesh": "models/Mesh010.obj",
+            "material": "Window"
+        },
+        {
+            "mesh": "models/Mesh031.obj",
+            "material": "WoodFurniture"
+        },
+        {
+            "mesh": "models/Mesh045.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh038.obj",
+            "material": "Mirror"
+        },
+        {
+            "mesh": "models/Mesh009.obj",
+            "material": "WoodFurniture"
+        },
+        {
+            "mesh": "models/Mesh024.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh030.obj",
+            "material": "WoodFurniture"
+        },
+        {
+            "mesh": "models/Mesh029.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh008.obj",
+            "material": "Walls2"
+        },
+        {
+            "mesh": "models/Mesh007.obj",
+            "material": "WoodFurniture"
+        },
+        {
+            "mesh": "models/Mesh006.obj",
+            "material": "WoodFurniture"
+        },
+        {
+            "mesh": "models/Mesh005.obj",
+            "material": "StainlessSmooth"
+        },
+        {
+            "mesh": "models/Mesh050.obj",
+            "material": "PictureFrame"
+        },
+        {
+            "mesh": "models/Mesh053.obj",
+            "material": "PictureBacking"
+        },
+        {
+            "mesh": "models/Mesh003.obj",
+            "material": "Picture"
+        },
+        {
+            "mesh": "models/Mesh002.obj",
+            "material": "Boxes"
+        },
+        {
+            "mesh": "models/Mesh016.obj",
+            "material": "Blankets"
+        },
+        {
+            "mesh": "models/Mesh001.obj",
+            "material": "Blankets"
+        },
+        {
+            "mesh": "models/Mesh000.obj",
+            "material": "Blankets"
+        },
+        {
+            "mesh": "models/Mesh018.obj",
+            "material": "Painting",
+            "translate": [
+            -1.1020985841751099,
+            0.09580427408218384,
+            0.0
+        ]
+        }
+    ],
+    "light": [
+        {
+            "mesh": "models/mesh_0.obj",
+            "material": "light",
+            "radiance": [ 16.464800, 16.464800, 16.464800 ]
+        },
+        {
+            "mesh": "models/mesh_1.obj",
+            "material": "light",
+            "radiance": [ 16.464800, 16.464800, 16.464800 ]
+        }
+    ]
+}
