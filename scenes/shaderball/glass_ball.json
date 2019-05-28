@@ -1,0 +1,81 @@
+{
+    "screen_width": 512,
+    "screen_height": 512,
+    "maxDepth": 30,
+    "epsilon": 0.000001,
+    "camera": {
+        "position": [ -0.300000, 0.500000, -0.500000 ],
+        "lookat": [ 0.000000, 0.075000, 0.000000 ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 37.000000
+    },
+    "material": [
+        {
+            "name": "BackGround",
+            "bsdf": "lambertian",
+            "diffuse": "../../scenes/shaderball/textures/Checker.png"
+        },
+        {
+            "name": "Inner",
+            "bsdf": "roughconduct",
+            "roughness": 0.010000,
+            "eta": [ 0.143119, 0.374957, 1.442479 ],
+            "k": [ 3.983160, 2.385721, 1.603215 ],
+            "remap": true
+        },
+        {
+            "name": "LTELogo",
+            "bsdf": "roughconduct",
+            "roughness": 0.010000,
+            "eta": [ 0.143119, 0.374957, 1.442479 ],
+            "k": [ 3.983160, 2.385721, 1.603215 ],
+            "remap": true
+        },
+        {
+            "name": "Outer",
+            "bsdf": "roughdielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "roughness": 0.1,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "emitter",
+            "bsdf": "lambertian",
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "../../scenes/shaderball/models/mesh_0.obj",
+            "material": "LTELogo"
+        },
+        {
+            "mesh": "../../scenes/shaderball/models/mesh_1.obj",
+            "material": "BackGround"
+        },
+        {
+            "mesh": "../../scenes/shaderball/models/mesh_2.obj",
+            "material": "Outer"
+        },
+        {
+            "mesh": "../../scenes/shaderball/models/mesh_3.obj",
+            "material": "Outer"
+        },
+        {
+            "mesh": "../../scenes/shaderball/models/mesh_4.obj",
+            "material": "Inner"
+        },
+        {
+            "mesh": "../../scenes/shaderball/models/mesh_5.obj",
+            "material": "Inner"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "../../scenes/shaderball/models/light.obj",
+            "material": "emitter",
+            "radiance": [ 9.500000, 9.500000, 9.500000 ]
+        }
+    ]
+}

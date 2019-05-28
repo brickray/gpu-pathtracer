@@ -1,0 +1,188 @@
+{
+    "screen_width": 800,
+    "screen_height": 800,
+    "maxDepth": 17,
+    "camera": {
+        "position": [ 6.911819, 1.651628, 2.554137 ],
+        "lookat": [ 2.328019, 1.651628, 0.336405 ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 70.000000
+    },
+    "material": [
+        {
+            "name": "Chrome",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 4.369683, 2.916703, 1.654701 ],
+            "k": [ 5.206434, 4.231365, 3.754947 ]
+        },
+        {
+            "name": "FloorTiles",
+            "bsdf": "substrate",
+            "roughness": 0.010000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/Tiles.jpg"
+        },
+        {
+            "name": "Glass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "Metal",
+            "bsdf": "roughconduct",
+            "roughness": 0.100000,
+            "eta": [ 1.657460, 0.880369, 0.521229 ],
+            "k": [ 9.223869, 6.269523, 4.837001 ]
+        },
+        {
+            "name": "SpotHolder",
+            "bsdf": "lambertian",
+            "diffuse": [ 1.000000, 1.000000, 1.000000 ]
+        },
+        {
+            "name": "Wall",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.893289, 0.893289, 0.893289 ]
+        },
+        {
+            "name": "Wallpaper",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Wallpaper.jpg"
+        },
+        {
+            "name": "Wood",
+            "bsdf": "substrate",
+            "roughness": 0.100000,
+            "specular": [ 0.04, 0.04, 0.04 ],
+            "diffuse": "textures/wood5.jpg"
+        },
+        {
+            "name": "light",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000000, 0.000000, 0.000000 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "models/Mesh008.obj",
+            "material": "SpotHolder"
+        },
+        {
+            "mesh": "models/Mesh004.obj",
+            "material": "SpotHolder"
+        },
+        {
+            "mesh": "models/Mesh003.obj",
+            "material": "SpotHolder"
+        },
+        {
+            "mesh": "models/Mesh006.obj",
+            "material": "SpotHolder"
+        },
+        {
+            "mesh": "models/Mesh012.obj",
+            "material": "Wall"
+        },
+        {
+            "mesh": "models/Mesh013.obj",
+            "material": "SpotHolder"
+        },
+        {
+            "mesh": "models/Mesh010.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh015.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh002.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh007.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh005.obj",
+            "material": "Metal"
+        },
+        {
+            "mesh": "models/Mesh016.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh017.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh018.obj",
+            "material": "Wallpaper"
+        },
+        {
+            "mesh": "models/Mesh011.obj",
+            "material": "FloorTiles"
+        },
+        {
+            "mesh": "models/Mesh014.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh001.obj",
+            "material": "Wood"
+        },
+        {
+            "mesh": "models/Mesh000.obj",
+            "material": "Wall"
+        },
+        {
+            "mesh": "models/Mesh009.obj",
+            "material": "Wall"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "models/mesh_0.obj",
+            "material": "light",
+            "radiance": [ 1.500000, 1.500000, 1.500000 ]
+        },
+        {
+            "mesh": "models/mesh_1.obj",
+            "material": "light",
+            "radiance": [ 1.500000, 1.500000, 1.500000 ]
+        },
+        {
+            "mesh": "models/mesh_2.obj",
+            "material": "light",
+            "radiance": [ 1.500000, 1.500000, 1.500000 ]
+        },
+        {
+            "mesh": "models/mesh_3.obj",
+            "material": "light",
+            "radiance": [ 1.500000, 1.500000, 1.500000 ]
+        },
+        {
+            "mesh": "models/mesh_4.obj",
+            "material": "light",
+            "radiance": [ 1.598913, 1.598913, 1.598913 ]
+        },
+        {
+            "mesh": "models/mesh_5.obj",
+            "material": "light",
+            "radiance": [ 4.575005, 3.590758, 1.549771 ]
+        },
+        {
+            "mesh": "models/mesh_6.obj",
+            "material": "light",
+            "radiance": [ 4.575005, 3.590758, 1.549771 ]
+        },
+        {
+            "mesh": "models/mesh_7.obj",
+            "material": "light",
+            "radiance": [ 3.265813, 3.265813, 3.265813 ]
+        }
+    ]
+}
