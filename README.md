@@ -9,7 +9,7 @@ physically based path tracer on gpu
 ----
 
 - 路径追踪器
-- 材质(lambertian mirror dielectric metal substrate)
+- 材质(lambertian mirror dielectric roughdielectric roughconduct substrate)
 - 面积光源
 - 多重重要性采样
 - 景深
@@ -25,7 +25,8 @@ physically based path tracer on gpu
 
 图集
 ---
-![glass_of_water](result/glass_of_water.png)
+![glass_of_water](result/glass_of_water.png) 
+![roughdielectric](result/rough_ball.png)
 ![staircase](result/staircase.png)
 ![bathroom](result/bathroom.png)
 ![bathroom2](result/bathroom2.png)
