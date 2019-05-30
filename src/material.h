@@ -17,7 +17,7 @@ enum MaterialType{
 class Material{
 public:
 	MaterialType type;
-	float roughness;
+	float alphaU, alphaV;
 	float insideIOR, outsideIOR;
 	float3 k, eta; //metal
 	float3 diffuse, specular;

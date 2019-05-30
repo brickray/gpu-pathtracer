@@ -11,8 +11,9 @@
 
 struct Intersection{
 	float3 pos; //hit point
-	float3 nor; //hit point's normal
-	float2 uv; //hit point's texture coordinate
+	float3 nor; //normal of hit point
+	float2 uv; //tex coord of hit point
+	float3 dpdu; //tangent 
 	int matIdx; //index of bsdf
 //	int bssrdf; //index of bssrdf
 	int lightIdx;
@@ -27,6 +28,7 @@ struct Vertex{
 	float3 v;
 	float3 n;
 	float2 uv;
+	float3 t;
 };
 
 class Triangle{
@@ -87,6 +89,7 @@ public:
 			isect->uv = v1.uv*(1.f - b1 - b2) + v2.uv*b1 + v3.uv*b2;
 			isect->matIdx = matIdx;
 			isect->lightIdx = lightIdx;
+			isect->dpdu = normalize(v1.t * (1.f - b1 - b2) + v2.t*b1 + v3.t*b2);
 			//isect->bssrdf = bssrdf;
 			//isect->mediumInside = mediumInside;
 			//isect->mediumOutside = mediumOutside;
@@ -120,6 +123,7 @@ public:
 private:
 	void processNode(aiNode* node, const aiScene* scene, mat4& trs);
 	void processMesh(aiMesh* aimesh, const aiScene* scene, mat4& trs);
+	float3 genTangent(int idx1, int idx2, int idx3);
 };
 
 

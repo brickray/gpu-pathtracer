@@ -24,7 +24,7 @@
         {
             "name": "BlackRaughtIron",
             "bsdf": "roughconduct",
-            "roughness": 0.400000,
+            "alpha": 0.400000,
             "eta": [ 4.370703, 3.300297, 2.998267 ],
             "k": [ 3.500678, 2.604865, 2.273193 ]
         },
@@ -61,7 +61,7 @@
         {
             "name": "BushLogo",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -90,14 +90,14 @@
         {
             "name": "Ceramic",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 1.000000, 1.000000, 1.000000 ]
         },
         {
             "name": "ChromeHandle",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -119,35 +119,35 @@
         {
             "name": "Dishes",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.578596, 0.578596, 0.578596 ]
         },
         {
             "name": "DrawerHandles",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
         {
             "name": "DullSteel",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
         {
             "name": "Floor",
             "bsdf": "substrate",
-            "roughness": 0.150000,
+            "alpha": 0.150000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/wood4.jpg"
         },
         {
             "name": "LampStand",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.578596, 0.578596, 0.578596 ]
         },
@@ -204,7 +204,7 @@
         {
             "name": "RadiatorBase",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 1.000000, 1.000000, 1.000000 ]
         },
@@ -216,14 +216,14 @@
         {
             "name": "RadiatorKnobOuter",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ -0.048523, 4.142755, 4.669769 ],
             "k": [ -0.036374, 0.093767, 1.300739 ]
         },
         {
             "name": "RadiatorPanelsEnamel",
             "bsdf": "substrate",
-            "roughness": 0.150000,
+            "alpha": 0.150000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.793110, 0.793110, 0.793110 ]
         },
@@ -245,14 +245,14 @@
         {
             "name": "RadioEdges",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
         {
             "name": "RadioGlass",
             "bsdf": "substrate",
-            "roughness": 0.150000,
+            "alpha": 0.150000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.000000, 0.000000, 0.000000 ]
         },
@@ -279,7 +279,7 @@
         {
             "name": "RadioPlastic",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.640000, 0.600153, 0.434490 ]
         },
@@ -321,7 +321,7 @@
         {
             "name": "SofaLeather",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.793110, 0.793110, 0.793110 ]
         },
@@ -333,7 +333,7 @@
         {
             "name": "Table",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 1.000000, 1.000000, 1.000000 ]
         },
@@ -352,7 +352,7 @@
         {
             "name": "TvScreen",
             "bsdf": "substrate",
-            "roughness": 0.150000,
+            "alpha": 0.150000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.000000, 0.000000, 0.000000 ]
         },
@@ -364,7 +364,7 @@
         {
             "name": "WhitePaint",
             "bsdf": "substrate",
-            "roughness": 0.150000,
+            "alpha": 0.150000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 1.000000, 1.000000, 1.000000 ]
         }

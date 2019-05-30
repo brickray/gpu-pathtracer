@@ -2,6 +2,7 @@
     "screen_width": 512,
     "screen_height": 512,
     "maxDepth": 10,
+    "epsilon": 0.0005,
     "camera": {
         "position": [ -0.300000, 0.500000, -0.500000 ],
         "lookat": [ 0.000000, 0.075000, 0.000000 ],
@@ -22,7 +23,7 @@
         {
             "name": "LTELogo",
             "bsdf": "roughconduct",
-            "roughness": 0.010000,
+            "alpha": 0.010000,
             "eta": [ 0.143119, 0.374957, 1.442479 ],
             "k": [ 3.983160, 2.385721, 1.603215 ],
             "remap": true
@@ -30,7 +31,8 @@
         {
             "name": "Outer",
             "bsdf": "roughconduct",
-            "roughness": 0.002500,
+            "alphaU": 0.00250000,
+            "alphaV": 0.250000,
             "eta": [ 0.155265, 0.116723, 0.138381 ],
             "k": [ 4.828343, 3.122246, 2.146950 ],
             "remap": true

@@ -13,7 +13,7 @@
         {
             "name": "Aluminium",
             "bsdf": "roughconduct",
-            "roughness": 0.200000,
+            "alpha": 0.200000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -50,7 +50,7 @@
         {
             "name": "CurtainRod",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -77,12 +77,12 @@
             "specular": [ 1.000000, 1.000000, 1.000000 ],
             "insideIOR": 1.500000,
             "outsideIOR": 1.000000,
-            "roughness": 0.1
+            "alpha": 0.1
         },
         {
             "name": "LampMetal",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -114,7 +114,7 @@
         {
             "name": "PictureFrame",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -168,14 +168,14 @@
         {
             "name": "WoodFloor",
             "bsdf": "substrate",
-            "roughness": 0.150000,
+            "alpha": 0.150000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/wood4.jpg"
         },
         {
             "name": "WoodFurniture",
             "bsdf": "substrate",
-            "roughness": 0.150000,
+            "alpha": 0.150000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/panel-wood-3.jpg"
         },

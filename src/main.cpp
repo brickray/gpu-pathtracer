@@ -8,6 +8,7 @@
 #include <gl\glut.h>
 #include <time.h>
 #include <cuda_gl_interop.h>
+//#include <OpenImageDenoise\oidn.h>
 
 const char* title = "FuHong's GPU Pathtracer";
 
@@ -24,12 +25,46 @@ BVH bvh;
 GLuint buffer;
 cudaGraphicsResource* resource = NULL;
 
+////intel open image denoise
+////https://openimagedenoise.github.io/documentation.html
+//void Denoiser(float3* colorPtr, float3* outputPtr){
+//	OIDNDevice device = oidnNewDevice(OIDN_DEVICE_TYPE_DEFAULT);
+//	oidnCommitDevice(device);
+//
+//	// Create a denoising filter
+//	OIDNFilter filter = oidnNewFilter(device, "RT"); // generic ray tracing filter
+//	oidnSetSharedFilterImage(filter, "color", colorPtr,
+//		OIDN_FORMAT_FLOAT3, config.width, config.height, 0, 0, 0);
+//	//oidnSetSharedFilterImage(filter, "albedo", albedoPtr,
+//	//	OIDN_FORMAT_FLOAT3, width, height, 0, 0, 0); // optional
+//	//oidnSetSharedFilterImage(filter, "normal", normalPtr,
+//	//	OIDN_FORMAT_FLOAT3, width, height, 0, 0, 0); // optional
+//	oidnSetSharedFilterImage(filter, "output", outputPtr,
+//		OIDN_FORMAT_FLOAT3, config.width, config.height, 0, 0, 0);
+//	oidnSetFilter1b(filter, "hdr", false); // image is HDR
+//	oidnCommitFilter(filter);
+//
+//	// Filter the image
+//	oidnExecuteFilter(filter);
+//
+//	// Check for errors
+//	const char* errorMessage;
+//	if (oidnGetDeviceError(device, &errorMessage) != OIDN_ERROR_NONE)
+//		printf("Error: %s\n", errorMessage);
+//
+//	// Cleanup
+//	oidnReleaseFilter(filter);
+//	oidnReleaseDevice(device);
+//}
+
 void SaveImage(){
 	glReadPixels(0, 0,config.width, config.height, GL_RGB, GL_FLOAT, image);
 	char buffer[2048] = { 0 };
 	
+	vector<float3> output(config.width*config.height);
+//	Denoiser(image, &output[0]);
 	sprintf(buffer, "../result/%ds iteration %dpx-%dpx.png", iteration, config.width, config.height);
-	ImageIO::SavePng(buffer, config.width, config.height, image);
+	ImageIO::SavePng(buffer, config.width, config.height, &image[0]);
 }
 
 void InitOpengl(int argc, char**argv){
@@ -258,7 +293,7 @@ bool InitScene(string file){
 		hdrmap.isvalid = false;
 
 	Camera cam = config.camera;
-	camera = new Camera(cam.position, cam.u, cam.v, cam.w, make_float2(config.width, config.height), 0.1f, cam.fov, cam.apertureRadius, cam.focalDistance);
+	camera = new Camera(cam.position, cam.u, cam.v, cam.w, make_float2(config.width, config.height), 0.1f, cam.fov, cam.apertureRadius, cam.focalDistance, cam.filmic);
 
 	printf("Load scene using %.3fms\n", float(clock() - now));
 	printf("Triangles [%d]\n", scene.triangles.size());

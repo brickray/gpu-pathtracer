@@ -22,21 +22,21 @@
         {
             "name": "BrightPinkLeather",
             "bsdf": "substrate",
-            "roughness": 0.400000,
+            "alpha": 0.400000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.772000, 0.175000, 0.262000 ]
         },
         {
             "name": "DarkPlastic",
             "bsdf": "substrate",
-            "roughness": 0.200000,
+            "alpha": 0.200000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.010000, 0.010000, 0.010000 ]
         },
         {
             "name": "DarkRubber",
             "bsdf": "substrate",
-            "roughness": 0.400000,
+            "alpha": 0.400000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.025000, 0.025000, 0.025000 ]
         },
@@ -50,35 +50,35 @@
         {
             "name": "Leather",
             "bsdf": "substrate",
-            "roughness": 0.400000,
+            "alpha": 0.400000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.034000, 0.014000, 0.008000 ]
         },
         {
             "name": "PinkLeather",
             "bsdf": "substrate",
-            "roughness": 0.400000,
+            "alpha": 0.400000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.256000, 0.013000, 0.080000 ]
         },
         {
             "name": "RedLeather",
             "bsdf": "substrate",
-            "roughness": 0.400000,
+            "alpha": 0.400000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.163000, 0.030000, 0.037000 ]
         },
         {
             "name": "RoughAluminium",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
         {
             "name": "RoughSteel",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 2.000000, 2.000000, 2.000000 ],
             "k": [ 0.000000, 0.000000, 0.000000 ]
         }

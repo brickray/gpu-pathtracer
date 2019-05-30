@@ -42,7 +42,7 @@
         {
             "name": "BookPages",
             "bsdf": "substrate",
-            "roughness": 0.050000,
+            "alpha": 0.050000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/Kitchen-bookpage-large.jpg"
         },
@@ -54,7 +54,7 @@
         {
             "name": "BreadBinHandle",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 4.369683, 2.916703, 1.654701 ],
             "k": [ 5.206434, 4.231365, 3.754947 ]
         },
@@ -76,28 +76,28 @@
         {
             "name": "Burners",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
         {
             "name": "BurnersTop",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.006310, 0.006310, 0.006310 ]
         },
         {
             "name": "BushLogo",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
         {
             "name": "Cable",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.612066, 0.612066, 0.612066 ]
         },
@@ -114,7 +114,7 @@
         {
             "name": "CeilingLightFitting",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.578596, 0.578596, 0.578596 ]
         },
@@ -126,21 +126,21 @@
         {
             "name": "ChoppingKnifeBlade",
             "bsdf": "roughconduct",
-            "roughness": 0.020000,
+            "alpha": 0.020000,
             "eta": [ 4.369683, 2.916703, 1.654701 ],
             "k": [ 5.206434, 4.231365, 3.754947 ]
         },
         {
             "name": "ChoppingKnifeEdge",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
         {
             "name": "ChoppingKnifeHandle",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.028991, 0.028991, 0.028991 ]
         },
@@ -152,14 +152,14 @@
         {
             "name": "CookerBlack",
             "bsdf": "substrate",
-            "roughness": 0.080000,
+            "alpha": 0.080000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.015396, 0.015396, 0.015396 ]
         },
         {
             "name": "CookerChrome",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 4.369683, 2.916703, 1.654701 ],
             "k": [ 5.206434, 4.231365, 3.754947 ]
         },
@@ -173,7 +173,7 @@
         {
             "name": "CookerIron",
             "bsdf": "substrate",
-            "roughness": 0.020000,
+            "alpha": 0.020000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.001373, 0.001373, 0.001373 ]
         },
@@ -195,21 +195,21 @@
         {
             "name": "Cutlery",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 4.369683, 2.916703, 1.654701 ],
             "k": [ 5.206434, 4.231365, 3.754947 ]
         },
         {
             "name": "ExtractorHood",
             "bsdf": "roughconduct",
-            "roughness": 0.080000,
+            "alpha": 0.080000,
             "eta": [ 4.369683, 2.916703, 1.654701 ],
             "k": [ 5.206434, 4.231365, 3.754947 ]
         },
         {
             "name": "Floor",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/wood.jpg"
         },
@@ -226,28 +226,28 @@
         {
             "name": "Kettle",
             "bsdf": "roughconduct",
-            "roughness": 0.050000,
+            "alpha": 0.050000,
             "eta": [ 4.369683, 2.916703, 1.654701 ],
             "k": [ 5.206434, 4.231365, 3.754947 ]
         },
         {
             "name": "KettleGreen",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.039947, 0.141980, 0.003303 ]
         },
         {
             "name": "KettleHandle",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.006310, 0.006310, 0.006310 ]
         },
         {
             "name": "Lamp",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.541798, 0.297653, 0.052842 ]
         },
@@ -264,28 +264,28 @@
         {
             "name": "LeftPage",
             "bsdf": "substrate",
-            "roughness": 0.050000,
+            "alpha": 0.050000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/Kitchen-book-leftpage.jpg"
         },
         {
             "name": "MetalHandles",
             "bsdf": "roughconduct",
-            "roughness": 0.075000,
+            "alpha": 0.075000,
             "eta": [ 4.369683, 2.916703, 1.654701 ],
             "k": [ 5.206434, 4.231365, 3.754947 ]
         },
         {
             "name": "Microwave",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
         {
             "name": "MicrowaveBack",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -316,21 +316,21 @@
         {
             "name": "Pepper-Green",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.030257, 0.197516, 0.000000 ]
         },
         {
             "name": "Pepper-Red",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.476177, 0.000000, 0.000000 ]
         },
         {
             "name": "Pepper-Yellow",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 1.000000, 0.204710, 0.000000 ]
         },
@@ -342,14 +342,14 @@
         {
             "name": "Plates",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.578596, 0.578596, 0.578596 ]
         },
         {
             "name": "PotHandles",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.006310, 0.006310, 0.006310 ]
         },
@@ -393,7 +393,7 @@
         {
             "name": "RadioMetalRing",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 4.369683, 2.916703, 1.654701 ],
             "k": [ 5.206434, 4.231365, 3.754947 ]
         },
@@ -420,21 +420,21 @@
         {
             "name": "SmallWorktop",
             "bsdf": "substrate",
-            "roughness": 0.040000,
+            "alpha": 0.040000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/Worktopt-light.jpg"
         },
         {
             "name": "SteelPot",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
         {
             "name": "TableCross",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.612066, 0.612066, 0.612066 ]
         },
@@ -446,7 +446,7 @@
         {
             "name": "Tabletop",
             "bsdf": "substrate",
-            "roughness": 0.025000,
+            "alpha": 0.025000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/Tabletop-light.jpg"
         },
@@ -458,7 +458,7 @@
         {
             "name": "Tomatoes",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.592438, 0.000000, 0.002932 ]
         },
@@ -470,7 +470,7 @@
         {
             "name": "Utensils",
             "bsdf": "roughconduct",
-            "roughness": 0.050000,
+            "alpha": 0.050000,
             "eta": [ 4.369683, 2.916703, 1.654701 ],
             "k": [ 5.206434, 4.231365, 3.754947 ]
         },
@@ -487,7 +487,7 @@
         {
             "name": "WhitePot",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.578596, 0.578596, 0.578596 ]
         },
@@ -516,14 +516,14 @@
         {
             "name": "WoodTop",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/Tabletop-light.jpg"
         },
         {
             "name": "Worktops",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/Worktopt-light.jpg"
         },

@@ -13,14 +13,14 @@
         {
             "name": "Bathtube",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.612066, 0.612066, 0.612066 ]
         },
         {
             "name": "BlackPlastic",
             "bsdf": "substrate",
-            "roughness": 0.200000,
+            "alpha": 0.200000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.006310, 0.006310, 0.006310 ]
         },
@@ -49,7 +49,7 @@
         {
             "name": "Floor",
             "bsdf": "substrate",
-            "roughness": 0.200000,
+            "alpha": 0.200000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/floor_tiles.png"
         },
@@ -61,7 +61,7 @@
         {
             "name": "Gold",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.648469, 1.150448, 1.379779 ],
             "k": [ 3.368460, 1.943489, 1.102012 ]
         },
@@ -93,7 +93,7 @@
         {
             "name": "MetalPlate",
             "bsdf": "roughconduct",
-            "roughness": 0.050000,
+            "alpha": 0.050000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -130,7 +130,7 @@
         {
             "name": "Pots",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.006310, 0.006310, 0.006310 ]
         },
@@ -142,21 +142,21 @@
         {
             "name": "StainlessRough",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
         {
             "name": "StainlessSmooth",
             "bsdf": "roughconduct",
-            "roughness": 0.010000,
+            "alpha": 0.010000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
         {
             "name": "Vase",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.612066, 0.612066, 0.612066 ]
         },
@@ -168,7 +168,7 @@
         {
             "name": "WhiteWood",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.893289, 0.893289, 0.893289 ]
         },
@@ -180,7 +180,7 @@
         {
             "name": "Wood",
             "bsdf": "substrate",
-            "roughness": 0.150000,
+            "alpha": 0.150000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/wood.jpg"
         },

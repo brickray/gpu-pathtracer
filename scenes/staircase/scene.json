@@ -26,14 +26,14 @@
         {
             "name": "Brass",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 2.865601, 2.119182, 1.940077 ],
             "k": [ 3.032326, 2.056108, 1.616293 ]
         },
         {
             "name": "BrushedAluminium",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -50,7 +50,7 @@
         {
             "name": "Copper",
             "bsdf": "roughconduct",
-            "roughness": 0.010000,
+            "alpha": 0.010000,
             "eta": [ 0.265787, 0.195610, 0.220920 ],
             "k": [ 3.540174, 2.311131, 1.668593 ]
         },
@@ -69,7 +69,7 @@
         {
             "name": "Gold",
             "bsdf": "roughconduct",
-            "roughness": 0.010000,
+            "alpha": 0.010000,
             "eta": [ 0.143119, 0.374957, 1.442479 ],
             "k": [ 3.983160, 2.385721, 1.603215 ]
         },
@@ -86,7 +86,7 @@
         {
             "name": "MagnoliaPaint",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.578596, 0.578596, 0.578596 ]
         },
@@ -108,7 +108,7 @@
         {
             "name": "StainlessSteel",
             "bsdf": "roughconduct",
-            "roughness": 0.010000,
+            "alpha": 0.010000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -125,7 +125,7 @@
         {
             "name": "WhitePaint",
             "bsdf": "substrate",
-            "roughness": 0.200000,
+            "alpha": 0.200000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.578596, 0.578596, 0.578596 ]
         },
@@ -142,28 +142,28 @@
         {
             "name": "WoodChair",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/Wood.jpg"
         },
         {
             "name": "WoodFloor",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/WoodFloor.jpg"
         },
         {
             "name": "WoodLamp",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/WoodChair.jpg"
         },
         {
             "name": "WoodStairs",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/WoodPanel.jpg"
         }

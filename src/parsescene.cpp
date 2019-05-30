@@ -79,7 +79,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			config.camera.apertureRadius = camera.HasMember("apertureRadius") ? camera["apertureRadius"].GetDouble() : 0.f;
 			config.camera.focalDistance = camera.HasMember("focalDistance") ? camera["focalDistance"].GetDouble() : 0.f;
 			config.camera_move_speed = camera.HasMember("move_speed") ? camera["move_speed"].GetDouble() : 0.1f;
-			config.camera.filmic = doc.HasMember("filmicTonemap") ? doc["filmicTonemap"].GetBool() : true;
+			config.camera.filmic = camera.HasMember("filmicTonemap") ? camera["filmicTonemap"].GetBool() : true;
 		}
 		else{
 			fprintf(stderr, "Scene file must define camera\n");
@@ -213,7 +213,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 						exit(1);
 					}
 
-					mesh.LoadObjFromFile((base + file).c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords, trs);
+					mesh.LoadObjFromFile((base + file).c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals, trs);
 					for (int i = 0; i < mesh.triangles.size(); ++i)
 						scene.triangles.push_back(mesh.triangles[i]);
 				}

@@ -1,7 +1,7 @@
 {
     "screen_width": 960,
     "screen_height": 540,
-    "maxDepth": 65,
+    "maxDepth": 10,
     "camera": {
         "position": [ 4.443148, 16.934431, 49.910233 ],
         "lookat": [ -2.573490, 9.991770, -10.588200 ],
@@ -17,14 +17,14 @@
         {
             "name": "BlackWoodLacquer",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.050000, 0.050000, 0.050000 ]
         },
         {
             "name": "Ceramic",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.578596, 0.578596, 0.578596 ]
         },
@@ -51,7 +51,7 @@
         {
             "name": "Plastic",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.578596, 0.578596, 0.578596 ]
         },
@@ -65,7 +65,7 @@
         {
             "name": "StainlessRough",
             "bsdf": "roughconduct",
-            "roughness": 0.010000,
+            "alpha": 0.010000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -92,14 +92,14 @@
         {
             "name": "Wood",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/WoodPanel.png"
         },
         {
             "name": "WoodFloor",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/WoodFloor.jpg"
         },

@@ -73,7 +73,7 @@ __device__ inline float GGX_D(float3& wh, float3& normal, float3 dpdu, float alp
 	float costheta4 = costheta2*costheta2;
 	float tantheta2 = sintheta2 / costheta2;
 
-	float3 uu = normalize(dpdu);
+	float3 uu = dpdu;
 	float3 dir = normalize(wh - costheta*normal);
 	float cosphi = dot(dir, uu);
 	float cosphi2 = cosphi*cosphi;
@@ -89,7 +89,7 @@ __device__ inline float SmithG(float3& w, float3& normal, float3& wh, float3 dpd
 	float tantheta = sintheta / wdn;
 	if (isinf(tantheta)) return 0.f;
 
-	float3 uu = normalize(dpdu);
+	float3 uu = dpdu;
 	float3 dir = normalize(w - wdn*normal);
 	float cosphi = dot(dir, uu);
 	float cosphi2 = cosphi*cosphi;
@@ -300,7 +300,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 			n = -n;
 
 		out = CosineHemiSphere(u.x, u.y, n, pdf);
-		float3 uu = normalize(dpdu), ww;
+		float3 uu = dpdu, ww;
 		ww = cross(uu, n);
 		out = ToWorld(out, uu, n, ww);
 		fr = make_float3(GetTexel(material, uv)) * ONE_OVER_PI;
@@ -358,7 +358,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 			n = -n;
 
 		float3 wh = SampleGGX(material.alphaU, material.alphaV, u.x, u.y);
-		float3 uu = normalize(dpdu), ww;
+		float3 uu = dpdu, ww;
 		ww = cross(uu, n);
 		wh = ToWorld(wh, uu, n, ww);
 		out = 2.f*dot(in, wh)*wh - in;
@@ -386,14 +386,14 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		if (u.x < 0.5){
 			u.x *= 2.f;
 			out = CosineHemiSphere(u.x, u.y, n, pdf);
-			float3 uu = normalize(dpdu), ww;
+			float3 uu = dpdu, ww;
 			ww = cross(uu, n);
 			out = ToWorld(out, uu, n, ww);
 		}
 		else{
 			u.x = (u.x - 0.5f) * 2.f;
 			float3 wh = SampleGGX(material.alphaU, material.alphaV, u.x, u.y);
-			float3 uu = normalize(dpdu), ww;
+			float3 uu = dpdu, ww;
 			ww = cross(uu, n);
 			wh = ToWorld(wh, uu, n, ww);
 			out = 2.f * dot(wh, in) * wh - in;
@@ -427,7 +427,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		float3 wi = -in;
 		float3 n = nor;
 		float3 wh = SampleGGX(material.alphaU, material.alphaV, u.x, u.y);
-		float3 uu = normalize(dpdu), ww;
+		float3 uu = dpdu, ww;
 		ww = cross(uu, n);
 		wh = ToWorld(wh, uu, n, ww);
 

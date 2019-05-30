@@ -12,14 +12,14 @@
         {
             "name": "Chrome",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 4.369683, 2.916703, 1.654701 ],
             "k": [ 5.206434, 4.231365, 3.754947 ]
         },
         {
             "name": "FloorTiles",
             "bsdf": "substrate",
-            "roughness": 0.010000,
+            "alpha": 0.010000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/Tiles.jpg"
         },
@@ -33,7 +33,7 @@
         {
             "name": "Metal",
             "bsdf": "roughconduct",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "eta": [ 1.657460, 0.880369, 0.521229 ],
             "k": [ 9.223869, 6.269523, 4.837001 ]
         },
@@ -55,7 +55,7 @@
         {
             "name": "Wood",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": "textures/wood5.jpg"
         },

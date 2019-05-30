@@ -2,6 +2,7 @@
     "screen_width": 640,
     "screen_height": 800,
     "maxDepth": 8,
+    "epsilon": 0.0005,
     "camera": {
         "position": [ -0.002960, 0.198303, 0.828151 ],
         "lookat": [ 0.002897, 0.166609, 0.022717 ],
@@ -12,7 +13,7 @@
         {
             "name": "Floor",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.578596, 0.578596, 0.578596 ]
         },
@@ -31,14 +32,14 @@
         {
             "name": "Plastic_Black",
             "bsdf": "substrate",
-            "roughness": 0.100000,
+            "alpha": 0.100000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 0.006310, 0.006310, 0.006310 ]
         },
         {
             "name": "Plastic_Orange",
             "bsdf": "substrate",
-            "roughness": 0.001000,
+            "alpha": 0.001000,
             "specular": [ 0.04, 0.04, 0.04 ],
             "diffuse": [ 1.000000, 0.378676, 0.013473 ]
         },

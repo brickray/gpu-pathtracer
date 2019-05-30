@@ -25,10 +25,11 @@ public:
 
 	}
 	__host__ __device__ Camera(float3 pos, float3 uu, float3 vv, float3 ww,
-		float2 res, float dis, float angle, float radius, float focal)
-	:position(pos),u(uu),v(vv),w(ww)
-	,resolution(res),distance(dis),fov(angle)
-	,apertureRadius(radius),focalDistance(focal){
+		float2 res, float dis, float angle, float radius, float focal, bool filmic)
+		:position(pos), u(uu), v(vv), w(ww)
+		, resolution(res), distance(dis), fov(angle)
+		, apertureRadius(radius), focalDistance(focal)
+		, filmic(filmic) {
 		float half_fov = fov*.5f;
 		height = tanf(DegreesToRadians(half_fov))*distance;
 		width = height*resolution.x / resolution.y;
