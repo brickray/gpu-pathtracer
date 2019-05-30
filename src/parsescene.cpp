@@ -79,6 +79,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			config.camera.apertureRadius = camera.HasMember("apertureRadius") ? camera["apertureRadius"].GetDouble() : 0.f;
 			config.camera.focalDistance = camera.HasMember("focalDistance") ? camera["focalDistance"].GetDouble() : 0.f;
 			config.camera_move_speed = camera.HasMember("move_speed") ? camera["move_speed"].GetDouble() : 0.1f;
+			config.camera.filmic = doc.HasMember("filmicTonemap") ? doc["filmicTonemap"].GetBool() : true;
 		}
 		else{
 			fprintf(stderr, "Scene file must define camera\n");
@@ -118,13 +119,25 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			for (; it != mat.End(); ++it){
 				string mat_name = (*it)["name"].GetString();
 				string bsdf = (*it)["bsdf"].GetString();
-				float roughness = (*it).HasMember("roughness") ? (*it)["roughness"].GetDouble() : 0.f;
+				float alphaU, alphaV;
+				if ((*it).HasMember("alpha")){
+					alphaU = (*it)["alpha"].GetDouble();
+					alphaV = alphaU;
+				}
+				else{
+					alphaU = (*it).HasMember("alphaU") ? (*it)["alphaU"].GetDouble() : 0.01f;
+					alphaV = (*it).HasMember("alphaV") ? (*it)["alphaV"].GetDouble() : 0.01f;
+				}
 				bool remap = (*it).HasMember("remap") ? (*it)["remap"].GetBool() : false;
 				if (remap){
-					roughness = std::max(roughness, (float)1e-3);
-					float x = log(roughness);
-					roughness = 1.62142f + 0.819955f * x + 0.1734f * x * x +
-						0.0171201f * x * x * x + 0.000640711f * x * x * x * x;
+					auto Remap = [](float roughness)->float{
+						roughness = std::max(roughness, (float)1e-3);
+						float x = log(roughness);
+						return 1.62142f + 0.819955f * x + 0.1734f * x * x +
+							0.0171201f * x * x * x + 0.000640711f * x * x * x * x;
+					};
+					alphaU = Remap(alphaU);
+					alphaV = Remap(alphaV);
 				}
 				float insideIOR = (*it).HasMember("insideIOR") ? (*it)["insideIOR"].GetDouble() : 1.f;
 				float outsideIOR = (*it).HasMember("outsideIOR") ? (*it)["outsideIOR"].GetDouble() : 1.f;
@@ -151,7 +164,8 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 				}
 				Material mat;
 				mat.type = matMap[bsdf];
-				mat.roughness = roughness;
+				mat.alphaU = alphaU;
+				mat.alphaV = alphaV;
 				mat.insideIOR = insideIOR;
 				mat.outsideIOR = outsideIOR;
 				mat.k = k;
@@ -199,7 +213,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 						exit(1);
 					}
 
-					mesh.LoadObjFromFile((base + file).c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals, trs);
+					mesh.LoadObjFromFile((base + file).c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_GenUVCoords, trs);
 					for (int i = 0; i < mesh.triangles.size(); ++i)
 						scene.triangles.push_back(mesh.triangles[i]);
 				}

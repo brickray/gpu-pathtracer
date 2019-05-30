@@ -64,51 +64,76 @@ __device__ inline float3 ConductFresnel(float cosi, const float3& eta, const flo
 	return (Rparl2 + Rperp2) * 0.5f;
 }
 
-__device__ inline float GGX_D(float3& wh, float3& normal, float alpha){
+__device__ inline float GGX_D(float3& wh, float3& normal, float3 dpdu, float alphaU, float alphaV){
 	float costheta = dot(wh, normal);
-	if (costheta < 0.f)
-		return 0.f;
+	if (costheta <= 0.f) return 0.f;
 	costheta = clamp(costheta, 0.f, 1.f);
+	float costheta2 = costheta*costheta;
+	float sintheta2 = 1.f - costheta2;
+	float costheta4 = costheta2*costheta2;
+	float tantheta2 = sintheta2 / costheta2;
 
-	float theta = acosf(costheta);
-	float cos4theta = costheta*costheta*costheta*costheta;
-	float tantheta = tanf(theta);
-	if (isinf(tantheta))
-		return 0.f;
-
-	float alpha2 = alpha*alpha;
-	float sqrD = alpha2 + tantheta*tantheta;
-	return alpha2 / (PI*cos4theta*sqrD*sqrD);
+	float3 uu = normalize(dpdu);
+	float3 dir = normalize(wh - costheta*normal);
+	float cosphi = dot(dir, uu);
+	float cosphi2 = cosphi*cosphi;
+	float sinphi2 = 1.f - cosphi2;
+	float sqrD = 1.f + tantheta2*(cosphi2 / (alphaU*alphaU) + sinphi2 / (alphaV*alphaV));
+	return 1.f / (PI*alphaU*alphaV*costheta4*sqrD*sqrD);
 }
 
-__device__ inline float SmithG(float3& w, float3& normal, float3& wh, float alpha){
+__device__ inline float SmithG(float3& w, float3& normal, float3& wh, float3 dpdu, float alphaU, float alphaV){
 	float wdn = dot(w, normal);
-	if (wdn * dot(w, wh) < 0.f)
-		return 0.f;
-	float sintheta = sqrtf(Max(0, 1.f - wdn*wdn));
+	if (wdn * dot(w, wh) < 0.f)	return 0.f;
+	float sintheta = sqrtf(clamp(1.f - wdn*wdn, 0.f, 1.f));
 	float tantheta = sintheta / wdn;
-	if (isinf(tantheta))
-		return 0.f;
-	float sqrD = alpha*alpha*tantheta*tantheta;
-	return 2 / (1 + sqrtf(1 + sqrD));
+	if (isinf(tantheta)) return 0.f;
+
+	float3 uu = normalize(dpdu);
+	float3 dir = normalize(w - wdn*normal);
+	float cosphi = dot(dir, uu);
+	float cosphi2 = cosphi*cosphi;
+	float sinphi2 = 1.f - cosphi2;
+	float alpha2 = cosphi2 * (alphaU*alphaU) + sinphi2 * (alphaV*alphaV);
+	float sqrD = alpha2*tantheta*tantheta;
+	return 2.f / (1.f + sqrtf(1 + sqrD));
 }
 
-__device__ inline float GGX_G(float3& wo, float3& wi, float3& normal, float3& wh, float alpha){
-	return SmithG(wo, normal, wh, alpha)*SmithG(wi, normal, wh, alpha);
+__device__ inline float GGX_G(float3& wo, float3& wi, float3& normal, float3& wh, float3 dpdu, float alphaU, float alphaV){
+	return SmithG(wo, normal, wh, dpdu, alphaU, alphaV)*SmithG(wi, normal, wh, dpdu, alphaU, alphaV);
 }
 
-__device__ inline float3 SampleGGX(float alpha, float u1, float u2){
-	float costheta = sqrtf((1.f - u1) / (u1*(alpha*alpha - 1.f) + 1.f));
-	float sintheta = sqrtf(1.f - costheta*costheta);
-	float phi = 2 * PI*u2;
-	float cosphi = cosf(phi);
-	float sinphi = sinf(phi);
+__device__ inline float3 SampleGGX(float alphaU, float alphaV, float u1, float u2){
+	if (alphaU == alphaV){
+		float costheta = sqrtf((1.f - u1) / (u1*(alphaU*alphaV - 1.f) + 1.f));
+		float sintheta = sqrtf(1.f - costheta*costheta);
+		float phi = 2 * PI*u2;
+		float cosphi = cosf(phi);
+		float sinphi = sinf(phi);
 
-	return{
-		sintheta*cosphi,
-		costheta,
-		sintheta*sinphi
-	};
+		return{
+			sintheta*cosphi,
+			costheta,
+			sintheta*sinphi
+		};
+	}
+	else{
+		float phi;
+		if (u2 <= 0.25) phi = atan(alphaV / alphaU*tan(TWOPI*u2));
+		else if (u2 >= 0.75f) phi = atan(alphaV / alphaU*tan(TWOPI*u2)) + TWOPI;
+		else phi = atan(alphaV / alphaU*tan(TWOPI*u2)) + PI;
+		float sinphi = sin(phi), cosphi = cos(phi);
+		float sinphi2 = sinphi * sinphi;
+		float cosphi2 = 1.0f - sinphi2;
+		float inverseA = 1.0f / (cosphi2 / (alphaU*alphaU) + sinphi2 / (alphaV*alphaV));
+		float theta = atan(sqrt(inverseA * u1 / (1.0f - u1)));
+		float sintheta = sin(theta), costheta = cos(theta);
+		return{
+			sintheta*cosphi,
+			costheta,
+			sintheta*sinphi
+		};
+	}
 }
 
 __device__ inline float3 SchlickFresnel(float3 specular, float costheta){
@@ -267,7 +292,7 @@ __device__ inline float4 GetTexel(Material material, float2 uv){
 		+ dy*((1 - dx)*c01 + dx*c11);
 }
 
-__device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, float3 u, float3& out, float3& fr, float& pdf){
+__device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, float3 dpdu, float3 u, float3& out, float3& fr, float& pdf){
 	switch(material.type){
 	case MT_LAMBERTIAN:{
 		float3 n = nor;
@@ -275,6 +300,9 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 			n = -n;
 
 		out = CosineHemiSphere(u.x, u.y, n, pdf);
+		float3 uu = normalize(dpdu), ww;
+		ww = cross(uu, n);
+		out = ToWorld(out, uu, n, ww);
 		fr = make_float3(GetTexel(material, uv)) * ONE_OVER_PI;
 		break;
 	}
@@ -329,10 +357,10 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		if (dot(nor, in) < 0)
 			n = -n;
 
-		float3 wh = SampleGGX(material.roughness, u.x, u.y);
-		float3 uu, ww;
-		MakeCoordinate(n, uu, ww);
-		wh = uu*wh.x + n*wh.y + ww*wh.z;
+		float3 wh = SampleGGX(material.alphaU, material.alphaV, u.x, u.y);
+		float3 uu = normalize(dpdu), ww;
+		ww = cross(uu, n);
+		wh = ToWorld(wh, uu, n, ww);
 		out = 2.f*dot(in, wh)*wh - in;
 		if (!SameHemiSphere(in, out, nor)){
 			fr = { 0, 0, 0 };
@@ -342,8 +370,8 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 
 		float cosi = dot(out, wh);
 		float3 F = ConductFresnel(fabs(cosi), material.eta, material.k);
-		float D = GGX_D(wh, n, material.roughness);
-		float G = GGX_G(in, out, n, wh, material.roughness);
+		float D = GGX_D(wh, n, dpdu, material.alphaU, material.alphaV);
+		float G = GGX_G(in, out, n, wh, dpdu, material.alphaU, material.alphaV);
 
 		fr = material.specular * F * D * G /
 			(4.f * fabs(dot(in, n))*fabs(dot(out, n)));
@@ -358,13 +386,16 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		if (u.x < 0.5){
 			u.x *= 2.f;
 			out = CosineHemiSphere(u.x, u.y, n, pdf);
+			float3 uu = normalize(dpdu), ww;
+			ww = cross(uu, n);
+			out = ToWorld(out, uu, n, ww);
 		}
 		else{
 			u.x = (u.x - 0.5f) * 2.f;
-			float3 wh = SampleGGX(material.roughness, u.x, u.y);
-			float3 uu, ww;
-			MakeCoordinate(n, uu, ww);
-			wh = uu*wh.x + n*wh.y + ww*wh.z;
+			float3 wh = SampleGGX(material.alphaU, material.alphaV, u.x, u.y);
+			float3 uu = normalize(dpdu), ww;
+			ww = cross(uu, n);
+			wh = ToWorld(wh, uu, n, ww);
 			out = 2.f * dot(wh, in) * wh - in;
 		}
 		if (!SameHemiSphere(in, out, n)){
@@ -382,7 +413,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 			(1 - cons0*cons0*cons0*cons0*cons0) *
 			(1 - cons1*cons1*cons1*cons1*cons1);
 		float3 wh = normalize(in + out);
-		float D = GGX_D(wh, n, material.roughness);
+		float D = GGX_D(wh, n, dpdu, material.alphaU, material.alphaV);
 		float3 specular = D /
 			(4.f * fabs(dot(out, wh))*Max(c0, c1))*
 			SchlickFresnel(Rs, dot(out, wh));
@@ -395,10 +426,10 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 	case MT_ROUGHDIELECTRIC:{
 		float3 wi = -in;
 		float3 n = nor;
-		float3 wh = SampleGGX(material.roughness, u.x, u.y);
-		float3 uu, ww;
-		MakeCoordinate(n, uu, ww);
-		wh = uu*wh.x + n*wh.y + ww*wh.z;
+		float3 wh = SampleGGX(material.alphaU, material.alphaV, u.x, u.y);
+		float3 uu = normalize(dpdu), ww;
+		ww = cross(uu, n);
+		wh = ToWorld(wh, uu, n, ww);
 
 		float ei = material.outsideIOR, et = material.insideIOR;
 		float cosi = dot(wi, n);
@@ -409,7 +440,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 			et = t;
 		}
 
-		float D = GGX_D(wh, n, material.roughness);
+		float D = GGX_D(wh, n, dpdu, material.alphaU, material.alphaV);
 		float eta = ei / et, cost;
 		cosi = dot(wi, wh);
 		float sint2 = eta*eta*(1.f - cosi*cosi);
@@ -418,7 +449,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		float3 tdir = normalize((wi - wh*cosi)*eta + (enter ? -cost : cost)*wh);
 		if (sint2 > 1.f){//total reflection
 			out = rdir;
-			float G = GGX_G(in, out, n, wh, material.roughness);
+			float G = GGX_G(in, out, n, wh, dpdu, material.alphaU, material.alphaV);
 			fr = material.specular * D * G / (4.f * fabs(dot(in, n)) * fabs(dot(out, n)));
 			pdf = D*fabs(dot(wh, n)) / (4.f*fabs(dot(wh, in)));
 			return;
@@ -427,7 +458,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		float fresnel = DielectricFresnel(fabs(cost), fabs(cosi), et, ei);
 		if (u.z > fresnel){//refract
 			out = tdir;
-			float G = GGX_G(in, out, n, wh, material.roughness);
+			float G = GGX_G(in, out, n, wh, dpdu, material.alphaU, material.alphaV);
 			float c = et*dot(out, wh) + ei*dot(in, wh);
 			fr = material.specular*et*et * D * G* (1.f - fresnel) * fabs(dot(in,wh)) * fabs(dot(out,wh)) / 
 				(fabs(dot(out, n)) * fabs(dot(in, n)) * c*c);
@@ -435,7 +466,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		}
 		else{//reflect
 			out = rdir;
-			float G = GGX_G(in, out, n, wh, material.roughness);
+			float G = GGX_G(in, out, n, wh, dpdu, material.alphaU, material.alphaV);
 			fr = material.specular * fresnel * D * G / (4.f * fabs(dot(in, n)) * fabs(dot(out, n)));
 			pdf = D*fabs(dot(wh, n)) / (4.f*fabs(dot(wh, in))) * fresnel;
 		}
@@ -444,7 +475,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 	}
 }
 
-__device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 uv, float3& fr, float& pdf){
+__device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 uv, float3 dpdu, float3& fr, float& pdf){
 	switch (material.type){
 	case MT_LAMBERTIAN:
 		if (!SameHemiSphere(in, out, nor)){
@@ -479,8 +510,8 @@ __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 
 
 		float3 wh = normalize(in + out);
 		float cosi = dot(out, wh);
-		float D = GGX_D(wh, n, material.roughness);
-		float G = GGX_G(in, out, n, wh, material.roughness);
+		float D = GGX_D(wh, n, dpdu, material.alphaU, material.alphaV);
+		float G = GGX_G(in, out, n, wh, dpdu, material.alphaU, material.alphaV);
 		float3 F = ConductFresnel(fabs(cosi), material.eta, material.k);
 		fr = material.specular * F*D*G /
 			(4.f*fabs(dot(in, n))*fabs(dot(out, n)));
@@ -509,7 +540,7 @@ __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 
 			(1 - cons0*cons0*cons0*cons0*cons0) *
 			(1 - cons1*cons1*cons1*cons1*cons1);
 		float3 wh = normalize(in + out);
-		float D = GGX_D(wh, n, material.roughness);
+		float D = GGX_D(wh, n, dpdu, material.alphaU, material.alphaV);
 		float3 specular = D /
 			(4.f * fabs(dot(out, wh))*Max(c0, c1))*
 			SchlickFresnel(Rs, dot(out, wh));
@@ -539,16 +570,16 @@ __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 
 		float sint2 = eta*eta*(1.f - cosi*cosi);
 		cost = sqrtf(1.f - sint2 < 0.f ? 0.f : 1.f - sint2);
 		float fresnel = DielectricFresnel(fabs(cost), fabs(cosi), et, ei);
-		float D = GGX_D(wh, n, material.roughness);
+		float D = GGX_D(wh, n, dpdu, material.alphaU, material.alphaV);
 		if (!reflect){//refract
-			float G = GGX_G(in, out, n, wh, material.roughness);
+			float G = GGX_G(in, out, n, wh, dpdu, material.alphaU, material.alphaV);
 			float c = et*dot(out, wh) + ei*dot(in, wh);
 			fr = material.specular*et*et * D * G* (1.f - fresnel) * fabs(dot(in, wh)) * fabs(dot(out, wh)) /
 				(fabs(dot(out, n)) * fabs(dot(in, n)) * c*c);
 			pdf = (1.f - fresnel) * D*fabs(dot(wh, n))* et*et*fabs(dot(out, wh)) / (c*c);
 		}
 		else{
-			float G = GGX_G(in, out, n, wh, material.roughness);
+			float G = GGX_G(in, out, n, wh, dpdu, material.alphaU, material.alphaV);
 			fr = material.specular * fresnel * D * G / (4.f * fabs(dot(in, n)) * fabs(dot(out, n)));
 			pdf = fresnel * D*fabs(dot(wh, n)) / (4.f*fabs(dot(wh, in)));
 
@@ -591,6 +622,7 @@ __global__ void Tracing(int iter, int maxDepth){
 		float3 pos = isect.pos;
 		float3 nor = isect.nor;
 		float2 uv = isect.uv;
+		float3 dpdu = isect.dpdu;
 		Material material = kernel_materials[isect.matIdx];
 		if (bounces == 0 || specular){
 			if (isect.lightIdx != -1){
@@ -616,7 +648,7 @@ __global__ void Tracing(int iter, int maxDepth){
 				float3 fr;
 				float samplePdf;
 
-				Fr(material, -r.d, shadowRay.d, nor, uv, fr, samplePdf);
+				Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
 				float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
 				Ld += weight*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);
 			} 
@@ -624,7 +656,7 @@ __global__ void Tracing(int iter, int maxDepth){
 			float3 uniform = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
 			float3 out, fr;
 			float pdf;
-			SampleBSDF(material, -r.d, nor, uv, uniform, out, fr, pdf);
+			SampleBSDF(material, -r.d, nor, uv, dpdu, uniform, out, fr, pdf);
 			if (!(IsBlack(fr) || pdf == 0)){
 				Intersection lightIsect;
 				Ray lightRay(pos, out, kernel_epsilon);
@@ -654,7 +686,7 @@ __global__ void Tracing(int iter, int maxDepth){
 		float3 out, fr;
 		float pdf;
 
-		SampleBSDF(material, -r.d, nor, uv, u, out, fr, pdf);
+		SampleBSDF(material, -r.d, nor, uv, dpdu, u, out, fr, pdf);
 		if (IsBlack(fr))
 			break;
 
@@ -676,7 +708,7 @@ __global__ void Tracing(int iter, int maxDepth){
 		kernel_color[pixel] = Li;
 }
 
-__global__ void Output(int iter, float3* output, bool reset){
+__global__ void Output(int iter, float3* output, bool reset, bool filmic){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
 	unsigned pixel = x + y*blockDim.x*gridDim.x;
@@ -688,7 +720,10 @@ __global__ void Output(int iter, float3* output, bool reset){
 	kernel_acc_image[pixel] += color;
 
 	color = kernel_acc_image[pixel] / iter;
-	FilmicTonemapping(color);
+	if (filmic)
+		FilmicTonemapping(color);
+	else
+		GammaCorrection(color);
 	output[pixel] = color;
 }
 
@@ -837,5 +872,5 @@ void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsig
 
 	grid.x = width / block.x;
 	grid.y = height / block.y;
-	Output << <grid, block >> >(iter, output, reset);
+	Output << <grid, block >> >(iter, output, reset, camera->filmic);
 }

@@ -14,6 +14,8 @@ public:
 	float apertureRadius;
 	float focalDistance;
 
+	bool filmic; //true when using filmic tonemap. false gamma correction
+
 private:
 	float width, height;
 	float2 pixel2screen;

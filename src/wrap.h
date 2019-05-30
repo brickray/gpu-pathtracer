@@ -45,10 +45,7 @@ __host__ __device__ inline float3 UniformHemiSphere(float u1, float u2, float3& 
 	pdf = ONE_OVER_TWO_PI;
 
 	float3 dir = make_float3(sintheta*cosphi, costheta, sintheta*sinphi);
-	float3 u, w;
-	MakeCoordinate(n, u, w);
-
-	return ToWorld(dir, u, n, w);
+	return dir;
 }
 
 __host__ __device__ inline float3 CosineHemiSphere(float u1, float u2, float3& n, float& pdf){
@@ -61,10 +58,7 @@ __host__ __device__ inline float3 CosineHemiSphere(float u1, float u2, float3& n
 	pdf = costheta*ONE_OVER_PI;
 
 	float3 dir = make_float3(sintheta*cosphi, costheta, sintheta*sinphi);
-	float3 u, w;
-	MakeCoordinate(n, u, w);
-
-	return ToWorld(dir, u, n, w);
+	return dir;
 }
 
 
@@ -78,10 +72,7 @@ __host__ __device__ inline float3 UniformCone(float u1, float u2, float costheta
 	pdf = 1.f / (TWOPI *(1.f - costhetamax));
 
 	float3 dir = make_float3(sintheta*cosphi, costheta, sintheta*sinphi);
-	float3 u, w;
-	MakeCoordinate(n, u, w);
-
-	return ToWorld(dir, u, n, w);
+	return dir;
 }
 
 __host__ __device__ inline float2 UniformDisk(float u1, float u2, float& pdf){

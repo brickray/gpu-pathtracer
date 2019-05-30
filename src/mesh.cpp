@@ -27,6 +27,7 @@ void Mesh::processNode(aiNode* node, const aiScene* scene, mat4& trs){
 }
 
 void Mesh::processMesh(aiMesh* aimesh, const aiScene* scene, mat4& trs){
+	bool hasUV = false;
 	for (int i = 0; i < aimesh->mNumVertices; ++i){
 		Vertex vertex;
 		vertex.v.x = aimesh->mVertices[i].x;
@@ -36,8 +37,12 @@ void Mesh::processMesh(aiMesh* aimesh, const aiScene* scene, mat4& trs){
 		vertex.n.y = aimesh->mNormals[i].y;
 		vertex.n.z = aimesh->mNormals[i].z;
 		if (aimesh->mTextureCoords[0]) {// have tex coordinate
+			hasUV = true;
 			vertex.uv.x = aimesh->mTextureCoords[0][i].x;
 			vertex.uv.y = aimesh->mTextureCoords[0][i].y;
+		}
+		else{
+			vertex.uv.x = vertex.uv.y = 0;
 		}
 
 		vertices.push_back(vertex);
@@ -64,6 +69,7 @@ void Mesh::processMesh(aiMesh* aimesh, const aiScene* scene, mat4& trs){
 		tri.v1 = vertices[idx1];
 		tri.v2 = vertices[idx2];
 		tri.v3 = vertices[idx3];
+		tri.hasUV = hasUV;
 		tri.matIdx = matIdx;
 		triangles.push_back(tri);
 	}
