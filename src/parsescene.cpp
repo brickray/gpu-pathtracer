@@ -71,6 +71,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 
 		if (doc.HasMember("camera")){
 			Value& camera = doc["camera"];
+			config.camera.environment = camera.HasMember("environment") ? camera["environment"].GetBool() : false;
 			config.camera.position = camera.HasMember("position") ? getFloat3(camera["position"]) : make_float3(0, 0, 0);
 			config.camera.fov = camera.HasMember("fov") ? camera["fov"].GetDouble() : 60.f;
 			float3 up = camera.HasMember("up") ? getFloat3(camera["up"]) : make_float3(0, 1, 0);

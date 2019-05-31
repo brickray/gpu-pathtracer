@@ -384,15 +384,15 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		if (dot(nor, in) < 0)
 			n = -n;
 		if (u.x < 0.5){
-			u.x *= 2.f;
-			out = CosineHemiSphere(u.x, u.y, n, pdf);
+			float ux = u.x * 2.f;
+			out = CosineHemiSphere(ux, u.y, n, pdf);
 			float3 uu = dpdu, ww;
 			ww = cross(uu, n);
 			out = ToWorld(out, uu, n, ww);
 		}
 		else{
-			u.x = (u.x - 0.5f) * 2.f;
-			float3 wh = SampleGGX(material.alphaU, material.alphaV, u.x, u.y);
+			float ux = (u.x - 0.5f) * 2.f;
+			float3 wh = SampleGGX(material.alphaU, material.alphaV, ux, u.y);
 			float3 uu = dpdu, ww;
 			ww = cross(uu, n);
 			wh = ToWorld(wh, uu, n, ww);
@@ -409,6 +409,23 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		float3 Rs = material.specular;
 		float cons0 = 1 - 0.5f * c0;
 		float cons1 = 1 - 0.5f * c1;
+		/*if (u.x < 0.5f){
+			float3 diffuse = (28.f / (23.f * PI)) * Rd * (make_float3(1.f, 1.f, 1.f) - Rs) *
+				(1 - cons0*cons0*cons0*cons0*cons0) *
+				(1 - cons1*cons1*cons1*cons1*cons1);
+			fr = diffuse;
+			pdf = fabs(dot(out, n)) * ONE_OVER_PI*0.5f;
+		}
+		else{
+			float3 wh = normalize(in + out);
+			float D = GGX_D(wh, n, dpdu, material.alphaU, material.alphaV);
+			float3 specular = D /
+				(4.f * fabs(dot(out, wh))*Max(c0, c1))*
+				SchlickFresnel(Rs, dot(out, wh));
+
+			fr =  specular;
+			pdf = 0.5f * (D * fabs(dot(wh, n)) / (4.f * dot(in, wh)));
+		}*/
 		float3 diffuse = (28.f / (23.f * PI)) * Rd * (make_float3(1.f, 1.f, 1.f) - Rs) *
 			(1 - cons0*cons0*cons0*cons0*cons0) *
 			(1 - cons1*cons1*cons1*cons1*cons1);
@@ -420,6 +437,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 
 		fr = diffuse + specular;
 		pdf = 0.5f * (fabs(dot(out, n)) * ONE_OVER_PI + D * fabs(dot(wh, n)) / (4.f * dot(in, wh)));
+
 		break;
 	}
 
@@ -475,6 +493,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 	}
 }
 
+//__device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 uv, float3 dpdu, float u, float3& fr, float& pdf){
 __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 uv, float3 dpdu, float3& fr, float& pdf){
 	switch (material.type){
 	case MT_LAMBERTIAN:
@@ -536,17 +555,31 @@ __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 
 		float3 Rs = material.specular;
 		float cons0 = 1 - 0.5f * c0;
 		float cons1 = 1 - 0.5f * c1;
+		float3 wh = normalize(in + out);
+		float D = GGX_D(wh, n, dpdu, material.alphaU, material.alphaV);
+		/*if (D < 1e-4 || u < 0.5f){
+			float3 diffuse = (28.f / (23.f * PI)) * Rd * (make_float3(1.f, 1.f, 1.f) - Rs) *
+				(1 - cons0*cons0*cons0*cons0*cons0) *
+				(1 - cons1*cons1*cons1*cons1*cons1);
+			fr = diffuse;
+			pdf = 0.5f*fabs(dot(out, n)) * ONE_OVER_PI;
+		}
+		else{
+			float3 specular = D /
+				(4.f * fabs(dot(out, wh))*Max(c0, c1))*
+				SchlickFresnel(Rs, dot(out, wh));
+
+			fr =  specular;
+			pdf = 0.5f * (D * fabs(dot(wh, n)) / (4.f * dot(in, wh)));
+		}*/
 		float3 diffuse = (28.f / (23.f * PI)) * Rd * (make_float3(1.f, 1.f, 1.f) - Rs) *
 			(1 - cons0*cons0*cons0*cons0*cons0) *
 			(1 - cons1*cons1*cons1*cons1*cons1);
-		float3 wh = normalize(in + out);
-		float D = GGX_D(wh, n, dpdu, material.alphaU, material.alphaV);
 		float3 specular = D /
 			(4.f * fabs(dot(out, wh))*Max(c0, c1))*
 			SchlickFresnel(Rs, dot(out, wh));
-
 		fr = diffuse + specular;
-		pdf = 0.5f * (fabs(dot(out, n)) * ONE_OVER_PI + D * fabs(dot(wh, n)) / (4.f * dot(in, wh)));
+		pdf = 0.5f*(fabs(dot(out, n)) * ONE_OVER_PI + D * fabs(dot(wh, n)) / (4.f * dot(in, wh)));
 		break;
 	}
 					  
@@ -648,6 +681,7 @@ __global__ void Tracing(int iter, int maxDepth){
 				float3 fr;
 				float samplePdf;
 
+				//Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, curand_uniform(&cudaRNG), fr, samplePdf);
 				Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
 				float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
 				Ld += weight*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);

@@ -62,7 +62,7 @@ void SaveImage(){
 	char buffer[2048] = { 0 };
 	
 	vector<float3> output(config.width*config.height);
-//	Denoiser(image, &output[0]);
+	//Denoiser(image, &output[0]);
 	sprintf(buffer, "../result/%ds iteration %dpx-%dpx.png", iteration, config.width, config.height);
 	ImageIO::SavePng(buffer, config.width, config.height, &image[0]);
 }
@@ -294,6 +294,7 @@ bool InitScene(string file){
 
 	Camera cam = config.camera;
 	camera = new Camera(cam.position, cam.u, cam.v, cam.w, make_float2(config.width, config.height), 0.1f, cam.fov, cam.apertureRadius, cam.focalDistance, cam.filmic);
+	camera->environment = cam.environment;
 
 	printf("Load scene using %.3fms\n", float(clock() - now));
 	printf("Triangles [%d]\n", scene.triangles.size());

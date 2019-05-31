@@ -15,6 +15,7 @@ public:
 	float focalDistance;
 
 	bool filmic; //true when using filmic tonemap. false gamma correction
+	bool environment; //environment camera?
 
 private:
 	float width, height;
@@ -40,6 +41,15 @@ public:
 	}
 
 	__host__ __device__ Ray GeneratePrimaryRay(float x, float y, float2 xy){
+		if (environment){
+			float3 orig = position;
+			float theta = PI*(1.f - y / resolution.y);
+			float phi = TWOPI*(1.f - x / resolution.x);
+			float3 dir = make_float3(sin(theta)*cos(phi), cos(theta), sin(theta)*sin(phi));
+			dir = dir.x*u + dir.y*v - dir.z*w;
+			return Ray(orig, dir);
+		}
+
 		float xx = x*pixel2screen.x - width;
 		float yy = y*pixel2screen.y - height;
 
