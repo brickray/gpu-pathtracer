@@ -5,20 +5,23 @@ BVH::BVH(){
 	total_nodes = 0;
 }
 
-void BVH::Build(vector<Triangle>& triangles){
-	if (triangles.size() == 0)
+void BVH::Build(vector<Primitive>& primitives){
+	if (primitives.size() == 0)
 		return;
 
 	root_box.Reset();
-	for (int i = 0; i < triangles.size(); ++i){
-		root_box.Expand(triangles[i].GetBBox());
+	for (int i = 0; i < primitives.size(); ++i){
+		if (primitives[i].type == GT_TRIANGLE)
+			root_box.Expand(primitives[i].triangle.GetBBox());
+		else
+			root_box.Expand(primitives[i].line.GetBBox());
 	}
 
-	tris.reserve(triangles.size());
+	prims.reserve(primitives.size());
 
-	BVHNode* root = split(triangles, root_box);
+	BVHNode* root = split(primitives, root_box);
 	root->bbox = root_box;
-	triangles.clear();
+	primitives.clear();
 
 	//flatten node
 	linear_root = new LinearBVHNode[total_nodes];
@@ -27,24 +30,24 @@ void BVH::Build(vector<Triangle>& triangles){
 	clearBVHNode(root);
 }
 
-BVHNode* BVH::split(vector<Triangle>& triangles, BBox& bbox){
+BVHNode* BVH::split(vector<Primitive>& primitives, BBox& bbox){
 	++total_nodes;
 
 	//detect if the bbox degenerate
 	float3 diagonal = bbox.Diagonal();
-	if (triangles.size() <= 4 || diagonal.x < 0.0001f || diagonal.y < 0.0001f || diagonal.z < 0.0001f){
+	if (primitives.size() <= 4 || diagonal.x < 0.0001f || diagonal.y < 0.0001f || diagonal.z < 0.0001f){
 		BVHNode* leaf = new BVHNode();
 		leaf->bbox = bbox;
 		leaf->is_leaf = true;
-		for (int i = 0; i < triangles.size(); ++i)
-			leaf->triangles.push_back(triangles[i]);
+		for (int i = 0; i < primitives.size(); ++i)
+			leaf->primitives.push_back(primitives[i]);
 
 		return leaf;
 	}
 
 	int best_axis = -1;//0=x,1=y,2=z
 	int best_bucket;
-	float best_cost = triangles.size()*bbox.SurfaceArea();
+	float best_cost = primitives.size()*bbox.SurfaceArea();
 	BBox best_left, best_right;
 	struct Bucket{
 		BBox bbox;
@@ -59,15 +62,20 @@ BVHNode* BVH::split(vector<Triangle>& triangles, BBox& bbox){
 	for (int i = 0; i < 3; ++i){
 		Bucket bucket[bucket_num];
 		//place all triangles into correspond bucket
-		for (int j = 0; j < triangles.size(); ++j){
-			float3 center = triangles[j].GetBBox().Centric();
+		for (int j = 0; j < primitives.size(); ++j){
+			BBox bounds;
+			if (primitives[j].type == GT_TRIANGLE)
+				bounds = primitives[j].triangle.GetBBox();
+			else
+				bounds = primitives[j].line.GetBBox();
+			float3 center = bounds.Centric();
 			float value = (i == 0) ? center.x : (i == 1) ? center.y : center.z;
 			float value_start = (i == 0) ? bbox.fmin.x : (i == 1) ? bbox.fmin.y : bbox.fmin.z;
 			float value_end = (i == 0) ? bbox.fmax.x : (i == 1) ? bbox.fmax.y : bbox.fmax.z;
 			int no = (int)((value - value_start) / (value_end - value_start) * bucket_num);
 			no = (no == 12) ? no - 1 : no;
 			bucket[no].count++;
-			bucket[no].bbox.Expand(triangles[j].GetBBox());
+			bucket[no].bbox.Expand(bounds);
 		}
 
 		for (int j = 1; j < bucket_num; ++j){
@@ -101,30 +109,30 @@ BVHNode* BVH::split(vector<Triangle>& triangles, BBox& bbox){
 		BVHNode* leaf = new BVHNode();
 		leaf->bbox = bbox;
 		leaf->is_leaf = true;
-		for (int i = 0; i < triangles.size(); ++i)
-			leaf->triangles.push_back(triangles[i]);
+		for (int i = 0; i < primitives.size(); ++i)
+			leaf->primitives.push_back(primitives[i]);
 
 		return leaf;
 	}
 
-	std::vector<Triangle> left;
-	std::vector<Triangle> right;
+	std::vector<Primitive> left;
+	std::vector<Primitive> right;
 
 	float value_start = (best_axis == 0) ? bbox.fmin.x : (best_axis == 1) ? bbox.fmin.y : bbox.fmin.z;
 	float value_end = (best_axis == 0) ? bbox.fmax.x : (best_axis == 1) ? bbox.fmax.y : bbox.fmax.z;
-	for (int i = 0; i < triangles.size(); ++i){
-		Triangle tri = triangles[i];
-		BBox bounds = tri.GetBBox();
+	for (int i = 0; i < primitives.size(); ++i){
+		Primitive prim = primitives[i];
+		BBox bounds = prim.type == GT_TRIANGLE ? prim.triangle.GetBBox() : prim.line.GetBBox();
 		float3 center = bounds.Centric();
 		float value = (best_axis == 0) ? center.x : (best_axis == 1) ? center.y : center.z;
 		int no = (int)((value - value_start) / (value_end - value_start)*bucket_num);
 		no = (no == bucket_num) ? no - 1 : no;
 		if (no < best_bucket){
-			left.push_back(tri);
+			left.push_back(prim);
 			best_left.Expand(bounds);
 		}
 		else{
-			right.push_back(tri);
+			right.push_back(prim);
 			best_right.Expand(bounds);
 		}
 	}
@@ -142,11 +150,11 @@ BVHNode* BVH::split(vector<Triangle>& triangles, BBox& bbox){
 void BVH::flatten(BVHNode* node, int cur, int& next){
 	linear_root[cur].bbox = node->bbox;
 	linear_root[cur].is_leaf = node->is_leaf;
-	if (node->triangles.size()){
-		linear_root[cur].start = tris.size();
-		for (int i = 0; i < node->triangles.size(); ++i)
-			tris.push_back(node->triangles[i]);
-		linear_root[cur].end = tris.size() - 1;
+	if (node->primitives.size()){
+		linear_root[cur].start = prims.size();
+		for (int i = 0; i < node->primitives.size(); ++i)
+			prims.push_back(node->primitives[i]);
+		linear_root[cur].end = prims.size() - 1;
 	}
 
 	if (node->left)

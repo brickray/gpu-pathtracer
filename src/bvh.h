@@ -2,14 +2,14 @@
 #define H_BVH_H
 
 #include "cutil_math.h"
-#include "mesh.h"
+#include "primitive.h"
 
 struct BVHNode{
 	BVHNode* left;
 	BVHNode* right;  
 	BBox bbox;
 	bool is_leaf;
-	vector<Triangle> triangles;
+	vector<Primitive> primitives;
 
 	BVHNode(){
 		left = right = NULL;
@@ -32,16 +32,16 @@ class BVH{
 public:
 	LinearBVHNode* linear_root;
 	int total_nodes;
-	vector<Triangle> tris;
+	vector<Primitive> prims;
 	BBox root_box;
 
 public:
 	BVH();
 
-	void Build(vector<Triangle>& triangles);
+	void Build(vector<Primitive>& primitives);
 
 private:
-	BVHNode* split(vector<Triangle>& triangles, BBox& bbox);
+	BVHNode* split(vector<Primitive>& primitives, BBox& bbox);
 	void flatten(BVHNode* node, int cur, int& next);
 	void clearBVHNode(BVHNode* node);
 };

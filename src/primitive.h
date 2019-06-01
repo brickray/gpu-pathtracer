@@ -3,12 +3,20 @@
 
 #include "common.h"
 #include "mesh.h"
+#include "line.h"
 
-//instance
+enum GeometryType{
+	GT_TRIANGLE = 0,
+	GT_LINES,
+};
+
 class Primitive{
 public:
-	int triIdx;
-	
+	GeometryType type;
+	union{
+		Triangle triangle;
+		Line line;
+	};
 };
 
 #endif

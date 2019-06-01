@@ -8,7 +8,7 @@ Camera* dev_camera;
 int maxDepth;
 float3* dev_image, *dev_color;
 LinearBVHNode* dev_bvh_nodes;
-Triangle* dev_triangles;
+Primitive* dev_primitives;
 Material* dev_materials;
 Area* dev_lights;
 float* dev_light_distribution;
@@ -21,7 +21,7 @@ __device__ Camera* kernel_camera;
 __device__ int kernel_hdr_width, kernel_hdr_height;
 __device__ float3* kernel_acc_image, *kernel_color;
 __device__ LinearBVHNode* kernel_linear;
-__device__ Triangle* kernel_triangles;
+__device__ Primitive* kernel_primitives;
 __device__ Material* kernel_materials;
 __device__ Area* kernel_lights;
 __device__ uchar4** kernel_textures;
@@ -31,10 +31,6 @@ __device__ int kernel_light_distribution_size;
 __device__ bool kernel_hdr_isvalid;
 //不同场景需要不同的epsilon，不知道怎么样优雅的实现
 __device__ float kernel_epsilon;
-
-__device__ inline bool Max(float c0, float c1){
-	return c0 > c1 ? c0 : c1;
-}
 
 __device__ inline unsigned int WangHash(unsigned int seed)
 {
@@ -207,10 +203,16 @@ __device__ bool Intersect(Ray& ray, Intersection* isect){
 			}
 			else{
 				for (int i = node.start; i <= node.end; ++i){
-					Triangle tri = kernel_triangles[i];
+					Primitive prim = kernel_primitives[i];
 
-					if (tri.Intersect(ray, isect))
-						ret = true;
+					if (prim.type == GT_TRIANGLE){
+						if (prim.triangle.Intersect(ray, isect))
+							ret = true;
+					}
+					else{
+						if (prim.line.Intersect(ray, isect))
+							ret = true;
+					}
 				}
 			}
 		}
@@ -239,10 +241,15 @@ __device__ bool IntersectP(Ray& ray){
 			}
 			else{
 				for (int i = node.start; i <= node.end; ++i){
-					Triangle tri = kernel_triangles[i];
-
-					if (tri.Intersect(ray, nullptr))
-						return true;
+					Primitive prim = kernel_primitives[i];
+					if (prim.type == GT_TRIANGLE){
+						if (prim.triangle.Intersect(ray, nullptr))
+							return true;
+					}
+					else{
+						if (prim.line.Intersect(ray, nullptr))
+							return true;
+					}
 				}
 			}
 		}
@@ -764,7 +771,7 @@ __global__ void Output(int iter, float3* output, bool reset, bool filmic){
 __global__ void InitRender(
 	Camera* camera,
 	LinearBVHNode* bvh_nodes,
-	Triangle* triangles,
+	Primitive* primitives,
 	Material* materials,
 	Area* lights,
 	uchar4** texs,
@@ -779,7 +786,7 @@ __global__ void InitRender(
 	bool isvalid){
 	kernel_camera = camera;
 	kernel_linear = bvh_nodes;
-	kernel_triangles = triangles;
+	kernel_primitives = primitives;
 	kernel_materials = materials;
 	kernel_lights = lights;
 	kernel_textures = texs;
@@ -809,14 +816,14 @@ void BeginRender(
 	int light_memory_use = 0;
 	int texture_memory_use = 0;
 	maxDepth = max_depth;
-	int num_triangles = bvh.tris.size();
+	int num_primitives = bvh.prims.size();
 	HANDLE_ERROR(cudaMalloc(&dev_camera, sizeof(Camera)));
 	HANDLE_ERROR(cudaMemcpy(dev_camera, &cam, sizeof(Camera), cudaMemcpyHostToDevice));
 
-	if (num_triangles){
-		HANDLE_ERROR(cudaMalloc(&dev_triangles, num_triangles*sizeof(Triangle)));
-		HANDLE_ERROR(cudaMemcpy(dev_triangles, &bvh.tris[0], num_triangles*sizeof(Triangle), cudaMemcpyHostToDevice));
-		mesh_memory_use += num_triangles*sizeof(Triangle);
+	if (num_primitives){
+		HANDLE_ERROR(cudaMalloc(&dev_primitives, num_primitives*sizeof(Primitive)));
+		HANDLE_ERROR(cudaMemcpy(dev_primitives, &bvh.prims[0], num_primitives*sizeof(Primitive), cudaMemcpyHostToDevice));
+		mesh_memory_use += num_primitives*sizeof(Primitive);
 	}
 	if (bvh.total_nodes > 0){
 		HANDLE_ERROR(cudaMalloc(&dev_bvh_nodes, bvh.total_nodes*sizeof(LinearBVHNode)));
@@ -873,7 +880,7 @@ void BeginRender(
 	texture_memory_use += ld_size*sizeof(float);
 	
 	InitRender << <1, 1 >> >(dev_camera, dev_bvh_nodes,
-		dev_triangles, dev_materials, dev_lights, dev_textures, dev_light_distribution, ld_size, 
+		dev_primitives, dev_materials, dev_lights, dev_textures, dev_light_distribution, ld_size,
 		texture_size, dev_image, dev_color, ep, hdrmap.width, hdrmap.height, hdrmap.isvalid);
 
 	HANDLE_ERROR(cudaDeviceSynchronize());
@@ -887,7 +894,7 @@ void BeginRender(
 }
 
 void EndRender(){
-	HANDLE_ERROR(cudaFree(dev_triangles));
+	HANDLE_ERROR(cudaFree(dev_primitives));
 	HANDLE_ERROR(cudaFree(dev_bvh_nodes));
 
 	HANDLE_ERROR(cudaFree(dev_image));

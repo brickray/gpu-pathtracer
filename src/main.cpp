@@ -297,10 +297,10 @@ bool InitScene(string file){
 	camera->environment = cam.environment;
 
 	printf("Load scene using %.3fms\n", float(clock() - now));
-	printf("Triangles [%d]\n", scene.triangles.size());
+	printf("Primitives [%d]\n", scene.primitives.size());
 
 	now = clock();
-	bvh.Build(scene.triangles);
+	bvh.Build(scene.primitives);
 	printf("Build bvh using %.3fms\n", float(clock() - now));
 	printf("Bvh total nodes:%d\n", bvh.total_nodes);
 	printf("Scene Bounds [%.3f, %.3f, %.3f]-[%.3f, %.3f, %.3f]\n", 

@@ -2,7 +2,7 @@
 #define H_SCENE_H
 
 #include <vector>
-#include "mesh.h"
+#include "primitive.h"
 #include "material.h"
 #include "texture.h"
 #include "area.h"
@@ -10,7 +10,7 @@
 
 class Scene{
 public:
-	vector<Triangle> triangles;
+	vector<Primitive> primitives;
 	vector<Material> materials;
 	vector<Area> lights;
 	vector<Texture> textures;

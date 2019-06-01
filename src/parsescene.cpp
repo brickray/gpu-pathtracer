@@ -1,5 +1,5 @@
 #include "parsescene.h"
-#include "mesh.h"
+#include "primitive.h"
 #include "area.h"
 
 #include <rapidjson\include\rapidjson\document.h>
@@ -215,8 +215,58 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					}
 
 					mesh.LoadObjFromFile((base + file).c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals, trs);
-					for (int i = 0; i < mesh.triangles.size(); ++i)
-						scene.triangles.push_back(mesh.triangles[i]);
+					for (int i = 0; i < mesh.triangles.size(); ++i){
+						Primitive primitive;
+						primitive.type = GT_TRIANGLE;
+						primitive.triangle = mesh.triangles[i];
+						scene.primitives.push_back(primitive);
+					}
+				}
+				else if (unit.HasMember("line")){
+					string mat_name = unit.HasMember("material") ? unit["material"].GetString() : "matte";
+					float3 p0 = unit.HasMember("p0") ? getFloat3(unit["p0"]) : make_float3(0, 0, 0);
+					float3 p1 = unit.HasMember("p1") ? getFloat3(unit["p1"]) : make_float3(1, 1, 1);
+					float width0 = unit.HasMember("width0") ? unit["width0"].GetDouble() : 0.025f;
+					float width1 = unit.HasMember("width1") ? unit["width1"].GetDouble() : 0.025f;
+					float3 scale = unit.HasMember("scale") ? getFloat3(unit["scale"]) : make_float3(1, 1, 1);
+					float3 translate = unit.HasMember("translate") ? getFloat3(unit["translate"]) : make_float3(0, 0, 0);
+					float3 rotate = unit.HasMember("rotate") ? getFloat3(unit["rotate"]) : make_float3(0, 0, 0);
+					mat4 trs, t, r, s;
+					s = glm::scale(s, vec3(scale.x, scale.y, scale.z));
+					t = glm::translate(t, vec3(translate.x, translate.y, translate.z));
+					r = glm::rotate(r, radians(rotate.x), vec3(1, 0, 0));
+					r = glm::rotate(r, radians(rotate.y), vec3(0, 1, 0));
+					r = glm::rotate(r, radians(rotate.z), vec3(0, 0, 1));
+					trs = t*r*s;
+
+					vec3 v0 = Float3ToVec(p0);
+					v0 = vec3(trs*vec4(v0, 1));
+					p0 = VecToFloat3(v0);
+					vec3 v1 = Float3ToVec(p1);
+					v1 = vec3(trs*vec4(v1, 1));
+					p1 = VecToFloat3(v1);
+
+					Line line;
+					line.p0 = p0;
+					line.p1 = p1;
+					line.width0 = width0;
+					line.width1 = width1;
+					int i;
+					for (i = 0; i < matName.size(); ++i){
+						if (matName[i] == mat_name){
+							line.matIdx = i;
+							break;
+						}
+					}
+					if (i == matName.size()){
+						fprintf(stderr, "There is no material named:[\"%s\"]\n", mat_name.c_str());
+						exit(1);
+					}
+					BBox b = line.GetBBox();
+					Primitive prim;
+					prim.type = GT_LINES;
+					prim.line = line;
+					scene.primitives.push_back(prim);
 				}
 				else{
 					fprintf(stderr, "Error scene file format\n");
@@ -267,7 +317,10 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					mesh.LoadObjFromFile((base + file).c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals, trs);
 					for (int i = 0; i < mesh.triangles.size(); ++i){
 						mesh.triangles[i].lightIdx = scene.lights.size();
-						scene.triangles.push_back(mesh.triangles[i]);
+						Primitive primitive;
+						primitive.type = GT_TRIANGLE;
+						primitive.triangle = mesh.triangles[i];
+						scene.primitives.push_back(primitive);
 						Area area;
 						area.radiance = radiance;
 						area.triangle = mesh.triangles[i];

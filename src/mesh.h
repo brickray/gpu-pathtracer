@@ -8,21 +8,7 @@
 
 #include "bbox.h"
 #include "wrap.h"
-
-struct Intersection{
-	float3 pos; //hit point
-	float3 nor; //normal of hit point
-	float2 uv; //tex coord of hit point
-	float3 dpdu; //tangent 
-	int matIdx; //index of bsdf
-//	int bssrdf; //index of bssrdf
-	int lightIdx;
-//	int mediumInside, mediumOutside;
-
-	__host__ __device__ Intersection(){
-		lightIdx = -1;
-	}
-};
+#include "intersection.h"
 
 struct Vertex{
 	float3 v;
@@ -38,10 +24,6 @@ public:
 	int lightIdx;
 
 public:
-	__host__ __device__ Triangle(){
-		lightIdx = -1;
-	}
-
 	__host__ __device__ BBox GetBBox() const{
 		float3 f1 = v1.v, f2 = v2.v, f3 = v3.v;
 		BBox bbox;

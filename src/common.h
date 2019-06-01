@@ -83,6 +83,10 @@ __host__ __device__ inline float3 Sqrt(const float3& c){
 	return{ r, g, b };
 }
 
+__host__ __device__ inline bool Max(float c0, float c1){
+	return c0 > c1 ? c0 : c1;
+}
+
 inline float3 VecToFloat3(vec3& v){
 	return make_float3(v.x, v.y, v.z);
 }
