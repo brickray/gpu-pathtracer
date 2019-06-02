@@ -262,10 +262,32 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 						fprintf(stderr, "There is no material named:[\"%s\"]\n", mat_name.c_str());
 						exit(1);
 					}
-					BBox b = line.GetBBox();
 					Primitive prim;
 					prim.type = GT_LINES;
 					prim.line = line;
+					scene.primitives.push_back(prim);
+				}
+				else if (unit.HasMember("sphere")){
+					string mat_name = unit.HasMember("material") ? unit["material"].GetString() : "matte";
+					float3 center = unit.HasMember("center") ? getFloat3(unit["center"]) : make_float3(0, 0, 0);
+					float radius = unit.HasMember("radius") ? unit["radius"].GetDouble() : 1.f;
+					Sphere sphere;
+					sphere.origin = center;
+					sphere.radius = radius;
+					int i;
+					for (i = 0; i < matName.size(); ++i){
+						if (matName[i] == mat_name){
+							sphere.matIdx = i;
+							break;
+						}
+					}
+					if (i == matName.size()){
+						fprintf(stderr, "There is no material named:[\"%s\"]\n", mat_name.c_str());
+						exit(1);
+					}
+					Primitive prim;
+					prim.type = GT_SPHERE;
+					prim.sphere = sphere;
 					scene.primitives.push_back(prim);
 				}
 				else{

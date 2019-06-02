@@ -13,8 +13,10 @@ void BVH::Build(vector<Primitive>& primitives){
 	for (int i = 0; i < primitives.size(); ++i){
 		if (primitives[i].type == GT_TRIANGLE)
 			root_box.Expand(primitives[i].triangle.GetBBox());
-		else
+		else if (primitives[i].type == GT_LINES)
 			root_box.Expand(primitives[i].line.GetBBox());
+		else if (primitives[i].type == GT_SPHERE)
+			root_box.Expand(primitives[i].sphere.GetBBox());
 	}
 
 	prims.reserve(primitives.size());
@@ -66,8 +68,10 @@ BVHNode* BVH::split(vector<Primitive>& primitives, BBox& bbox){
 			BBox bounds;
 			if (primitives[j].type == GT_TRIANGLE)
 				bounds = primitives[j].triangle.GetBBox();
-			else
+			else if (primitives[j].type == GT_LINES)
 				bounds = primitives[j].line.GetBBox();
+			else if (primitives[j].type == GT_SPHERE)
+				bounds = primitives[j].sphere.GetBBox();
 			float3 center = bounds.Centric();
 			float value = (i == 0) ? center.x : (i == 1) ? center.y : center.z;
 			float value_start = (i == 0) ? bbox.fmin.x : (i == 1) ? bbox.fmin.y : bbox.fmin.z;
@@ -122,7 +126,13 @@ BVHNode* BVH::split(vector<Primitive>& primitives, BBox& bbox){
 	float value_end = (best_axis == 0) ? bbox.fmax.x : (best_axis == 1) ? bbox.fmax.y : bbox.fmax.z;
 	for (int i = 0; i < primitives.size(); ++i){
 		Primitive prim = primitives[i];
-		BBox bounds = prim.type == GT_TRIANGLE ? prim.triangle.GetBBox() : prim.line.GetBBox();
+		BBox bounds;
+		if (prim.type == GT_TRIANGLE)
+			bounds = prim.triangle.GetBBox();
+		else if (prim.type == GT_LINES)
+			bounds = prim.line.GetBBox();
+		else if (prim.type == GT_SPHERE)
+			bounds = prim.sphere.GetBBox();
 		float3 center = bounds.Centric();
 		float value = (best_axis == 0) ? center.x : (best_axis == 1) ? center.y : center.z;
 		int no = (int)((value - value_start) / (value_end - value_start)*bucket_num);

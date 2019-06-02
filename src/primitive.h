@@ -4,10 +4,12 @@
 #include "common.h"
 #include "mesh.h"
 #include "line.h"
+#include "sphere.h"
 
 enum GeometryType{
 	GT_TRIANGLE = 0,
 	GT_LINES,
+	GT_SPHERE,
 };
 
 class Primitive{
@@ -16,6 +18,7 @@ public:
 	union{
 		Triangle triangle;
 		Line line;
+		Sphere sphere;
 	};
 };
 

@@ -209,8 +209,12 @@ __device__ bool Intersect(Ray& ray, Intersection* isect){
 						if (prim.triangle.Intersect(ray, isect))
 							ret = true;
 					}
-					else{
+					else if(prim.type == GT_LINES){
 						if (prim.line.Intersect(ray, isect))
+							ret = true;
+					}
+					else if (prim.type == GT_SPHERE){
+						if (prim.sphere.Intersect(ray, isect))
 							ret = true;
 					}
 				}
@@ -246,8 +250,12 @@ __device__ bool IntersectP(Ray& ray){
 						if (prim.triangle.Intersect(ray, nullptr))
 							return true;
 					}
-					else{
+					else if (prim.type == GT_LINES){
 						if (prim.line.Intersect(ray, nullptr))
+							return true;
+					}
+					else if (prim.type == GT_SPHERE){
+						if (prim.sphere.Intersect(ray, nullptr))
 							return true;
 					}
 				}
