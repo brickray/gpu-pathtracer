@@ -911,14 +911,16 @@ __global__ void Tracing(int iter, int maxDepth){
 				light.SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
 				shadowRay.medium = r.medium;
 
-				if (!IsBlack(radiance) && !IntersectP(shadowRay)){
+				if (!IsBlack(radiance)){
 					float3 fr;
 					float samplePdf;
 
 					//Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, curand_uniform(&cudaRNG), fr, samplePdf);
 					Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
+					float3 tr = Tr(shadowRay, cudaRNG);
+
 					float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
-					Ld += weight*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);
+					Ld += weight*tr*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);
 				}
 
 				float3 uniform = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
@@ -942,7 +944,9 @@ __global__ void Tracing(int iter, int maxDepth){
 							float costheta = fabs(dot(n, lightRay.d));
 							float lPdf = pdfA * lenSquare / (costheta);
 							float weight = PowerHeuristic(1, pdf, 1, lPdf * choicePdf);
-							Ld += weight * fr * radiance * fabs(dot(out, nor)) / pdf;
+							float3 tr = { 1.f, 1.f, 1.f };
+							if (lightRay.medium) tr = lightRay.medium->Tr(lightRay, cudaRNG);
+							Ld += weight * tr * fr * radiance * fabs(dot(out, nor)) / pdf;
 						}
 					}
 				}
