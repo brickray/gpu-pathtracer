@@ -7,11 +7,15 @@
 #include "texture.h"
 #include "area.h"
 #include "camera.h"
+#include "bssrdf.h"
+#include "meidum.h"
 
 class Scene{
 public:
 	vector<Primitive> primitives;
 	vector<Material> materials;
+	vector<Bssrdf> bssrdfs;
+	vector<Medium> mediums;
 	vector<Area> lights;
 	vector<Texture> textures;
 	vector<float> lightDistribution;

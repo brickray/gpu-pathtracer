@@ -80,6 +80,7 @@ public:
 			isect->dpdu = dpdu;
 			isect->matIdx = matIdx;
 			isect->lightIdx = -1;
+			isect->bssrdf = -1;
 		}
 
 		return true;

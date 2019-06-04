@@ -10,6 +10,8 @@ float3* dev_image, *dev_color;
 LinearBVHNode* dev_bvh_nodes;
 Primitive* dev_primitives;
 Material* dev_materials;
+Bssrdf* dev_bssrdfs;
+Medium* dev_mediums;
 Area* dev_lights;
 float* dev_light_distribution;
 float4* hdr_map;
@@ -23,6 +25,8 @@ __device__ float3* kernel_acc_image, *kernel_color;
 __device__ LinearBVHNode* kernel_linear;
 __device__ Primitive* kernel_primitives;
 __device__ Material* kernel_materials;
+__device__ Bssrdf* kernel_bssrdfs;
+__device__ Medium* kernel_mediums;
 __device__ Area* kernel_lights;
 __device__ uchar4** kernel_textures;
 __device__ int* kernel_texture_size;
@@ -130,6 +134,26 @@ __device__ inline float3 SampleGGX(float alphaU, float alphaV, float u1, float u
 			sintheta*sinphi
 		};
 	}
+}
+
+__device__ inline float3 Reflect(float3 in, float3 nor){
+	return 2.f*dot(in, nor)*nor - in;
+}
+
+__device__ inline float3 Refract(float3 in, float3 nor, float etai, float etat){
+	float cosi = dot(in, nor);
+	bool enter = cosi > 0;
+	if (!enter){
+		float t = etai;
+		etai = etat;
+		etat = t;
+	}
+
+	float eta = etai / etat;
+	float sini2 = 1.f - cosi*cosi;
+	float sint2 = sini2*eta*eta;
+	float cost = sqrtf(1.f - sint2);
+	return normalize((nor*cosi-in)*eta + (enter ? -cost : cost)*nor);
 }
 
 __device__ inline float3 SchlickFresnel(float3 specular, float costheta){
@@ -270,6 +294,28 @@ __device__ bool IntersectP(Ray& ray){
 	return false;
 }
 
+__device__ float3 Tr(Ray& ray, curandState& rng){
+	float3 tr = make_float3(1, 1, 1);
+	float tmax = ray.tmax;
+	while (true){
+		Intersection isect;
+		bool invisible = Intersect(ray, &isect);
+		if (invisible && isect.matIdx != -1)
+			return{ 0, 0, 0 };
+
+		if (ray.medium)
+			tr *= ray.medium->Tr(ray, rng);
+
+		if (!invisible) break;
+		Medium* m = dot(ray.d, isect.nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
+			: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
+		tmax -= ray.tmax;
+		ray = Ray(ray(ray.tmax), ray.d, m, kernel_epsilon, tmax);
+	}
+
+	return tr;
+}
+
 __device__ inline float4 getTexel(Material material, int w, int h, int2 uv){
 	float inv = 1.f / 255.f;
 
@@ -307,6 +353,135 @@ __device__ inline float4 GetTexel(Material material, float2 uv){
 		+ dy*((1 - dx)*c01 + dx*c11);
 }
 
+//**************************bssrdf*****************
+__device__ float3 SingleScatter(Intersection* isect, float3 in, curandState& cudaRNG){
+	float3 pos = isect->pos;
+	float3 nor = isect->nor;
+	float coso = fabs(dot(in, nor));
+	Bssrdf bssrdf = kernel_bssrdfs[isect->bssrdf];
+	float eta = bssrdf.eta;
+	float sino2 = 1.f - coso*coso;
+	float cosi = sqrtf(1.f - sino2 / (eta*eta));
+	float fresnel = 1.f - DielectricFresnel(coso, cosi, 1.f, eta);
+	float sigmaTr = Luminance(bssrdf.GetSigmaTr());
+	float3 sigmaS = bssrdf.GetSigmaS();
+	float3 sigmaT = bssrdf.GetSigmaT();
+	float3 rdir = Reflect(in, nor);
+	float3 tdir = Refract(in, nor, 1.f, eta);
+	float3 L = { 0, 0, 0 };
+	Intersection rIsect;
+	if (Intersect(Ray(pos,rdir,nullptr,kernel_epsilon), &rIsect)){
+		if (rIsect.lightIdx != -1){
+			L += (1.f - fresnel)*kernel_lights[rIsect.lightIdx].Le(rIsect.nor, -rdir);
+		}
+	}
+	Intersection tIsect;
+	Intersect(Ray(pos, tdir, nullptr, kernel_hdr_height), &tIsect);
+	float len = length(tIsect.pos - pos);
+	int samples = 1;
+	for (int i = 0; i < samples; ++i){
+		float d = Exponential(curand_uniform(&cudaRNG), sigmaTr);
+		if (d > len) continue;
+		float3 pSample = pos + tdir*d;
+		float pdf = ExponentialPdf(d, sigmaTr);
+		float choicePdf;
+		float u = curand_uniform(&cudaRNG);
+		int idx = LookUpLightDistribution(u, choicePdf);
+		Area light = kernel_lights[idx];
+		float lightPdf;
+		Ray shadowRay;
+		float3 radiance, lightNor;
+		float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+		light.SampleLight(pSample, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+		if (IsBlack(radiance))
+			continue;
+
+		float tmax = shadowRay.tmax;
+		Intersection wiIsect;
+		if (Intersect(shadowRay, &wiIsect)){
+			if (wiIsect.bssrdf == isect->bssrdf){
+				float3 wiPos = wiIsect.pos;
+				float3 wiNor = wiIsect.nor;
+				shadowRay.tmin += shadowRay.tmax;
+				shadowRay.tmax = tmax;
+				if (!IntersectP(shadowRay)){
+					float p = bssrdf.GetPhase();
+					float cosi = fabs(dot(wiNor, shadowRay.d));
+					float sini2 = 1.f - cosi*cosi;
+					float coso = sqrtf(1.f - sini2 / (eta*eta));
+					float fresnelI = 1.f - DielectricFresnel(cosi, coso, 1.f, eta);
+					float G = fabs(dot(wiNor, tdir)) / cosi;
+					float3 sigmaTC = sigmaT*(1.f + G);
+					float di = length(wiPos - pSample);
+					float et = 1.f / eta;
+					float diPrime = di*fabs(dot(shadowRay.d, wiNor)) /
+						sqrt(1.f - et*et*(1.f - cosi*cosi));
+					L += (fresnel*fresnelI*p*sigmaS / sigmaTC)*
+						Exp(-diPrime*sigmaT)*
+						Exp(-d*sigmaT)*radiance / (lightPdf*choicePdf*pdf);
+				}
+			}
+		}
+	}
+
+	L /= samples;
+	return L;
+}
+
+__device__ float3 MultipleScatter(Intersection* isect, float3 in, curandState& cudaRNG){
+	float3 pos = isect->pos;
+	float3 nor = isect->nor;
+	float coso = fabs(dot(in, nor));
+	Bssrdf bssrdf = kernel_bssrdfs[isect->bssrdf];
+	float eta = bssrdf.eta;
+	float sino2 = 1.f - coso*coso;
+	float cosi = sqrtf(1.f - sino2 / (eta*eta));
+	float fresnel = 1.f - DielectricFresnel(coso, cosi, 1.f, eta);
+	float sigmaTr = Luminance(bssrdf.GetSigmaTr());
+	float skipRatio = 0.01f;
+	float rMax = sqrt(log(skipRatio) / -sigmaTr);
+	float3 L = { 0, 0, 0 };
+	int samples = 1;
+	for (int i = 0; i < samples; ++i){
+		Ray probeRay;
+		float pdf;
+		float2 u = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+		bssrdf.SampleProbeRay(pos, nor, u, sigmaTr, rMax, probeRay, pdf);
+		probeRay.tmin = kernel_epsilon;
+
+		Intersection probeIsect;
+		if (Intersect(probeRay, &probeIsect)){
+			if (isect->bssrdf == probeIsect.bssrdf){
+				float3 probePos = probeIsect.pos;
+				float3 probeNor = probeIsect.nor;
+				float3 rd = bssrdf.Rd(dot(probePos - pos, probePos - pos));
+				float choicePdf;
+				float u = curand_uniform(&cudaRNG);
+				int idx = LookUpLightDistribution(u, choicePdf);
+				Area light = kernel_lights[idx];
+				float lightPdf;
+				float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+				float3 radiance, lightNor;
+				Ray shadowRay;
+				light.SampleLight(probePos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+				if (!IsBlack(radiance) && !IntersectP(shadowRay)){
+					float cosi = fabs(dot(shadowRay.d, probeNor));
+					float sini2 = 1.f - cosi*cosi;
+					float cost = sqrtf(1.f - sini2 / (eta*eta));
+					float3 irradiance = radiance*cosi / (lightPdf*choicePdf);
+					float fresnelI = 1.f - DielectricFresnel(cosi, cost, 1.f, eta);
+					pdf *= fabs(dot(probeRay.d, probeNor));
+					L += (ONE_OVER_PI*fresnel*fresnelI*rd*irradiance) / pdf;
+				}
+			}
+		}
+
+		L /= samples;
+		return L;
+	}
+}
+//**************************bssrdf end*************
+
 __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, float3 dpdu, float3 u, float3& out, float3& fr, float& pdf){
 	switch(material.type){
 	case MT_LAMBERTIAN:{
@@ -323,7 +498,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 	}
 	
 	case MT_MIRROR:
-		out = 2.f*dot(in, nor)*nor - in;
+		out = Reflect(in, nor);
 		fr = material.specular / fabs(dot(out, nor));
 		pdf = 1.f;
 		break;
@@ -344,8 +519,8 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		float eta = ei / et, cost;
 		float sint2 = eta*eta*(1.f - cosi*cosi);
 		cost = sqrtf(1.f - sint2 < 0.f ? 0.f : 1.f - sint2);
-		float3 rdir = 2.f * dot(-wi, normal) * normal + wi;
-		float3 tdir = normalize((wi - normal*cosi)*eta + (enter ? -cost : cost)*normal);
+		float3 rdir = Reflect(-wi, normal);
+		float3 tdir = Refract(in, nor, material.outsideIOR, material.insideIOR);
 		if (sint2 > 1.f){//total reflection
 			out = rdir;
 			fr = material.specular / fabs(dot(out, normal));
@@ -376,7 +551,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		float3 uu = dpdu, ww;
 		ww = cross(uu, n);
 		wh = ToWorld(wh, uu, n, ww);
-		out = 2.f*dot(in, wh)*wh - in;
+		out = Reflect(in, wh);
 		if (!SameHemiSphere(in, out, nor)){
 			fr = { 0, 0, 0 };
 			pdf = 0.f;
@@ -411,7 +586,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 			float3 uu = dpdu, ww;
 			ww = cross(uu, n);
 			wh = ToWorld(wh, uu, n, ww);
-			out = 2.f * dot(wh, in) * wh - in;
+			out = Reflect(in, wh);
 		}
 		if (!SameHemiSphere(in, out, n)){
 			fr = { 0.f, 0.f, 0.f };
@@ -478,8 +653,8 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		cosi = dot(wi, wh);
 		float sint2 = eta*eta*(1.f - cosi*cosi);
 		cost = sqrtf(1.f - sint2 < 0.f ? 0.f : 1.f - sint2);
-		float3 rdir = 2.f * dot(-wi, wh) * wh + wi;
-		float3 tdir = normalize((wi - wh*cosi)*eta + (enter ? -cost : cost)*wh);
+		float3 rdir = Reflect(-wi, wh);
+		float3 tdir = Refract(in, wh, material.outsideIOR, material.insideIOR);
 		if (sint2 > 1.f){//total reflection
 			out = rdir;
 			float G = GGX_G(in, out, n, wh, dpdu, material.alphaU, material.alphaV);
@@ -655,6 +830,7 @@ __global__ void Tracing(int iter, int maxDepth){
 	float2 aperture = UniformDisk(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), unuse);//for dof
 	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, aperture);
 	ray.tmin = kernel_epsilon;
+	ray.medium = kernel_camera->medium == -1 ? nullptr : &kernel_mediums[kernel_camera->medium];
 
 	float3 Li = make_float3(0.f, 0.f, 0.f);
 	float3 beta = make_float3(1.f, 1.f, 1.f);
@@ -671,16 +847,19 @@ __global__ void Tracing(int iter, int maxDepth){
 		float3 nor = isect.nor;
 		float2 uv = isect.uv;
 		float3 dpdu = isect.dpdu;
-		Material material = kernel_materials[isect.matIdx];
-		if (bounces == 0 || specular){
-			if (isect.lightIdx != -1){
-				Li += beta*kernel_lights[isect.lightIdx].Le(nor, -r.d);
-				break;
-			}
-		}
+		/*if (isect.bssrdf != -1){
+			float3 L = SingleScatter(&isect, -r.d, cudaRNG)
+			+MultipleScatter(&isect, -r.d, cudaRNG);
+			Li += beta*L;
 
-		if (IsDiffuse(material.type)){
-			float3 Ld = make_float3(0.f, 0.f, 0.f);
+			break;
+			}*/
+		float sampledDist;
+		bool sampledMedium = false;
+		if (r.medium)
+			beta *= r.medium->Sample(r, curand_uniform(&cudaRNG), sampledDist, sampledMedium);
+		if (IsBlack(beta)) break;
+		if (sampledMedium){
 			float u = curand_uniform(&cudaRNG);
 			float choicePdf;
 			int idx = LookUpLightDistribution(u, choicePdf);
@@ -689,58 +868,105 @@ __global__ void Tracing(int iter, int maxDepth){
 			float3 radiance, lightNor;
 			Ray shadowRay;
 			float lightPdf;
-			light.SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+			light.SampleLight(r(sampledDist), u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+			shadowRay.medium = r.medium;
+			float3 tr = Tr(shadowRay, cudaRNG);
 
-			bool invisible = IntersectP(shadowRay);
-			if (!IsBlack(radiance) && !invisible){
-				float3 fr;
-				float samplePdf;
+			if (!IsBlack(radiance))
+				Li += tr*beta*ONE_OVER_FOUR_PI*radiance / (lightPdf * choicePdf);
 
-				//Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, curand_uniform(&cudaRNG), fr, samplePdf);
-				Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
-				float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
-				Ld += weight*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);
-			} 
-
-			float3 uniform = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
-			float3 out, fr;
 			float pdf;
-			SampleBSDF(material, -r.d, nor, uv, dpdu, uniform, out, fr, pdf);
-			if (!(IsBlack(fr) || pdf == 0)){
-				Intersection lightIsect;
-				Ray lightRay(pos, out, kernel_epsilon);
-				if (Intersect(lightRay, &lightIsect)){
-					float3 p = lightIsect.pos;
-					float3 n = lightIsect.nor;
-					float3 radiance = { 0.f, 0.f, 0.f };
-					if (lightIsect.lightIdx != -1)
-						radiance = kernel_lights[lightIsect.lightIdx].Le(n, -lightRay.d);
-					if (!IsBlack(radiance)){
-						float pdfA, pdfW;
-						kernel_lights[lightIsect.lightIdx].Pdf(Ray(p, -out, kernel_epsilon), n, pdfA, pdfW);
-						float choicePdf = PdfFromLightDistribution(lightIsect.lightIdx);
-						float lenSquare = dot(p - pos, p - pos);
-						float costheta = fabs(dot(n, lightRay.d));
-						float lPdf = pdfA * lenSquare / (costheta);
-						float weight = PowerHeuristic(1, pdf, 1, lPdf * choicePdf);
-						Ld += weight * fr * radiance * fabs(dot(out, nor)) / pdf;
-					}
+			float3 dir = UniformSphere(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), pdf);
+			r = Ray(r(sampledDist), dir, r.medium);
+		}
+		else{
+			if (bounces == 0 || specular){
+				if (isect.lightIdx != -1){
+					Li += beta*kernel_lights[isect.lightIdx].Le(nor, -r.d);
+					break;
 				}
 			}
 
-			Li += beta*Ld;
+			if (isect.matIdx == -1){
+				bounces--;
+				Medium* m = dot(r.d, isect.nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
+					: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
+				r = Ray(pos, r.d, m);
+
+				continue;
+			}
+
+			Material material = kernel_materials[isect.matIdx];
+			//direct light with multiple importance sampling
+			if (IsDiffuse(material.type)){
+				float3 Ld = make_float3(0.f, 0.f, 0.f);
+				float u = curand_uniform(&cudaRNG);
+				float choicePdf;
+				int idx = LookUpLightDistribution(u, choicePdf);
+				Area light = kernel_lights[idx];
+				float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+				float3 radiance, lightNor;
+				Ray shadowRay;
+				float lightPdf;
+				light.SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+				shadowRay.medium = r.medium;
+
+				if (!IsBlack(radiance) && !IntersectP(shadowRay)){
+					float3 fr;
+					float samplePdf;
+
+					//Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, curand_uniform(&cudaRNG), fr, samplePdf);
+					Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
+					float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
+					Ld += weight*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);
+				}
+
+				float3 uniform = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+				float3 out, fr;
+				float pdf;
+				SampleBSDF(material, -r.d, nor, uv, dpdu, uniform, out, fr, pdf);
+				if (!(IsBlack(fr) || pdf == 0)){
+					Intersection lightIsect;
+					Ray lightRay(pos, out, r.medium, kernel_epsilon);
+					if (Intersect(lightRay, &lightIsect)){
+						float3 p = lightIsect.pos;
+						float3 n = lightIsect.nor;
+						float3 radiance = { 0.f, 0.f, 0.f };
+						if (lightIsect.lightIdx != -1)
+							radiance = kernel_lights[lightIsect.lightIdx].Le(n, -lightRay.d);
+						if (!IsBlack(radiance)){
+							float pdfA, pdfW;
+							kernel_lights[lightIsect.lightIdx].Pdf(Ray(p, -out, r.medium, kernel_epsilon), n, pdfA, pdfW);
+							float choicePdf = PdfFromLightDistribution(lightIsect.lightIdx);
+							float lenSquare = dot(p - pos, p - pos);
+							float costheta = fabs(dot(n, lightRay.d));
+							float lPdf = pdfA * lenSquare / (costheta);
+							float weight = PowerHeuristic(1, pdf, 1, lPdf * choicePdf);
+							Ld += weight * fr * radiance * fabs(dot(out, nor)) / pdf;
+						}
+					}
+				}
+
+				Li += beta*Ld;
+			}
+
+			float3 u = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+			float3 out, fr;
+			float pdf;
+
+			SampleBSDF(material, -r.d, nor, uv, dpdu, u, out, fr, pdf);
+			if (IsBlack(fr))
+				break;
+
+			beta *= fr*fabs(dot(nor, out)) / pdf;
+			specular = !IsDiffuse(material.type);
+
+			Medium* m = dot(out, nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
+				: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
+			m = dot(-r.d, nor)*dot(out, nor) > 0 ? r.medium : m;
+
+			r = Ray(pos, out, m, kernel_epsilon);
 		}
-
-		float3 u = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
-		float3 out, fr;
-		float pdf;
-
-		SampleBSDF(material, -r.d, nor, uv, dpdu, u, out, fr, pdf);
-		if (IsBlack(fr))
-			break;
-
-		beta *= fr*fabs(dot(nor, out)) / pdf;
-		specular = !IsDiffuse(material.type);
 
 		if (bounces > 3){
 			float illumate = clamp(1.f - Luminance(beta), 0.f, 1.f);
@@ -749,8 +975,6 @@ __global__ void Tracing(int iter, int maxDepth){
 
 			beta /= (1 - illumate);
 		}
-
-		r = Ray(pos, out, kernel_epsilon);
 	}
 
 	if (!(isnan(Li.x) || isnan(Li.y) || isnan(Li.z)))
@@ -781,6 +1005,8 @@ __global__ void InitRender(
 	LinearBVHNode* bvh_nodes,
 	Primitive* primitives,
 	Material* materials,
+	Bssrdf* bssrdfs,
+	Medium* mediums,
 	Area* lights,
 	uchar4** texs,
 	float* light_distribution,
@@ -796,6 +1022,8 @@ __global__ void InitRender(
 	kernel_linear = bvh_nodes;
 	kernel_primitives = primitives;
 	kernel_materials = materials;
+	kernel_bssrdfs = bssrdfs;
+	kernel_mediums = mediums;
 	kernel_lights = lights;
 	kernel_textures = texs;
 	kernel_light_distribution = light_distribution;
@@ -845,6 +1073,20 @@ void BeginRender(
 	HANDLE_ERROR(cudaMemcpy(dev_materials, &scene.materials[0], num_materials*sizeof(Material), cudaMemcpyHostToDevice));
 	material_memory_use += num_materials*sizeof(Material);
 
+	int num_bssrdfs = scene.bssrdfs.size();
+	if (num_bssrdfs){
+		HANDLE_ERROR(cudaMalloc(&dev_bssrdfs, num_bssrdfs*sizeof(Bssrdf)));
+		HANDLE_ERROR(cudaMemcpy(dev_bssrdfs, &scene.bssrdfs[0], num_bssrdfs*sizeof(Bssrdf), cudaMemcpyHostToDevice));
+		material_memory_use += num_bssrdfs*sizeof(Bssrdf);
+	}
+
+	int num_mediums = scene.mediums.size();
+	if (num_mediums){
+		HANDLE_ERROR(cudaMalloc(&dev_mediums, num_mediums*sizeof(Medium)));
+		HANDLE_ERROR(cudaMemcpy(dev_mediums, &scene.mediums[0], num_mediums*sizeof(Medium), cudaMemcpyHostToDevice));
+		material_memory_use += num_mediums*sizeof(Medium);
+	}
+
 	int num_lights = scene.lights.size();
 	HANDLE_ERROR(cudaMalloc(&dev_lights, num_lights*sizeof(Area)));
 	HANDLE_ERROR(cudaMemcpy(dev_lights, &scene.lights[0], num_lights*sizeof(Area), cudaMemcpyHostToDevice));
@@ -888,7 +1130,7 @@ void BeginRender(
 	texture_memory_use += ld_size*sizeof(float);
 	
 	InitRender << <1, 1 >> >(dev_camera, dev_bvh_nodes,
-		dev_primitives, dev_materials, dev_lights, dev_textures, dev_light_distribution, ld_size,
+		dev_primitives, dev_materials, dev_bssrdfs, dev_mediums, dev_lights, dev_textures, dev_light_distribution, ld_size,
 		texture_size, dev_image, dev_color, ep, hdrmap.width, hdrmap.height, hdrmap.isvalid);
 
 	HANDLE_ERROR(cudaDeviceSynchronize());

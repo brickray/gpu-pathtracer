@@ -84,6 +84,7 @@ void Mesh::processMesh(aiMesh* aimesh, const aiScene* scene, mat4& trs){
 		tri.v2 = vertices[idx2];
 		tri.v3 = vertices[idx3];
 		tri.matIdx = matIdx;
+		tri.bssrdfIdx = bssrdfIdx;
 		tri.lightIdx = -1;
 		triangles.push_back(tri);
 	}

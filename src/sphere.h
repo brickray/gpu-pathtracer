@@ -10,6 +10,8 @@ public:
 	float3 origin;
 	float radius;
 	int matIdx;
+	int bssrdfIdx;
+	int mediumInside, mediumOutside;
 
 public:
 	__host__ __device__ BBox GetBBox(){
@@ -83,6 +85,9 @@ public:
 			isect->uv = make_float2(u, v);
 			isect->matIdx = matIdx;
 			isect->lightIdx = -1;
+			isect->bssrdf = bssrdfIdx;
+			isect->mediumInside = mediumInside;
+			isect->mediumOutside = mediumOutside;
 		}
 
 		return true;

@@ -21,7 +21,9 @@ class Triangle{
 public:
 	Vertex v1, v2, v3;
 	int matIdx;
+	int bssrdfIdx;
 	int lightIdx;
+	int mediumInside, mediumOutside;
 
 public:
 	__host__ __device__ BBox GetBBox() const{
@@ -72,9 +74,9 @@ public:
 			isect->matIdx = matIdx;
 			isect->lightIdx = lightIdx;
 			isect->dpdu = normalize(v1.t * (1.f - b1 - b2) + v2.t*b1 + v3.t*b2);
-			//isect->bssrdf = bssrdf;
-			//isect->mediumInside = mediumInside;
-			//isect->mediumOutside = mediumOutside;
+			isect->bssrdf = bssrdfIdx;
+			isect->mediumInside = mediumInside;
+			isect->mediumOutside = mediumOutside;
 		}
 
 		return true;
@@ -98,6 +100,7 @@ public:
 	vector<Vertex> vertices;
 	vector<Triangle> triangles;
 	int matIdx;
+	int bssrdfIdx;
 
 public:
 	void LoadObjFromFile(std::string filename, unsigned int flags, mat4& trs);

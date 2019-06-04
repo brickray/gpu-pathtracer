@@ -17,7 +17,7 @@ public:
 		float3 dir;
 		triangle.SampleShape(pos, u, dir, nor, pdf);
 		rad = pdf != 0.f ? radiance : make_float3(0.f, 0.f, 0.f);
-		ray = Ray(pos, normalize(dir), epsilon, sqrtf(dot(dir, dir) - epsilon));
+		ray = Ray(pos, normalize(dir), nullptr, epsilon, sqrtf(dot(dir, dir) - epsilon));
 	}
 
 	__host__ __device__ void Pdf(Ray& ray, float3& nor, float& pdfA, float& pdfW) const{

@@ -122,42 +122,44 @@ __host__ __device__ inline float EquiAngularPdf(float t, float D, float thetaA, 
 	return D / ((thetaB - thetaA)*(t*t + D*D));
 }
 
-__device__ inline float2 GaussianDiskInfinity(float u1, float u2, float falloff){
+__host__ __device__ inline float2 GaussianDiskInfinity(float u1, float u2, float falloff){
 	float r = sqrtf(log(u1) / -falloff);
 	float theta = TWOPI*u2;
 
 	return{ r*cos(theta), r*sin(theta) };
 }
 
-__device__ inline float GaussianDiskInfinityPdf(float x, float y, float falloff){
+__host__ __device__ inline float GaussianDiskInfinityPdf(float x, float y, float falloff){
 	return ONE_OVER_PI * falloff*exp(-falloff*(x*x + y*y));
 }
 
-__device__ inline float GaussianDiskInfinityPdf(float3& center, float3& sample, float3& n, float falloff){
+__host__ __device__ inline float GaussianDiskInfinityPdf(float3& center, float3& sample, float3& n, float falloff){
 	float3 d = sample - center;
 	float3 projected = d - n*dot(d, n);
 	return ONE_OVER_PI*falloff*exp(-falloff*dot(projected, projected));
 }
 
-__device__ inline float2 GaussianDisk(float u1, float u2, float falloff, float rmax){
-	float r = sqrtf(log(1 - u1*(1 - expf(-falloff*rmax*rmax))) / -falloff);
-	float theta = TWOPI*u2;
-	return{ r*cos(theta), r*sin(theta) };
+__host__ __device__ inline float2 GaussianDisk(float u1, float u2, float falloff, float rmax){
+	float r = sqrtf(log(1.0f - u1 * (1.0f - exp(-falloff * rmax * rmax))) /
+		-falloff);
+	float theta = TWOPI * u2;
+	return{ r * cos(theta), r * sin(theta) };
 }
 
-__device__ inline float GaussianDiskPdf(float x, float y, float falloff, float rmax){
-	return GaussianDiskInfinityPdf(x, y, falloff) / (1.f - exp(-falloff*rmax*rmax));
+__host__ __device__ inline float GaussianDiskPdf(float x, float y, float falloff, float rmax){
+	return GaussianDiskInfinityPdf(x, y, falloff) /
+		(1.0f - exp(-falloff * rmax * rmax));
 }
 
-__device__ inline float GaussianDiskPdf(float3& center, float3& sample, float3& n, float falloff, float rmax){
+__host__ __device__ inline float GaussianDiskPdf(float3& center, float3& sample, float3& n, float falloff, float rmax){
 	return GaussianDiskInfinityPdf(center, sample, n, falloff) / (1.f - exp(-falloff*rmax*rmax));
 }
 
-__device__ inline float Exponential(float u, float falloff){
+__host__ __device__ inline float Exponential(float u, float falloff){
 	return -log(u) / falloff;
 }
 
-__device__ inline float ExponentialPdf(float x, float falloff){
+__host__ __device__ inline float ExponentialPdf(float x, float falloff){
 	return falloff*exp(-falloff*x);
 }
 

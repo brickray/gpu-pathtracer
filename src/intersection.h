@@ -9,9 +9,9 @@ struct Intersection{
 	float2 uv; //tex coord of hit point
 	float3 dpdu; //tangent 
 	int matIdx; //index of bsdf
-	//	int bssrdf; //index of bssrdf
+	int bssrdf; //index of bssrdf
 	int lightIdx;
-	//	int mediumInside, mediumOutside;
+	int mediumInside, mediumOutside;
 
 	__host__ __device__ Intersection(){
 		lightIdx = -1;

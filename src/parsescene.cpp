@@ -55,6 +55,46 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 	Value::MemberIterator it = doc.MemberBegin();
 	Value::MemberIterator ited = doc.MemberEnd();
 
+	vector<string> mediumName;
+	//parse medium
+	{
+		if (doc.HasMember("medium")){
+			Value& s = doc["medium"];
+			if (!s.IsArray()){
+				fprintf(stderr, "Invalid Medium format\n");
+				return false;
+			}
+			Value::ValueIterator it = s.Begin();
+			for (; it != s.End(); ++it){
+				Value& unit = *it;
+				string name = (*it)["name"].GetString();
+				float3 sigmaA = (*it).HasMember("sigmaA") ? getFloat3((*it)["sigmaA"]) : make_float3(1.f, 1.f, 1.f);
+				float3 sigmaS = (*it).HasMember("sigmaS") ? getFloat3((*it)["sigmaS"]) : make_float3(1.f, 1.f, 1.f);
+				float g = (*it).HasMember("g") ? (*it)["g"].GetDouble() : 0.f;
+				float scale = (*it).HasMember("scale") ? (*it)["scale"].GetDouble() : 1.f;
+				sigmaA *= scale;
+				sigmaS *= scale;
+				Medium medium;
+				medium.sigmaA = sigmaA;
+				medium.sigmaS = sigmaS;
+				medium.sigmaT = sigmaA + sigmaS;
+				medium.g = g;
+				scene.mediums.push_back(medium);
+				mediumName.push_back(name);
+			}
+		}
+	}
+
+	auto getMedium = [mediumName](string m)->int{
+		int mi = -1;
+		for (int i = 0; i < mediumName.size(); ++i){
+			if (mediumName[i] == m){
+				mi = i;
+				break;
+			}
+		}
+		return mi;
+	};
 	//global config
 	{
 		if (doc.HasMember("screen_width") && doc.HasMember("screen_height")){
@@ -65,7 +105,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			config.width = 512;
 			config.height = 512;
 		}
-		
+
 		config.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
 		config.epsilon = doc.HasMember("epsilon") ? doc["epsilon"].GetDouble() : 0.01f;
 
@@ -81,6 +121,8 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			config.camera.focalDistance = camera.HasMember("focalDistance") ? camera["focalDistance"].GetDouble() : 0.f;
 			config.camera_move_speed = camera.HasMember("move_speed") ? camera["move_speed"].GetDouble() : 0.1f;
 			config.camera.filmic = camera.HasMember("filmicTonemap") ? camera["filmicTonemap"].GetBool() : true;
+			string m = camera.HasMember("medium") ? camera["medium"].GetString() : "";
+			config.camera.medium = getMedium(m);
 		}
 		else{
 			fprintf(stderr, "Scene file must define camera\n");
@@ -98,6 +140,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 	}
 
 	vector<string> matName;
+	vector<string> bssrdfName;
 	//parse material
 	{
 		if (doc.HasMember("material")){
@@ -118,6 +161,26 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 
 			Value::ValueIterator it = mat.Begin();
 			for (; it != mat.End(); ++it){
+				if ((*it).HasMember("bssrdf")){
+					string mat_name = (*it)["name"].GetString();
+					float3 sigmaA = (*it).HasMember("sigmaA") ? getFloat3((*it)["sigmaA"]) : make_float3(1.0, 1.0, 1.0);
+					float3 sigmaSP = (*it).HasMember("sigmaSP") ? getFloat3((*it)["sigmaSP"]) : make_float3(1.0, 1.0, 1.0);
+					float eta = (*it).HasMember("eta") ? (*it)["eta"].GetDouble() : 1.5f;
+					float g = (*it).HasMember("g") ? (*it)["g"].GetDouble() : 0.f;
+					float scale = (*it).HasMember("scale") ? (*it)["scale"].GetDouble() : 1.f;
+					sigmaA *= scale;
+					sigmaSP *= scale;
+					Bssrdf bssrdf(sigmaA, sigmaSP, eta, g);
+					if ((*it).HasMember("kd")){
+						float3 kd = getFloat3((*it)["kd"]);
+						float meanPathLength = (*it).HasMember("meanPathLength") ? (*it)["meanPathLength"].GetDouble() : 1.f;
+						bssrdf.ConvertFromDiffuse(kd, meanPathLength, eta);
+					}
+					float3 aa = bssrdf.GetSigmaT();
+					scene.bssrdfs.push_back(bssrdf);
+					bssrdfName.push_back(mat_name);
+					continue;
+				}
 				string mat_name = (*it)["name"].GetString();
 				string bsdf = (*it)["bsdf"].GetString();
 				float alphaU, alphaV;
@@ -189,10 +252,14 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 				Value& unit = *it;
 				if (unit.HasMember("mesh")){
 					string file = unit["mesh"].GetString();
-					string mat_name = unit.HasMember("material") ? unit["material"].GetString() : "matte";
+					string mat_name = unit.HasMember("material") ? unit["material"].GetString() : "";
 					float3 scale = unit.HasMember("scale") ? getFloat3(unit["scale"]) : make_float3(1, 1, 1);
 					float3 translate = unit.HasMember("translate") ? getFloat3(unit["translate"]) : make_float3(0, 0, 0);
 					float3 rotate = unit.HasMember("rotate") ? getFloat3(unit["rotate"]) : make_float3(0, 0, 0);
+					string mediumInside = unit.HasMember("inside") ? unit["inside"].GetString() : "";
+					string mediumOutside = unit.HasMember("outside") ? unit["outside"].GetString() : "";
+					int mi = getMedium(mediumInside);
+					int mo = getMedium(mediumOutside);
 					mat4 trs, t, r, s;
 					s = glm::scale(s, vec3(scale.x, scale.y, scale.z));
 					t = glm::translate(t, vec3(translate.x, translate.y, translate.z));
@@ -201,17 +268,30 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					r = glm::rotate(r, radians(rotate.z), vec3(0, 0, 1));
 					trs = t*r*s;
 					Mesh mesh;
-					
-					int i;
-					for (i = 0; i < matName.size(); ++i){
-						if (matName[i] == mat_name){
-							mesh.matIdx = i;
-							break;
+					mesh.matIdx = -1;
+					mesh.bssrdfIdx = -1;
+
+					//medium 和 material不相容
+					if (!(mi != -1 || mo != -1)){
+						int i;
+						for (i = 0; i < matName.size(); ++i){
+							if (matName[i] == mat_name){
+								mesh.matIdx = i;
+								break;
+							}
 						}
-					}
-					if (i == matName.size()){
-						fprintf(stderr, "There is no material named:[\"%s\"]\n", mat_name.c_str());
-						exit(1);
+						if (i == matName.size()){
+							for (i = 0; i < bssrdfName.size(); ++i){
+								if (bssrdfName[i] == mat_name){
+									mesh.bssrdfIdx = i;
+									break;
+								}
+							}
+							if (i == bssrdfName.size()){
+								fprintf(stderr, "There is no material named:[\"%s\"]\n", mat_name.c_str());
+								exit(1);
+							}
+						}
 					}
 
 					mesh.LoadObjFromFile((base + file).c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals, trs);
@@ -219,6 +299,8 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 						Primitive primitive;
 						primitive.type = GT_TRIANGLE;
 						primitive.triangle = mesh.triangles[i];
+						primitive.triangle.mediumInside = mi;
+						primitive.triangle.mediumOutside = mo;
 						scene.primitives.push_back(primitive);
 					}
 				}
@@ -271,23 +353,43 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					string mat_name = unit.HasMember("material") ? unit["material"].GetString() : "matte";
 					float3 center = unit.HasMember("center") ? getFloat3(unit["center"]) : make_float3(0, 0, 0);
 					float radius = unit.HasMember("radius") ? unit["radius"].GetDouble() : 1.f;
+					string mediumInside = unit.HasMember("inside") ? unit["inside"].GetString() : "";
+					string mediumOutside = unit.HasMember("outside") ? unit["outside"].GetString() : "";
+					int mi = getMedium(mediumInside);
+					int mo = getMedium(mediumOutside);
 					Sphere sphere;
 					sphere.origin = center;
 					sphere.radius = radius;
-					int i;
-					for (i = 0; i < matName.size(); ++i){
-						if (matName[i] == mat_name){
-							sphere.matIdx = i;
-							break;
+					sphere.matIdx = -1;
+					sphere.bssrdfIdx = -1;
+
+					if (!(mi != -1 || mo != -1)){
+						int i;
+						for (i = 0; i < matName.size(); ++i){
+							if (matName[i] == mat_name){
+								sphere.matIdx = i;
+								break;
+							}
+						}
+						if (i == matName.size()){
+							for (i = 0; i < bssrdfName.size(); ++i){
+								if (bssrdfName[i] == mat_name){
+									sphere.bssrdfIdx = i;
+									break;
+								}
+							}
+							if (i == bssrdfName.size()){
+								fprintf(stderr, "There is no material named:[\"%s\"]\n", mat_name.c_str());
+								exit(1);
+							}
 						}
 					}
-					if (i == matName.size()){
-						fprintf(stderr, "There is no material named:[\"%s\"]\n", mat_name.c_str());
-						exit(1);
-					}
+
 					Primitive prim;
 					prim.type = GT_SPHERE;
 					prim.sphere = sphere;
+					prim.sphere.mediumInside = mi;
+					prim.sphere.mediumOutside = mo;
 					scene.primitives.push_back(prim);
 				}
 				else{
@@ -309,6 +411,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			for (; it != s.End(); ++it){
 				Value& unit = *it;
 				if (unit.HasMember("mesh")){
+					//光源不支持medium
 					string file = unit["mesh"].GetString();
 					string mat_name = unit.HasMember("material") ? unit["material"].GetString() : "matte";
 					float3 radiance = unit.HasMember("radiance") ? getFloat3(unit["radiance"]) : make_float3(0.f, 0.f, 0.f);
@@ -323,6 +426,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					r = glm::rotate(r, radians(rotate.z), vec3(0, 0, 1));
 					trs = t*r*s;
 					Mesh mesh;
+					mesh.bssrdfIdx = -1;
 
 					int i;
 					for (i = 0; i < matName.size(); ++i){
