@@ -1,12 +1,13 @@
 {
     "screen_width": 768,
     "screen_height": 576,
-    "maxDepth": 7,
+    "maxDepth": 17,
     "camera": {
         "position": [ -0.223944, -6.642450, 0.366128 ],
         "lookat": [ -0.261616, -5.644770, 0.309317 ],
         "up": [ 0.000000, 0.000000, 1.000000 ],
-        "fov": 34.156548
+        "fov": 34.156548,
+        "medium": "vol"
     },
     "material": [
         {
@@ -39,10 +40,26 @@
             "diffuse": [ 0.329630, 0.257976, 0.150292 ]
         }
     ],
+    "medium": [
+        {
+            "type": "homogeneous",
+            "sigmaA": [ 0.001, 0.001, 0.001 ],
+            "sigmaS": [ 0.1, 0.1, 0.1 ],
+            "scale": 1.0,
+            "name": "vol"
+        },
+        {
+            "type": "homogeneous",
+            "sigmaA": [ 0.0014, 0.0025, 0.0142 ],
+            "sigmaS": [ 0.70, 1.22, 1.90 ],
+            "scale": 25.0,
+            "name": "skim"
+        }
+    ],
     "scene": [
         {
             "mesh": "../veach_bidir/geometry/bidir_0.ply",
-            "material": "glass"
+            "material": "matte"
         },
         {
             "mesh": "../veach_bidir/geometry/bidir_1.ply",
