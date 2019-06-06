@@ -1,0 +1,109 @@
+{
+    "screen_width": 512,
+    "screen_height": 512,
+    "maxDepth": 17,
+    "epsilon": 0.001,
+    "camera": {
+        "position": [ 0, 1.0, 6.8 ],
+        "lookat": [ 0, 1.0, 0 ],
+        "fov": 19.5,
+        "apertureRadius": 0.0,
+        "focalDistance": 7.0,
+        "move_speed": 0.1,
+        "environment": false
+    },
+    "material": [
+        {
+            "name": "Left",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.63, 0.065, 0.05 ]
+        },
+        {
+            "name": "Right",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.140000, 0.450000, 0.091000 ]
+        },
+        {
+            "name": "General",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.725, 0.725, 0.725 ]
+        },
+        {
+            "name": "General",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.725, 0.725, 0.725 ]
+        },
+        {
+            "name": "Emission",
+            "bsdf": "lambertian",
+            "diffuse": [ 0, 0, 0 ]
+        },
+        {
+            "name": "Glass",
+            "bsdf": "dielectric",
+            "insideIOR": 1.5,
+            "outsideIOR": 1.0
+        },
+        {
+            "name": "metal",
+            "bsdf": "roughconduct",
+            "alphaU": 0.025,
+            "alphaV": 0.025,
+            "eta": [ 1.0, 1.0, 1.0 ],
+            "k": [ 1.0, 1.0, 1.0 ],
+            "remap": false
+        }
+    ],
+    "medium": [
+        {
+            "type": "homogeneous",
+            "sigmaA": [ 0, 0, 0 ],
+            "sigmaS": [ 1.0, 1.0, 1.0 ],
+            "scale": 1.0,
+            "name": "gas"
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "geometry/mesh_0.obj",
+            "material": "General"
+        },
+        {
+            "mesh": "geometry/mesh_1.obj",
+            "material": "General"
+        },
+        {
+            "mesh": "geometry/mesh_2.obj",
+            "material": "General"
+        },
+        {
+            "mesh": "geometry/mesh_3.obj",
+            "material": "",
+            "inside": "gas",
+            "outside": ""
+        },
+        {
+            "mesh": "geometry/mesh_4.obj",
+            "material": "Right"
+        },
+        {
+            "mesh": "geometry/mesh_5.obj",
+            "material": "Left"
+        },
+        {
+            "sphere": true,
+            "center": [ 0, 1.2, 0.0 ],
+            "radius": 0.3,
+            "material": "Glass",
+            "inside": "",
+            "outside": "gas"
+        }
+    ],
+    "light": [
+        {
+            "mesh": "geometry/mesh_6.obj",
+            "material": "Emission",
+            "radiance": [ 17.0, 12.0, 4.0 ]
+        }
+    ]
+}
