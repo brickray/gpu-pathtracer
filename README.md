@@ -10,6 +10,7 @@ physically based path tracer on gpu
 
 - 路径追踪器
 - 材质(lambertian mirror dielectric roughdielectric roughconduct substrate)
+- 参与介质渲染(homogeneous and heterogeneous)
 - 面积光源
 - 多重重要性采样
 - 景深
@@ -25,9 +26,8 @@ physically based path tracer on gpu
 
 图集
 ---
-![veach_bidir](result/veach_bidir.png) 
 ![roughdielectric](result/rough_ball.png)
+![heterogeneous](result/heterogeneous.png) 
 ![subsurface](result/subsurface.png)
-![coffee](result/coffee.png)
-![spaceship](result/spaceship.png)
+![volume_caustic](result/volume_caustic.png)
 ![cornell_dof](result/cornell_dof.png)
