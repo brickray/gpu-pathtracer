@@ -67,6 +67,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			Value::ValueIterator it = s.Begin();
 			for (; it != s.End(); ++it){
 				Value& unit = *it;
+				string type = (*it).HasMember("type") ? (*it)["type"].GetString() : "homogeneous";
 				string name = (*it)["name"].GetString();
 				float3 sigmaA = (*it).HasMember("sigmaA") ? getFloat3((*it)["sigmaA"]) : make_float3(1.f, 1.f, 1.f);
 				float3 sigmaS = (*it).HasMember("sigmaS") ? getFloat3((*it)["sigmaS"]) : make_float3(1.f, 1.f, 1.f);
@@ -75,10 +76,39 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 				sigmaA *= scale;
 				sigmaS *= scale;
 				Medium medium;
-				medium.sigmaA = sigmaA;
-				medium.sigmaS = sigmaS;
-				medium.sigmaT = sigmaA + sigmaS;
-				medium.g = g;
+				if (type == "homogeneous"){
+					medium.type = MT_HOMOGENEOUS;
+					medium.homogeneous.sigmaA = sigmaA;
+					medium.homogeneous.sigmaS = sigmaS;
+					medium.homogeneous.sigmaT = sigmaA + sigmaS;
+					medium.homogeneous.g = g;
+				}
+				else{
+					int nx = (*it)["nx"].GetInt();
+					int ny = (*it)["ny"].GetInt();
+					int nz = (*it)["nz"].GetInt();
+					float3 p0 = getFloat3((*it)["p0"]);
+					float3 p1 = getFloat3((*it)["p1"]);
+					string file = (*it)["density"].GetString();
+					medium.type = MT_HETEROGENEOUS;
+					medium.heterogeneous.sigmaA = sigmaA;
+					medium.heterogeneous.sigmaS = sigmaS;
+					medium.heterogeneous.sigmaT = sigmaA + sigmaS;
+					medium.heterogeneous.g = g;
+					medium.heterogeneous.nx = nx;
+					medium.heterogeneous.ny = ny;
+					medium.heterogeneous.nz = nz;
+					medium.heterogeneous.p0 = p0;
+					medium.heterogeneous.p1 = p1;
+					medium.heterogeneous.density = new float[nx*ny*nz];
+					ReadDensityFromFile((base + file).c_str(), nx, ny, nz, medium.heterogeneous.density);
+					float max = 0.f;
+					for (int i = 0; i < nx*ny*nz; ++i){
+						if (medium.heterogeneous.density[i] > max)
+							max = medium.heterogeneous.density[i];
+					}
+					medium.heterogeneous.invMaxDensity = 1.f / max;
+				}
 				scene.mediums.push_back(medium);
 				mediumName.push_back(name);
 			}
@@ -271,8 +301,8 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					mesh.matIdx = -1;
 					mesh.bssrdfIdx = -1;
 
-					//medium ∫Õ material≤ªœ‡»›
-					if (!(mi != -1 || mo != -1)){
+
+					if (mat_name != "" || !(mi != -1 || mo != -1)){
 						int i;
 						for (i = 0; i < matName.size(); ++i){
 							if (matName[i] == mat_name){
@@ -350,7 +380,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					scene.primitives.push_back(prim);
 				}
 				else if (unit.HasMember("sphere")){
-					string mat_name = unit.HasMember("material") ? unit["material"].GetString() : "matte";
+					string mat_name = unit.HasMember("material") ? unit["material"].GetString() : "";
 					float3 center = unit.HasMember("center") ? getFloat3(unit["center"]) : make_float3(0, 0, 0);
 					float radius = unit.HasMember("radius") ? unit["radius"].GetDouble() : 1.f;
 					string mediumInside = unit.HasMember("inside") ? unit["inside"].GetString() : "";
@@ -363,7 +393,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					sphere.matIdx = -1;
 					sphere.bssrdfIdx = -1;
 
-					if (!(mi != -1 || mo != -1)){
+					if (mat_name != "" || !(mi != -1 || mo != -1)){
 						int i;
 						for (i = 0; i < matName.size(); ++i){
 							if (matName[i] == mat_name){

@@ -303,8 +303,12 @@ __device__ float3 Tr(Ray& ray, curandState& rng){
 		if (invisible && isect.matIdx != -1)
 			return{ 0, 0, 0 };
 
-		if (ray.medium)
-			tr *= ray.medium->Tr(ray, rng);
+		if (ray.medium){
+			if (ray.medium->type == MT_HOMOGENEOUS)
+				tr *= ray.medium->homogeneous.Tr(ray, rng);
+			else
+				tr *= ray.medium->heterogeneous.Tr(ray, rng);
+		}
 
 		if (!invisible) break;
 		Medium* m = dot(ray.d, isect.nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
@@ -856,8 +860,12 @@ __global__ void Tracing(int iter, int maxDepth){
 			}*/
 		float sampledDist;
 		bool sampledMedium = false;
-		if (r.medium)
-			beta *= r.medium->Sample(r, curand_uniform(&cudaRNG), sampledDist, sampledMedium);
+		if (r.medium){
+			if (r.medium->type == MT_HOMOGENEOUS)
+				beta *= r.medium->homogeneous.Sample(r, cudaRNG, sampledDist, sampledMedium);
+			else
+				beta *= r.medium->heterogeneous.Sample(r, cudaRNG, sampledDist, sampledMedium);
+		}
 		if (IsBlack(beta)) break;
 		if (sampledMedium){
 			float u = curand_uniform(&cudaRNG);
@@ -945,7 +953,12 @@ __global__ void Tracing(int iter, int maxDepth){
 							float lPdf = pdfA * lenSquare / (costheta);
 							float weight = PowerHeuristic(1, pdf, 1, lPdf * choicePdf);
 							float3 tr = { 1.f, 1.f, 1.f };
-							if (lightRay.medium) tr = lightRay.medium->Tr(lightRay, cudaRNG);
+							if (lightRay.medium){
+								if (lightRay.medium->type == MT_HOMOGENEOUS)
+									tr = lightRay.medium->homogeneous.Tr(lightRay, cudaRNG);
+								else
+									tr = lightRay.medium->heterogeneous.Tr(lightRay, cudaRNG);
+							}
 							Ld += weight * tr * fr * radiance * fabs(dot(out, nor)) / pdf;
 						}
 					}
@@ -1090,6 +1103,18 @@ void BeginRender(
 		HANDLE_ERROR(cudaMemcpy(dev_mediums, &scene.mediums[0], num_mediums*sizeof(Medium), cudaMemcpyHostToDevice));
 		material_memory_use += num_mediums*sizeof(Medium);
 	}
+	//copy heterogeneous density data
+	for (int i = 0; i < num_mediums; ++i){
+		if (scene.mediums[i].type == MT_HETEROGENEOUS){
+			Heterogeneous m = scene.mediums[i].heterogeneous;
+			float* density;
+			HANDLE_ERROR(cudaMalloc(&density, m.nx*m.ny*m.nz*sizeof(float)));
+			material_memory_use += m.nx*m.ny*m.nz*sizeof(float);
+			HANDLE_ERROR(cudaMemcpy(density, m.density, m.nx*m.ny*m.nz*sizeof(float), cudaMemcpyHostToDevice));
+			HANDLE_ERROR(cudaMemcpy(&dev_mediums[i].heterogeneous.density, &density, sizeof(float*), cudaMemcpyHostToDevice));
+			delete[] m.density;
+		}
+	}
 
 	int num_lights = scene.lights.size();
 	HANDLE_ERROR(cudaMalloc(&dev_lights, num_lights*sizeof(Area)));
@@ -1136,6 +1161,7 @@ void BeginRender(
 	InitRender << <1, 1 >> >(dev_camera, dev_bvh_nodes,
 		dev_primitives, dev_materials, dev_bssrdfs, dev_mediums, dev_lights, dev_textures, dev_light_distribution, ld_size,
 		texture_size, dev_image, dev_color, ep, hdrmap.width, hdrmap.height, hdrmap.isvalid);
+
 
 	HANDLE_ERROR(cudaDeviceSynchronize());
 
