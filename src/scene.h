@@ -9,7 +9,7 @@
 #include "area.h"
 #include "camera.h"
 #include "bssrdf.h"
-#include "meidum.h"
+#include "medium.h"
 #include "infinite.h"
 
 class Scene{
