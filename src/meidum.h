@@ -16,13 +16,31 @@ public:
 	}
 
 	__device__ float3 Sample(const Ray& ray, curandState& rng, float& t, bool& sampled) const{
-		float sigma = dot(sigmaT, { 0.212671f, 0.715160f, 0.072169f });
+		int channel = curand_uniform(&rng) * 3;
+		channel = channel == 3 ? 2 : channel;
+		float dist = -std::log(1 - curand_uniform(&rng)) / (&sigmaT.x)[channel];
+		float tt = dist < ray.tmax ? dist : ray.tmax;
+		bool sampledMedium = tt < ray.tmax;
+		sampled = sampledMedium;
+		if (sampledMedium)
+			t = tt;
+
+		float3 Tr = Exp(sigmaT * -tt);
+
+		float3 density = sampledMedium ? (sigmaT * Tr) : Tr;
+		float pdf = 0;
+		for (int i = 0; i < 3; ++i) pdf += (&density.x)[i];
+		pdf *= 1 / 3.f;
+		if (pdf == 0) {
+		    pdf = 1;
+		}
+		/*float sigma = dot(sigmaT, { 0.212671f, 0.715160f, 0.072169f });
 		float dist = Exponential(curand_uniform(&rng), sigma);
 		bool sampledMedium = dist < ray.tmax;
 		sampled = sampledMedium;
-		t = dist;
+		t = dist;*/
 
-		return sampledMedium ? (sigmaS / sigmaT) : make_float3(1.f, 1.f, 1.f);
+		return sampledMedium ? (Tr * sigmaS / pdf) : Tr / pdf;
 	}
 };
 
