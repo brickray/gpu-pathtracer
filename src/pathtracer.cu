@@ -843,7 +843,7 @@ __global__ void Tracing(int iter, int maxDepth){
 	bool specular = false;
 	for (int bounces = 0; bounces < maxDepth; ++bounces){
 		if (!Intersect(r, &isect)){
-			if (bounces == 0 || specular)
+			if ((bounces == 0 || specular) && kernel_infinite->isvalid)
 				Li += beta*kernel_infinite->Le(r.d);
 			break;
 		}
@@ -870,15 +870,19 @@ __global__ void Tracing(int iter, int maxDepth){
 		if (IsBlack(beta)) break;
 		if (sampledMedium){
 			//TODO:多重重要性采样
+			bool inf = false;
 			float u = curand_uniform(&cudaRNG);
 			float choicePdf;
 			int idx = LookUpLightDistribution(u, choicePdf);
-			Area light = kernel_lights[idx];
+			if (idx == kernel_light_size) inf = true;
 			float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
 			float3 radiance, lightNor;
 			Ray shadowRay;
 			float lightPdf;
-			light.SampleLight(r(sampledDist), u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+			if (!inf)
+				kernel_lights[idx].SampleLight(r(sampledDist), u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+			else
+				kernel_infinite->SampleLight(r(sampledDist), u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
 			shadowRay.medium = r.medium;
 			float3 tr = Tr(shadowRay, cudaRNG);
 			float phase, unuse;
@@ -919,16 +923,13 @@ __global__ void Tracing(int iter, int maxDepth){
 				float u = curand_uniform(&cudaRNG);
 				float choicePdf;
 				int idx = LookUpLightDistribution(u, choicePdf);
-				if (idx == kernel_light_size) inf = true;;
-				Area light;
-				if (!inf)
-					light = kernel_lights[idx];
+				if (idx == kernel_light_size) inf = true;
 				float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
 				float3 radiance, lightNor;
 				Ray shadowRay;
 				float lightPdf;
 				if (!inf)
-					light.SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+					kernel_lights[idx].SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
 				else
 					kernel_infinite->SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
 				shadowRay.medium = r.medium;
@@ -978,21 +979,23 @@ __global__ void Tracing(int iter, int maxDepth){
 					}
 					else{
 						//infinite
-						float3 radiance = { 0.f, 0.f, 0.f };
-						radiance = kernel_infinite->Le(lightRay.d);
-						float choicePdf = PdfFromLightDistribution(kernel_light_size);
-						float lightPdf, pdfA;
-						float3 lightNor;
-						kernel_infinite->Pdf(lightRay, lightNor, pdfA, lightPdf);
-						float weight = PowerHeuristic(1, pdf, 1, lightPdf*choicePdf);
-						float3 tr = { 1.f, 1.f, 1.f };
-						if (lightRay.medium){
-							if (lightRay.medium->type == MT_HOMOGENEOUS)
-								tr = lightRay.medium->homogeneous.Tr(lightRay, cudaRNG);
-							else
-								tr = lightRay.medium->heterogeneous.Tr(lightRay, cudaRNG);
+						if (kernel_infinite->isvalid){
+							float3 radiance = { 0.f, 0.f, 0.f };
+							radiance = kernel_infinite->Le(lightRay.d);
+							float choicePdf = PdfFromLightDistribution(kernel_light_size);
+							float lightPdf, pdfA;
+							float3 lightNor;
+							kernel_infinite->Pdf(lightRay, lightNor, pdfA, lightPdf);
+							float weight = PowerHeuristic(1, pdf, 1, lightPdf*choicePdf);
+							float3 tr = { 1.f, 1.f, 1.f };
+							if (lightRay.medium){
+								if (lightRay.medium->type == MT_HOMOGENEOUS)
+									tr = lightRay.medium->homogeneous.Tr(lightRay, cudaRNG);
+								else
+									tr = lightRay.medium->heterogeneous.Tr(lightRay, cudaRNG);
+							}
+							Ld += weight * tr * fr * radiance * fabs(dot(out, nor)) / pdf;
 						}
-						Ld += weight * tr * fr * radiance * fabs(dot(out, nor)) / pdf;
 					}
 				}
 
@@ -1152,9 +1155,9 @@ void BeginRender(
 	}
 
 	//copy infinite light
+	HANDLE_ERROR(cudaMalloc(&dev_infinite, sizeof(Infinite)));
+	HANDLE_ERROR(cudaMemcpy(dev_infinite, &scene.infinite, sizeof(Infinite), cudaMemcpyHostToDevice));
 	if (scene.infinite.isvalid){
-		HANDLE_ERROR(cudaMalloc(&dev_infinite, sizeof(Infinite)));
-		HANDLE_ERROR(cudaMemcpy(dev_infinite, &scene.infinite, sizeof(Infinite), cudaMemcpyHostToDevice));
 		int width = scene.infinite.width, height = scene.infinite.height;
 		float3* data;
 		HANDLE_ERROR(cudaMalloc(&data, width*height*sizeof(float3)));
