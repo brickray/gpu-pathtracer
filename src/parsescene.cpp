@@ -73,17 +73,23 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 				float3 sigmaS = (*it).HasMember("sigmaS") ? getFloat3((*it)["sigmaS"]) : make_float3(1.f, 1.f, 1.f);
 				float g = (*it).HasMember("g") ? (*it)["g"].GetDouble() : 0.f;
 				float scale = (*it).HasMember("scale") ? (*it)["scale"].GetDouble() : 1.f;
+				int iterMax = (*it).HasMember("iterMax") ? (*it)["iterMax"].GetInt() : 1000;
 				sigmaA *= scale;
 				sigmaS *= scale;
 				Medium medium;
+				medium.g = g;
 				if (type == "homogeneous"){
 					medium.type = MT_HOMOGENEOUS;
 					medium.homogeneous.sigmaA = sigmaA;
 					medium.homogeneous.sigmaS = sigmaS;
 					medium.homogeneous.sigmaT = sigmaA + sigmaS;
-					medium.homogeneous.g = g;
 				}
 				else{
+					float3 sigmaT = sigmaA + sigmaS;
+					if (sigmaT.x != sigmaT.y || sigmaT.x != sigmaT.z){
+						fprintf(stderr, "sigmaA and sigmaS requires uniform attenuation coefficient\n");
+						exit(1);
+					}
 					int nx = (*it)["nx"].GetInt();
 					int ny = (*it)["ny"].GetInt();
 					int nz = (*it)["nz"].GetInt();
@@ -93,13 +99,13 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					medium.type = MT_HETEROGENEOUS;
 					medium.heterogeneous.sigmaA = sigmaA;
 					medium.heterogeneous.sigmaS = sigmaS;
-					medium.heterogeneous.sigmaT = sigmaA + sigmaS;
-					medium.heterogeneous.g = g;
+					medium.heterogeneous.sigmaT = sigmaT;
 					medium.heterogeneous.nx = nx;
 					medium.heterogeneous.ny = ny;
 					medium.heterogeneous.nz = nz;
 					medium.heterogeneous.p0 = p0;
 					medium.heterogeneous.p1 = p1;
+					medium.heterogeneous.iterMax = iterMax;
 					medium.heterogeneous.density = new float[nx*ny*nz];
 					ReadDensityFromFile((base + file).c_str(), nx, ny, nz, medium.heterogeneous.density);
 					float max = 0.f;
@@ -157,15 +163,6 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 		else{
 			fprintf(stderr, "Scene file must define camera\n");
 			return false;
-		}
-
-		config.skybox = false;
-		if (doc.HasMember("skybox")){
-			Value& skybox = doc["skybox"];
-			if (skybox.HasMember("envmap")){
-				config.skybox = true;
-				config.hdr = skybox["envmap"].GetString();
-			}
 		}
 	}
 
@@ -483,8 +480,36 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 						scene.lights.push_back(area);
 					}
 				}
+				else if (unit.HasMember("infinite")){
+					string file = unit["infinite"].GetString();
+					int w, h;
+					vector<float3> exr;
+					if (!ImageIO::LoadExr((base + file).c_str(), w, h, exr)){
+						fprintf(stderr, "Couldn't load hdr file \"%s\", only support .exr format\n", file.c_str());
+						exit(1);
+					}
+					float3 r = unit.HasMember("rotate") ? getFloat3(unit["rotate"]) : make_float3(0.f, 0.f, 0.f);
+					mat4 rs;
+					rs = rotate(rs, radians(r.x), vec3(1, 0, 0));
+					rs = rotate(rs, radians(r.y), vec3(0, 1, 0));
+					rs = rotate(rs, radians(r.z), vec3(0, 0, 1));
+					vec3 uu = vec3(rs * vec4(1, 0, 0, 0));
+					vec3 vv = vec3(rs * vec4(0, 1, 0, 0));
+					vec3 ww = vec3(rs * vec4(0, 0, 1, 0));
+					Infinite infinite;
+					infinite.u = VecToFloat3(uu);
+					infinite.v = VecToFloat3(vv);
+					infinite.w = VecToFloat3(ww);
+					infinite.width = w;
+					infinite.height = h;
+					infinite.data = new float3[w*h];
+					for (int i = 0; i < w*h; ++i)
+						infinite.data[i] = exr[i];
+					infinite.isvalid = true;
+					scene.infinite = infinite;
+				}
 				else{
-					fprintf(stderr, "Only area light supported\n");
+					fprintf(stderr, "Only support area and infinite light\n");
 				}
 			}
 		}

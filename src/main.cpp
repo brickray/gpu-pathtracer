@@ -16,12 +16,9 @@ GlobalConfig config;
 unsigned iteration = 0;
 bool vision_bvh = false;
 bool reset_acc_image = false;
-HDRMap hdrmap;
 clock_t start = 0, last = 0;
 float3* image, *dev_ptr;
-Camera* camera;
 Scene scene;
-BVH bvh;
 GLuint buffer;
 cudaGraphicsResource* resource = NULL;
 
@@ -130,8 +127,8 @@ void draw_bbox(BBox& bbox){
 }
 
 void visualize_bvh(){
-	for (int i = 0; i < bvh.total_nodes; ++i)
-		draw_bbox(bvh.linear_root[i].bbox);
+	for (int i = 0; i < scene.bvh.total_nodes; ++i)
+		draw_bbox(scene.bvh.linear_root[i].bbox);
 }
 
 void start_tracing(){
@@ -139,7 +136,7 @@ void start_tracing(){
 	cudaGraphicsMapResources(1, &resource, NULL);
 	cudaGraphicsResourceGetMappedPointer((void**)&dev_ptr, &size, resource);
 
-	Render(scene, config.width, config.height, camera, iteration, reset_acc_image, dev_ptr);
+	Render(scene, config.width, config.height, scene.camera, iteration, reset_acc_image, dev_ptr);
 	reset_acc_image = false;
 
 	//HANDLE_ERROR(cudaMemcpy(image, dev_ptr, width*height*sizeof(float3), cudaMemcpyDeviceToHost));
@@ -163,10 +160,10 @@ void record_time(){
 void update_camera(){
 	glMatrixMode(GL_MODELVIEW);
 	GLfloat matrix[16];
-	matrix[0] = camera->u.x; matrix[1] = camera->v.x; matrix[2] = camera->w.x; matrix[3] = 0.f;
-	matrix[4] = camera->u.y; matrix[5] = camera->v.y; matrix[6] = camera->w.y; matrix[7] = 0.f;
-	matrix[8] = camera->u.z; matrix[9] = camera->v.z; matrix[10] = camera->w.z; matrix[11] = 0.f;
-	matrix[12] = -dot(camera->u, camera->position); matrix[13] = -dot(camera->v, camera->position); matrix[14] = -dot(camera->w, camera->position); matrix[15] = 1.f;
+	matrix[0] = scene.camera->u.x; matrix[1] = scene.camera->v.x; matrix[2] = scene.camera->w.x; matrix[3] = 0.f;
+	matrix[4] = scene.camera->u.y; matrix[5] = scene.camera->v.y; matrix[6] = scene.camera->w.y; matrix[7] = 0.f;
+	matrix[8] = scene.camera->u.z; matrix[9] = scene.camera->v.z; matrix[10] = scene.camera->w.z; matrix[11] = 0.f;
+	matrix[12] = -dot(scene.camera->u, scene.camera->position); matrix[13] = -dot(scene.camera->v, scene.camera->position); matrix[14] = -dot(scene.camera->w, scene.camera->position); matrix[15] = 1.f;
 	
 	glLoadMatrixf(matrix);
 }
@@ -210,38 +207,37 @@ static void keyboard(unsigned char key, int x, int y){
 		break;
 	case 'w':
 	case 'W':
-		camera->position -= camera->w*speed;
+		scene.camera->position -= scene.camera->w*speed;
 		reset_acc_image = true;
 		break;
 	case 's':
 	case 'S':
-		camera->position += camera->w*speed;
+		scene.camera->position += scene.camera->w*speed;
 		reset_acc_image = true;
 		break;
 	case 'a':
 	case 'A':
-		camera->position -= camera->u*speed;
+		scene.camera->position -= scene.camera->u*speed;
 		reset_acc_image = true;
 		break;
 	case 'd':
 	case 'D':
-		camera->position += camera->u*speed;
+		scene.camera->position += scene.camera->u*speed;
 		reset_acc_image = true;
 		break;
 	case 'e':
 	case 'E':
-		camera->position += camera->v*speed;
+		scene.camera->position += scene.camera->v*speed;
 		reset_acc_image = true;
 		break;
 	case 'q':
 	case 'Q':
-		camera->position -= camera->v*speed;
+		scene.camera->position -= scene.camera->v*speed;
 		reset_acc_image = true;
 		break;
 	case 27:
 		EndRender();
 		HANDLE_ERROR(cudaFree(dev_ptr));
-		delete camera;
 
 		exit(0);
 	}
@@ -255,28 +251,6 @@ static void motion(int x, int y){
 
 }
 
-void InitHDR(const char* hdr){
-	/*HDRImage image;
-	if (!HDRLoader::load(hdr, image)){
-		fprintf(stderr, "could not find hdr file");
-	}
-	int hdr_width = image.width;
-	int hdr_height = image.height;
-	hdrmap.isvalid = true;
-	hdrmap.width = hdr_width;
-	hdrmap.height = hdr_height;
-	hdrmap.image = new float4[hdr_width*hdr_height];
-
-	for (int i = 0; i < hdr_height; ++i){
-		for (int j = 0; j < hdr_width; ++j){
-			int idx = i*hdr_width + j;
-			float3 c = make_float3(image.colors[3 * idx], image.colors[3 * idx + 1], image.colors[3 * idx + 2]);
-
-			hdrmap.image[idx] = make_float4(c, 0.f);
-		}
-	}*/
-}
-
 bool InitScene(string file){
 	clock_t now = clock();
 	if (!LoadScene(file.c_str(), config, scene)){
@@ -284,28 +258,14 @@ bool InitScene(string file){
 		return false;
 	}
 
-	//init light distribution
-	scene.Init();
-
-	if (config.skybox)
-		;// InitHDR(config.hdr.c_str());
-	else
-		hdrmap.isvalid = false;
-
 	Camera cam = config.camera;
-	camera = new Camera(cam.position, cam.u, cam.v, cam.w, make_float2(config.width, config.height), 0.1f, cam.fov, cam.apertureRadius, cam.focalDistance, cam.filmic, cam.medium);
+	Camera* camera = new Camera(cam.position, cam.u, cam.v, cam.w, make_float2(config.width, config.height), 0.1f, cam.fov, cam.apertureRadius, cam.focalDistance, cam.filmic, cam.medium);
 	camera->environment = cam.environment;
+	//init light distribution
+	scene.Init(camera);
 
 	printf("Load scene using %.3fms\n", float(clock() - now));
-	printf("Primitives [%d]\n", scene.primitives.size());
-
-	now = clock();
-	bvh.Build(scene.primitives);
-	printf("Build bvh using %.3fms\n", float(clock() - now));
-	printf("Bvh total nodes:%d\n", bvh.total_nodes);
-	printf("Scene Bounds [%.3f, %.3f, %.3f]-[%.3f, %.3f, %.3f]\n", 
-		bvh.root_box.fmin.x, bvh.root_box.fmin.y, bvh.root_box.fmin.z,
-		bvh.root_box.fmax.x, bvh.root_box.fmax.y, bvh.root_box.fmax.z);
+	printf("Primitives [%d]\n", scene.bvh.prims.size());
 
 	return true;
 }
@@ -330,7 +290,7 @@ int main(int argc, char**argv){
 	image = new float3[config.width*config.height];
 	HANDLE_ERROR(cudaMalloc(&dev_ptr, config.width*config.height*sizeof(float3)));
 
-	BeginRender(scene, bvh, *camera, config.width, config.height, config.epsilon, config.maxDepth, hdrmap);
+	BeginRender(scene, config.width, config.height, config.epsilon, config.maxDepth);
 
 	srand(time(NULL));
 

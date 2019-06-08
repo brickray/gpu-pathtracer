@@ -23,10 +23,6 @@ struct GlobalConfig{
 	float camera_move_speed;
 	//default 0.01
 	float epsilon;
-
-	//skybox
-	bool skybox;
-	std::string hdr;
 };
 
 bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene);

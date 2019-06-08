@@ -8,7 +8,6 @@
 class Homogeneous{
 public:
 	float3 sigmaA, sigmaS, sigmaT;
-	float g;
 
 public:
 	__device__ float3 Tr(const Ray& ray, curandState& rng) const{
@@ -25,6 +24,109 @@ public:
 
 		return sampledMedium ? (sigmaS / sigmaT) : make_float3(1.f, 1.f, 1.f);
 	}
+};
+
+class Heterogeneous{
+public:
+	float3 sigmaA, sigmaS, sigmaT;
+	int nx, ny, nz;
+	float* density;
+	float invMaxDensity;
+	float3 p0, p1;
+	int iterMax;
+
+public:
+	//有时候会因为迭代过于深而导致timeout
+	__device__ float3 Tr(const Ray& ray, curandState& rng) const{
+		float sigma = dot(sigmaT, { 0.212671f, 0.715160f, 0.072169f });
+		Ray r = ray;
+		float3 d = p1 - p0;
+		float tr = 1.f;
+		float dist = 0.f;
+		int iter = iterMax;
+		while (true){
+			dist += -log(curand_uniform(&rng)) * invMaxDensity / sigma;
+			if (dist >= r.tmax) break;
+			float3 p = r(dist);
+			p = (p - p0) / d;
+			tr *= 1.f - getDensity(p)*invMaxDensity;
+
+			if (tr < 0.1f){
+				float q = 1.f - tr;
+				if (curand_uniform(&rng) < q) return{ 0.f, 0.f, 0.f };
+				tr /= (1.f - q);
+			}
+
+			if (--iter == 0)
+				break;
+		}
+
+		return{ tr, tr, tr };
+	}
+
+	__device__ float3 Sample(const Ray& ray, curandState& rng, float& t, bool& sampled) const{
+		float sigma = dot(sigmaT, { 0.212671f, 0.715160f, 0.072169f });
+		Ray r = ray;
+		float3 d = p1 - p0;
+		float dist = 0.f;
+		int iter = iterMax;
+		while (true){
+			dist += -log(curand_uniform(&rng)) * invMaxDensity / sigma;
+			if (dist >= r.tmax) break;
+			float3 p = r(dist);
+			p = (p - p0) / d;
+			if (getDensity(p)*invMaxDensity > curand_uniform(&rng)){
+				t = dist;
+				sampled = true;
+				return sigmaS / sigmaT;
+			}
+
+			if (--iter == 0)
+				break;
+		}
+
+		t = dist;
+		sampled = false;
+		return make_float3(1.f, 1.f, 1.f);
+	}
+
+private:
+	__device__ float getDensity(float3& p) const{
+		float3 ps = make_float3(p.x*nx, p.y*ny, p.z*nz);
+		float3 psi = make_float3(floor(ps.x), floor(ps.y), floor(ps.z));
+		float3 delta = ps - psi;
+		float d00 = lerp(d(psi), d(psi + make_float3(1, 0, 0)), delta.x);
+		float d10 = lerp(d(psi + make_float3(0, 1, 0)), d(psi + make_float3(1, 1, 0)), delta.x);
+		float d01 = lerp(d(psi + make_float3(0, 0, 1)), d(psi + make_float3(1, 0, 1)), delta.x);
+		float d11 = lerp(d(psi + make_float3(0, 1, 1)), d(psi + make_float3(1, 1, 1)), delta.x);
+		float d0 = lerp(d00, d10, delta.y);
+		float d1 = lerp(d01, d11, delta.y);
+		return lerp(d0, d1, delta.z);
+	}
+
+	__device__ float d(float3& p) const{
+		int x = p.x, y = p.y, z = p.z;
+		if (x<0 || x>nx - 1 || y<0 || y>ny - 1 || z<0 || z>nz - 1) return 0.f;
+		int idx = z*ny*nx + y*nx + x;
+		return density[idx];
+	}
+};
+
+enum MediumType{
+	MT_HOMOGENEOUS = 0,
+	MT_HETEROGENEOUS,
+};
+
+class Medium{
+public:
+	MediumType type;
+	float g;
+
+	union{
+		Homogeneous homogeneous;
+		Heterogeneous heterogeneous;
+	};
+
 
 	__device__ void SamplePhase(float2 u, float3& dir, float& phase, float& pdf) const{
 		if (g == 0){
@@ -50,91 +152,20 @@ public:
 		phase = ONE_OVER_FOUR_PI*(1.f - g*g) / sqrt(cubicTerm*cubicTerm*cubicTerm);
 		pdf = phase;
 	}
-};
 
-class Heterogeneous{
-public:
-	float3 sigmaA, sigmaS, sigmaT;
-	float g;
-	int nx, ny, nz;
-	float* density;
-	float invMaxDensity;
-	float3 p0, p1;
-
-public:
-	__device__ float3 Tr(const Ray& ray, curandState& rng) const{
-		float sigma = dot(sigmaT, { 0.212671f, 0.715160f, 0.072169f });
-		Ray r = ray;
-		float3 d = p1 - p0;
-		float tr = 1.f;
-		float dist = 0.f;
-		while (true){
-			dist += -log(curand_uniform(&rng)) * invMaxDensity / sigma;
-			if (dist > r.tmax) break;
-			float3 p = r(dist);
-			p = (p - p0) / d;
-			tr *= 1.f - getDensity(p)*invMaxDensity;
+	__device__ void Phase(float3& in, float3& out, float& phase, float& pdf){
+		if (g == 0){
+			phase = ONE_OVER_FOUR_PI;
+			pdf = phase;
+			return;
 		}
 
-		return{ tr, tr, tr };
+		//hg
+		float costheta = dot(in, out);
+		float cubicTerm = (1.f + g*g - 2.f*g*costheta);
+		phase = ONE_OVER_FOUR_PI*(1.f - g*g) / sqrt(cubicTerm*cubicTerm*cubicTerm);
+		pdf = phase;
 	}
-
-	__device__ float3 Sample(const Ray& ray, curandState& rng, float& t, bool& sampled) const{
-		float sigma = dot(sigmaT, { 0.212671f, 0.715160f, 0.072169f });
-		Ray r = ray;
-		float3 d = p1 - p0;
-		float dist = 0.f;
-		while (true){
-			dist += -log(curand_uniform(&rng)) * invMaxDensity / sigma;
-			if (dist > r.tmax) break;
-			float3 p = r(dist);
-			p = (p - p0) / d;
-			if (getDensity(p)*invMaxDensity > curand_uniform(&rng)){
-				t = dist;
-				sampled = true;
-				return sigmaS / sigmaT;
-			}
-		}
-
-		t = dist;
-		sampled = false;
-		return make_float3(1.f, 1.f, 1.f);
-	}
-
-private:
-	__device__ float getDensity(float3& p) const{
-		float3 ps = make_float3(p.x*nx, p.y*ny, p.z*nz);
-		float3 psi = make_float3(floor(ps.x), floor(ps.y), floor(ps.z));
-		float3 delta = ps - psi;
-		float d00 = lerp(d(psi), d(psi + make_float3(1, 0, 0)), delta.x);
-		float d10 = lerp(d(psi + make_float3(0, 1, 0)), d(psi + make_float3(1, 1, 0)), delta.x);
-		float d01 = lerp(d(psi + make_float3(0, 0, 1)), d(psi + make_float3(1, 0, 1)), delta.x);
-		float d11 = lerp(d(psi + make_float3(0, 1, 1)), d(psi + make_float3(1, 1, 1)), delta.x);
-		float d0 = lerp(d00, d10, delta.y);
-		float d1 = lerp(d01, d11, delta.y);
-		return lerp(d0, d1, delta.z);
-	}
-
-	__device__ float d(float3& p) const{
-		int x = p.x, y = p.y, z = p.z;
-		if (x<0 || x>nx-1 || y<0 || y>ny-1 || z<0 || z>nz-1) return 0.f;
-		return density[z*ny*nx + y*nx + x];
-	}
-};
-
-enum MediumType{
-	MT_HOMOGENEOUS = 0,
-	MT_HETEROGENEOUS,
-};
-
-class Medium{
-public:
-	MediumType type;
-
-	union{
-		Homogeneous homogeneous;
-		Heterogeneous heterogeneous;
-	};
 };
 
 static void ReadDensityFromFile(const char* file, int nx, int ny, int nz, float* d){

@@ -91,8 +91,9 @@ bool ImageIO::LoadExr(const char* filename, int& width, int& height, vector<floa
 		}
 	}
 	else {
+		output.resize(width*height);
 		for (int i = 0; i < width*height; ++i){
-			output[i] = make_float3(out[3 * i + 0], out[3 * i + 1], out[3 * i + 2]);
+			output[i] = make_float3(out[4 * i + 0], out[4 * i + 1], out[4 * i + 2]);
 		}
 		free(out); // relase memory of image data
 	}

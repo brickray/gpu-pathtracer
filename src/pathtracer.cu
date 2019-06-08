@@ -13,11 +13,10 @@ Material* dev_materials;
 Bssrdf* dev_bssrdfs;
 Medium* dev_mediums;
 Area* dev_lights;
+Infinite* dev_infinite;
 float* dev_light_distribution;
-float4* hdr_map;
 uchar4** dev_textures;
 int* texture_size;//0 1为第一张图的长宽， 2 3为第二张图的长宽，以此类推
-texture<float4, 1, cudaReadModeElementType> hdr_texture;
 
 __device__ Camera* kernel_camera;
 __device__ int kernel_hdr_width, kernel_hdr_height;
@@ -28,11 +27,12 @@ __device__ Material* kernel_materials;
 __device__ Bssrdf* kernel_bssrdfs;
 __device__ Medium* kernel_mediums;
 __device__ Area* kernel_lights;
+__device__ Infinite* kernel_infinite;
 __device__ uchar4** kernel_textures;
 __device__ int* kernel_texture_size;
 __device__ float* kernel_light_distribution;
+__device__ int kernel_light_size;
 __device__ int kernel_light_distribution_size;
-__device__ bool kernel_hdr_isvalid;
 //不同场景需要不同的epsilon，不知道怎么样优雅的实现
 __device__ float kernel_epsilon;
 
@@ -843,7 +843,8 @@ __global__ void Tracing(int iter, int maxDepth){
 	bool specular = false;
 	for (int bounces = 0; bounces < maxDepth; ++bounces){
 		if (!Intersect(r, &isect)){
-			//infinity light
+			if (bounces == 0 || specular)
+				Li += beta*kernel_infinite->Le(r.d);
 			break;
 		}
 
@@ -868,6 +869,7 @@ __global__ void Tracing(int iter, int maxDepth){
 		}
 		if (IsBlack(beta)) break;
 		if (sampledMedium){
+			//TODO:多重重要性采样
 			float u = curand_uniform(&cudaRNG);
 			float choicePdf;
 			int idx = LookUpLightDistribution(u, choicePdf);
@@ -879,13 +881,18 @@ __global__ void Tracing(int iter, int maxDepth){
 			light.SampleLight(r(sampledDist), u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
 			shadowRay.medium = r.medium;
 			float3 tr = Tr(shadowRay, cudaRNG);
+			float phase, unuse;
+			r.medium->Phase(-r.d, shadowRay.d, phase, unuse);
 
 			if (!IsBlack(radiance))
-				Li += tr*beta*ONE_OVER_FOUR_PI*radiance / (lightPdf * choicePdf);
+				Li += tr*beta*phase*radiance / (lightPdf * choicePdf);
 
 			float pdf;
-			float3 dir = UniformSphere(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), pdf);
+			float2 phaseU = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+			float3 dir;
+			r.medium->SamplePhase(phaseU, dir, phase, pdf);
 			r = Ray(r(sampledDist), dir, r.medium);
+			specular = false;
 		}
 		else{
 			if (bounces == 0 || specular){
@@ -908,15 +915,22 @@ __global__ void Tracing(int iter, int maxDepth){
 			//direct light with multiple importance sampling
 			if (IsDiffuse(material.type)){
 				float3 Ld = make_float3(0.f, 0.f, 0.f);
+				bool inf = false;
 				float u = curand_uniform(&cudaRNG);
 				float choicePdf;
 				int idx = LookUpLightDistribution(u, choicePdf);
-				Area light = kernel_lights[idx];
+				if (idx == kernel_light_size) inf = true;;
+				Area light;
+				if (!inf)
+					light = kernel_lights[idx];
 				float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
 				float3 radiance, lightNor;
 				Ray shadowRay;
 				float lightPdf;
-				light.SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+				if (!inf)
+					light.SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+				else
+					kernel_infinite->SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
 				shadowRay.medium = r.medium;
 
 				if (!IsBlack(radiance)){
@@ -961,6 +975,24 @@ __global__ void Tracing(int iter, int maxDepth){
 							}
 							Ld += weight * tr * fr * radiance * fabs(dot(out, nor)) / pdf;
 						}
+					}
+					else{
+						//infinite
+						float3 radiance = { 0.f, 0.f, 0.f };
+						radiance = kernel_infinite->Le(lightRay.d);
+						float choicePdf = PdfFromLightDistribution(kernel_light_size);
+						float lightPdf, pdfA;
+						float3 lightNor;
+						kernel_infinite->Pdf(lightRay, lightNor, pdfA, lightPdf);
+						float weight = PowerHeuristic(1, pdf, 1, lightPdf*choicePdf);
+						float3 tr = { 1.f, 1.f, 1.f };
+						if (lightRay.medium){
+							if (lightRay.medium->type == MT_HOMOGENEOUS)
+								tr = lightRay.medium->homogeneous.Tr(lightRay, cudaRNG);
+							else
+								tr = lightRay.medium->heterogeneous.Tr(lightRay, cudaRNG);
+						}
+						Ld += weight * tr * fr * radiance * fabs(dot(out, nor)) / pdf;
 					}
 				}
 
@@ -1025,16 +1057,15 @@ __global__ void InitRender(
 	Bssrdf* bssrdfs,
 	Medium* mediums,
 	Area* lights,
+	Infinite* infinite,
 	uchar4** texs,
 	float* light_distribution,
+	int light_size,
 	int ld_size,
 	int* tex_size,
 	float3* image, 
 	float3* color,
-	float ep,
-	int hdr_w, 
-	int hdr_h, 
-	bool isvalid){
+	float ep){
 	kernel_camera = camera;
 	kernel_linear = bvh_nodes;
 	kernel_primitives = primitives;
@@ -1042,46 +1073,42 @@ __global__ void InitRender(
 	kernel_bssrdfs = bssrdfs;
 	kernel_mediums = mediums;
 	kernel_lights = lights;
+	kernel_infinite = infinite;
 	kernel_textures = texs;
 	kernel_light_distribution = light_distribution;
+	kernel_light_size = light_size;
 	kernel_light_distribution_size = ld_size;
 	kernel_texture_size = tex_size;
 	kernel_acc_image = image;
 	kernel_color = color;
 	kernel_epsilon = ep;
-	kernel_hdr_width = hdr_w;
-	kernel_hdr_height = hdr_h;
-	kernel_hdr_isvalid = isvalid;
 }
 
 void BeginRender(
 	Scene& scene,
-	BVH& bvh,
-	Camera cam,
 	unsigned width,
 	unsigned height,
 	float ep,
-	int max_depth, 
-	HDRMap& hdrmap){
+	int max_depth){
 	int mesh_memory_use = 0;
 	int material_memory_use = 0;
 	int bvh_memory_use = 0;
 	int light_memory_use = 0;
 	int texture_memory_use = 0;
 	maxDepth = max_depth;
-	int num_primitives = bvh.prims.size();
+	int num_primitives = scene.bvh.prims.size();
 	HANDLE_ERROR(cudaMalloc(&dev_camera, sizeof(Camera)));
-	HANDLE_ERROR(cudaMemcpy(dev_camera, &cam, sizeof(Camera), cudaMemcpyHostToDevice));
+	HANDLE_ERROR(cudaMemcpy(dev_camera, scene.camera, sizeof(Camera), cudaMemcpyHostToDevice));
 
 	if (num_primitives){
 		HANDLE_ERROR(cudaMalloc(&dev_primitives, num_primitives*sizeof(Primitive)));
-		HANDLE_ERROR(cudaMemcpy(dev_primitives, &bvh.prims[0], num_primitives*sizeof(Primitive), cudaMemcpyHostToDevice));
+		HANDLE_ERROR(cudaMemcpy(dev_primitives, &scene.bvh.prims[0], num_primitives*sizeof(Primitive), cudaMemcpyHostToDevice));
 		mesh_memory_use += num_primitives*sizeof(Primitive);
 	}
-	if (bvh.total_nodes > 0){
-		HANDLE_ERROR(cudaMalloc(&dev_bvh_nodes, bvh.total_nodes*sizeof(LinearBVHNode)));
-		HANDLE_ERROR(cudaMemcpy(dev_bvh_nodes, bvh.linear_root, bvh.total_nodes*sizeof(LinearBVHNode), cudaMemcpyHostToDevice));
-		bvh_memory_use += bvh.total_nodes*sizeof(LinearBVHNode);
+	if (scene.bvh.total_nodes > 0){
+		HANDLE_ERROR(cudaMalloc(&dev_bvh_nodes, scene.bvh.total_nodes*sizeof(LinearBVHNode)));
+		HANDLE_ERROR(cudaMemcpy(dev_bvh_nodes, scene.bvh.linear_root, scene.bvh.total_nodes*sizeof(LinearBVHNode), cudaMemcpyHostToDevice));
+		bvh_memory_use += scene.bvh.total_nodes*sizeof(LinearBVHNode);
 	}
 
 	//copy material
@@ -1116,10 +1143,25 @@ void BeginRender(
 		}
 	}
 
+	//copy light
 	int num_lights = scene.lights.size();
-	HANDLE_ERROR(cudaMalloc(&dev_lights, num_lights*sizeof(Area)));
-	HANDLE_ERROR(cudaMemcpy(dev_lights, &scene.lights[0], num_lights*sizeof(Area), cudaMemcpyHostToDevice));
-	light_memory_use+= num_lights*sizeof(Area);
+	if (num_lights){
+		HANDLE_ERROR(cudaMalloc(&dev_lights, num_lights*sizeof(Area)));
+		HANDLE_ERROR(cudaMemcpy(dev_lights, &scene.lights[0], num_lights*sizeof(Area), cudaMemcpyHostToDevice));
+		light_memory_use += num_lights*sizeof(Area);
+	}
+
+	//copy infinite light
+	if (scene.infinite.isvalid){
+		HANDLE_ERROR(cudaMalloc(&dev_infinite, sizeof(Infinite)));
+		HANDLE_ERROR(cudaMemcpy(dev_infinite, &scene.infinite, sizeof(Infinite), cudaMemcpyHostToDevice));
+		int width = scene.infinite.width, height = scene.infinite.height;
+		float3* data;
+		HANDLE_ERROR(cudaMalloc(&data, width*height*sizeof(float3)));
+		texture_memory_use += width*height*sizeof(float3);
+		HANDLE_ERROR(cudaMemcpy(data, scene.infinite.data, width*height*sizeof(float3), cudaMemcpyHostToDevice));
+		HANDLE_ERROR(cudaMemcpy(&dev_infinite->data, &data, sizeof(float3*), cudaMemcpyHostToDevice));
+	}
 
 	//copy textures
 	if (scene.textures.size()){
@@ -1144,14 +1186,6 @@ void BeginRender(
 	texture_memory_use += num_pixel*sizeof(float3);
 	HANDLE_ERROR(cudaMalloc(&dev_color, num_pixel*sizeof(float3)));
 	texture_memory_use += num_pixel*sizeof(float3);
-	if (hdrmap.isvalid){
-		HANDLE_ERROR(cudaMalloc(&hdr_map, hdrmap.width*hdrmap.height*sizeof(float4)));
-		texture_memory_use += num_pixel*sizeof(float4);
-		HANDLE_ERROR(cudaMemcpy(hdr_map, hdrmap.image, hdrmap.width*hdrmap.height*sizeof(float4), cudaMemcpyHostToDevice));
-		hdr_texture.filterMode = cudaFilterModeLinear;
-		cudaChannelFormatDesc channel4desc = cudaCreateChannelDesc<float4>();
-		HANDLE_ERROR(cudaBindTexture(NULL, &hdr_texture, hdr_map, &channel4desc, hdrmap.width*hdrmap.height*sizeof(float4)));
-	}
 
 	int ld_size = scene.lightDistribution.size();
 	HANDLE_ERROR(cudaMalloc(&dev_light_distribution, ld_size*sizeof(float)));
@@ -1159,8 +1193,8 @@ void BeginRender(
 	texture_memory_use += ld_size*sizeof(float);
 	
 	InitRender << <1, 1 >> >(dev_camera, dev_bvh_nodes,
-		dev_primitives, dev_materials, dev_bssrdfs, dev_mediums, dev_lights, dev_textures, dev_light_distribution, ld_size,
-		texture_size, dev_image, dev_color, ep, hdrmap.width, hdrmap.height, hdrmap.isvalid);
+		dev_primitives, dev_materials, dev_bssrdfs, dev_mediums, dev_lights, dev_infinite, dev_textures, dev_light_distribution, num_lights, ld_size,
+		texture_size, dev_image, dev_color, ep);
 
 
 	HANDLE_ERROR(cudaDeviceSynchronize());
@@ -1179,8 +1213,6 @@ void EndRender(){
 
 	HANDLE_ERROR(cudaFree(dev_image));
 	HANDLE_ERROR(cudaFree(dev_color));
-	HANDLE_ERROR(cudaFree(hdr_map));
-	HANDLE_ERROR(cudaUnbindTexture(hdr_texture));
 }
 
 void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsigned iter, bool reset, float3* output){

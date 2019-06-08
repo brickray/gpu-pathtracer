@@ -78,6 +78,11 @@ public:
 			return false;
 		return true;
 	}
+
+	__host__ __device__ void boundingSphere(float3& center, float& radius) const{
+		center = Centric();
+		radius = sqrtf(dot(fmax - center, fmax - center));
+	}
 };
 
 #endif

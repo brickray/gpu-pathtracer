@@ -10,9 +10,6 @@ public:
 	Triangle triangle;
 
 public:
-	__host__ Area(){
-	}
-
 	__host__ __device__ void SampleLight(float3& pos, float2& u, float3& rad, Ray& ray, float3& nor, float& pdf, float epsilon = 0.01) const{
 		float3 dir;
 		triangle.SampleShape(pos, u, dir, nor, pdf);
@@ -27,7 +24,7 @@ public:
 	}
 
 	__host__ __device__ float3 GetPower() const{
-		return radiance * triangle.GetSurfaceArea() * TWOPI;
+		return radiance * triangle.GetSurfaceArea() * PI;
 	}
 
 	__host__ __device__ float3 Le(float3& nor, float3& dir) const{
