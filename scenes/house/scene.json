@@ -1,0 +1,1269 @@
+{
+    "screen_width": 960,
+    "screen_height": 540,
+    "maxDepth": 17,
+    "camera": {
+        "position": [ -37.466297, -0.614254, 32.122295 ],
+        "lookat": [ -3.499760, 7.133240, -5.072650 ],
+        "up": [ 0.000000, 1.000000, 0.000000 ],
+        "fov": 20.114292,
+        "filmicTonemap": false
+    },
+    "material": [
+        {
+            "name": "BlackDiffuse",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.000273, 0.000273, 0.000273 ]
+        },
+        {
+            "name": "Blue",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.052861, 0.138432, 0.799103 ]
+        },
+        {
+            "name": "BlueGlossy",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.205138, 0.418493, 0.800000 ]
+        },
+        {
+            "name": "BrassOld",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.502314, 0.441461, 0.313963 ]
+        },
+        {
+            "name": "BrickTextureBase",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.426695, 0.375011, 0.363006 ]
+        },
+        {
+            "name": "Brown",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.334323, 0.255375, 0.189200 ]
+        },
+        {
+            "name": "Chrome",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.578596, 0.578596, 0.578596 ]
+        },
+        {
+            "name": "Chrome2",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.575677, 0.578596, 0.563447 ]
+        },
+        {
+            "name": "DarkerGrey",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.079484, 0.080011, 0.078957 ]
+        },
+        {
+            "name": "DeckWoodBase",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.419979, 0.390887, 0.369568 ]
+        },
+        {
+            "name": "DrivewayBase",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.424737, 0.424737, 0.424737 ]
+        },
+        {
+            "name": "FenceWoodBase",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.699394, 0.699394, 0.699394 ]
+        },
+        {
+            "name": "Floorboards",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.416131, 0.391048, 0.383141 ]
+        },
+        {
+            "name": "GarageDoorBase",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.133209, 0.133209, 0.133209 ]
+        },
+        {
+            "name": "Glass",
+            "bsdf": "dielectric",
+            "specular": [ 1.000000, 1.000000, 1.000000 ],
+            "insideIOR": 1.500000,
+            "outsideIOR": 1.000000
+        },
+        {
+            "name": "Grey",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.080011, 0.080011, 0.080011 ]
+        },
+        {
+            "name": "Ground",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.661862, 0.661862, 0.661862 ]
+        },
+        {
+            "name": "MirrorMaterial",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.487458, 0.493879, 0.493879 ]
+        },
+        {
+            "name": "None",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.800000, 0.800000, 0.800000 ]
+        },
+        {
+            "name": "PaleYellow",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.273831, 0.258563, 0.183140 ]
+        },
+        {
+            "name": "Pink",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.028991, 0.028991, 0.028991 ]
+        },
+        {
+            "name": "Red",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.800000, 0.061900, 0.031334 ]
+        },
+        {
+            "name": "RoofTiles",
+            "bsdf": "lambertian",
+            "diffuse": "textures/Tiles.jpg"
+        },
+        {
+            "name": "ShowerFloorBase",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.416131, 0.415021, 0.414138 ]
+        },
+        {
+            "name": "StainlessSteel",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.426132, 0.426132, 0.426132 ]
+        },
+        {
+            "name": "StepBase",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.416131, 0.401572, 0.395541 ]
+        },
+        {
+            "name": "TileBase",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.381008, 0.434047, 0.451620 ]
+        },
+        {
+            "name": "WallMaterial",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.393113, 0.295146, 0.217308 ]
+        },
+        {
+            "name": "WhiteDiffuse",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.688883, 0.688883, 0.688883 ]
+        },
+        {
+            "name": "WhitePaint",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.800000, 0.800000, 0.800000 ]
+        },
+        {
+            "name": "YellowDiffuse",
+            "bsdf": "lambertian",
+            "diffuse": [ 0.698193, 0.603565, 0.426615 ]
+        }
+    ],
+    "scene": [
+        {
+            "mesh": "models/Mesh116.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh062.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh112.obj",
+            "material": "Floorboards"
+        },
+        {
+            "mesh": "models/Mesh110.obj",
+            "material": "Chrome2"
+        },
+        {
+            "mesh": "models/Mesh125.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh096.obj",
+            "material": "RoofTiles"
+        },
+        {
+            "mesh": "models/Mesh118.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh109.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh104.obj",
+            "material": "TileBase"
+        },
+        {
+            "mesh": "models/Mesh255.obj",
+            "material": "Pink"
+        },
+        {
+            "mesh": "models/Mesh185.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh138.obj",
+            "material": "BrickTextureBase"
+        },
+        {
+            "mesh": "models/Mesh069.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh103.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh106.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh101.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh100.obj",
+            "material": "BrassOld"
+        },
+        {
+            "mesh": "models/Mesh061.obj",
+            "material": "YellowDiffuse"
+        },
+        {
+            "mesh": "models/Mesh145.obj",
+            "material": "Floorboards"
+        },
+        {
+            "mesh": "models/Mesh151.obj",
+            "material": "Chrome2"
+        },
+        {
+            "mesh": "models/Mesh094.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh141.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh143.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh152.obj",
+            "material": "TileBase"
+        },
+        {
+            "mesh": "models/Mesh168.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh068.obj",
+            "material": "Red"
+        },
+        {
+            "mesh": "models/Mesh160.obj",
+            "material": "Blue"
+        },
+        {
+            "mesh": "models/Mesh162.obj",
+            "material": "WallMaterial"
+        },
+        {
+            "mesh": "models/Mesh167.obj",
+            "material": "StepBase"
+        },
+        {
+            "mesh": "models/Mesh212.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh250.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh149.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh114.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh248.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh115.obj",
+            "material": "BlackDiffuse"
+        },
+        {
+            "mesh": "models/Mesh146.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh137.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh155.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh131.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh147.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh139.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh053.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh111.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh173.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh051.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh092.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh128.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh221.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh089.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh066.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh247.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh088.obj",
+            "material": "Red"
+        },
+        {
+            "mesh": "models/Mesh087.obj",
+            "material": "Blue"
+        },
+        {
+            "mesh": "models/Mesh127.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh086.obj",
+            "material": "Red"
+        },
+        {
+            "mesh": "models/Mesh085.obj",
+            "material": "Blue"
+        },
+        {
+            "mesh": "models/Mesh211.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh191.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh081.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh079.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh264.obj",
+            "material": "None"
+        },
+        {
+            "mesh": "models/Mesh126.obj",
+            "material": "DrivewayBase"
+        },
+        {
+            "mesh": "models/Mesh077.obj",
+            "material": "Pink"
+        },
+        {
+            "mesh": "models/Mesh074.obj",
+            "material": "MirrorMaterial"
+        },
+        {
+            "mesh": "models/Mesh049.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh073.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh142.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh133.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh171.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh071.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh072.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh075.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh123.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh070.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh064.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh048.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh166.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh157.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh117.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh065.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh060.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh076.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh058.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh120.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh054.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh050.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh080.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh140.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh148.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh169.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh047.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh045.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh156.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh130.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh083.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh159.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh174.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh177.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh180.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh193.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh132.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh184.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh189.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh144.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh194.obj",
+            "material": "Pink"
+        },
+        {
+            "mesh": "models/Mesh046.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh129.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh195.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh196.obj",
+            "material": "TileBase"
+        },
+        {
+            "mesh": "models/Mesh186.obj",
+            "material": "MirrorMaterial"
+        },
+        {
+            "mesh": "models/Mesh090.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh198.obj",
+            "material": "Red"
+        },
+        {
+            "mesh": "models/Mesh201.obj",
+            "material": "Blue"
+        },
+        {
+            "mesh": "models/Mesh078.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh063.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh202.obj",
+            "material": "WallMaterial"
+        },
+        {
+            "mesh": "models/Mesh203.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh204.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh215.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh206.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh209.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh210.obj",
+            "material": "BlueGlossy"
+        },
+        {
+            "mesh": "models/Mesh199.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh158.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh214.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh091.obj",
+            "material": "FenceWoodBase"
+        },
+        {
+            "mesh": "models/Mesh216.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh218.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh098.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh219.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh223.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh136.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh082.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh225.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh227.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh228.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh124.obj",
+            "material": "ShowerFloorBase"
+        },
+        {
+            "mesh": "models/Mesh153.obj",
+            "material": "BlueGlossy"
+        },
+        {
+            "mesh": "models/Mesh208.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh229.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh270.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh182.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh230.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh231.obj",
+            "material": "Floorboards"
+        },
+        {
+            "mesh": "models/Mesh251.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh234.obj",
+            "material": "Floorboards"
+        },
+        {
+            "mesh": "models/Mesh232.obj",
+            "material": "Floorboards"
+        },
+        {
+            "mesh": "models/Mesh235.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh236.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh237.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh175.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh238.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh161.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh176.obj",
+            "material": "BrickTextureBase"
+        },
+        {
+            "mesh": "models/Mesh107.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh172.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh165.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh190.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh240.obj",
+            "material": "Floorboards"
+        },
+        {
+            "mesh": "models/Mesh213.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh243.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh253.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh188.obj",
+            "material": "None"
+        },
+        {
+            "mesh": "models/Mesh224.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh246.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh055.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh192.obj",
+            "material": "None"
+        },
+        {
+            "mesh": "models/Mesh217.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh084.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh163.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh256.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh249.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh187.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh093.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh154.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh252.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh254.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh099.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh197.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh178.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh164.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh239.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh257.obj",
+            "material": "BlueGlossy"
+        },
+        {
+            "mesh": "models/Mesh170.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh244.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh258.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh259.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh260.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh226.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh261.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh265.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh266.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh108.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh220.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh222.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh267.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh271.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh105.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh242.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh044.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh043.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh042.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh040.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh057.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh200.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh039.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh038.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh037.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh052.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh036.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh035.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh241.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh034.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh033.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh179.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh263.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh032.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh031.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh030.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh122.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh028.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh026.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh205.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh135.obj",
+            "material": "WallMaterial"
+        },
+        {
+            "mesh": "models/Mesh027.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh119.obj",
+            "material": "DarkerGrey"
+        },
+        {
+            "mesh": "models/Mesh025.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh102.obj",
+            "material": "BlueGlossy"
+        },
+        {
+            "mesh": "models/Mesh245.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh183.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh024.obj",
+            "material": "PaleYellow"
+        },
+        {
+            "mesh": "models/Mesh023.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh134.obj",
+            "material": "BlackDiffuse"
+        },
+        {
+            "mesh": "models/Mesh150.obj",
+            "material": "BlackDiffuse"
+        },
+        {
+            "mesh": "models/Mesh022.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh041.obj",
+            "material": "Grey"
+        },
+        {
+            "mesh": "models/Mesh233.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh021.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh019.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh018.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh121.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh020.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh017.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh016.obj",
+            "material": "BrickTextureBase"
+        },
+        {
+            "mesh": "models/Mesh015.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh269.obj",
+            "material": "WallMaterial"
+        },
+        {
+            "mesh": "models/Mesh014.obj",
+            "material": "Pink"
+        },
+        {
+            "mesh": "models/Mesh207.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh013.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh113.obj",
+            "material": "GarageDoorBase"
+        },
+        {
+            "mesh": "models/Mesh012.obj",
+            "material": "Glass"
+        },
+        {
+            "mesh": "models/Mesh056.obj",
+            "material": "DeckWoodBase"
+        },
+        {
+            "mesh": "models/Mesh011.obj",
+            "material": "Brown"
+        },
+        {
+            "mesh": "models/Mesh010.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh009.obj",
+            "material": "DeckWoodBase"
+        },
+        {
+            "mesh": "models/Mesh181.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh268.obj",
+            "material": "StepBase"
+        },
+        {
+            "mesh": "models/Mesh095.obj",
+            "material": "Ground"
+        },
+        {
+            "mesh": "models/Mesh008.obj",
+            "material": "DeckWoodBase"
+        },
+        {
+            "mesh": "models/Mesh097.obj",
+            "material": "Pink"
+        },
+        {
+            "mesh": "models/Mesh007.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh006.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh029.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh005.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh004.obj",
+            "material": "WhiteDiffuse"
+        },
+        {
+            "mesh": "models/Mesh003.obj",
+            "material": "Blue"
+        },
+        {
+            "mesh": "models/Mesh067.obj",
+            "material": "Red"
+        },
+        {
+            "mesh": "models/Mesh262.obj",
+            "material": "FenceWoodBase"
+        },
+        {
+            "mesh": "models/Mesh059.obj",
+            "material": "WhitePaint"
+        },
+        {
+            "mesh": "models/Mesh002.obj",
+            "material": "Chrome"
+        },
+        {
+            "mesh": "models/Mesh001.obj",
+            "material": "StainlessSteel"
+        },
+        {
+            "mesh": "models/Mesh000.obj",
+            "material": "WhiteDiffuse"
+        }
+    ],
+    "light": [
+        {
+            "infinite": "textures/sky.exr",
+            "rotate": [0.0,
+                    36.146697998046875,
+                    0.0]
+        }
+    ]
+}
