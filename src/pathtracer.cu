@@ -658,7 +658,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		float sint2 = eta*eta*(1.f - cosi*cosi);
 		cost = sqrtf(1.f - sint2 < 0.f ? 0.f : 1.f - sint2);
 		float3 rdir = Reflect(-wi, wh);
-		float3 tdir = Refract(in, wh, material.outsideIOR, material.insideIOR);
+		float3 tdir = normalize((wi - wh*cosi)*eta + (enter ? -cost : cost)*wh);
 		if (sint2 > 1.f){//total reflection
 			out = rdir;
 			float G = GGX_G(in, out, n, wh, dpdu, material.alphaU, material.alphaV);
