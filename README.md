@@ -28,6 +28,7 @@ physically based path tracer on gpu
 ---
 ![roughdielectric](result/rough_ball.png)
 ![heterogeneous](result/heterogeneous.png) 
-![subsurface](result/subsurface.png)
+![jade](result/jade.png)
+![skimmilk](result/skimmilk.png)
 ![volume_caustic](result/volume_caustic.png)
 ![cornell_dof](result/cornell_dof.png)
