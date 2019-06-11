@@ -197,8 +197,8 @@ __device__ inline void GammaCorrection(float3& in){
 
 __device__ inline void FilmicTonemapping(float3& in){
 	float3 c = in - make_float3(0.004f, 0.004f, 0.004f);
+	c = fmaxf(make_float3(0, 0, 0), c);
 	c = (c*(6.2f*c + 0.5f)) / (c*(6.2f*c + 1.7f) + 0.06f);
-	c = Clamp(c, 0.f, 1.f);
 	in = c;
 }
 
@@ -1029,8 +1029,9 @@ __global__ void Tracing(int iter, int maxDepth){
 		}
 	}
 
-	if (!(isnan(Li.x) || isnan(Li.y) || isnan(Li.z)))
-		kernel_color[pixel] = Li;
+	if (!(isinf(Li.x) || isinf(Li.y) || isinf(Li.z)))
+		if (!(isnan(Li.x) || isnan(Li.y) || isnan(Li.z)))
+			kernel_color[pixel] = Li;
 }
 
 __global__ void Output(int iter, float3* output, bool reset, bool filmic){
