@@ -4,17 +4,18 @@ GPUPathtracer
 physically based path tracer on gpu
 
 ![whiteroom](result/whiteroom.png)
+![whiteroom_ao](result/whiteroom_ao.png)
 
 特点
 ----
 
-- 路径追踪器
+- 积分器(ao path volpath)
 - 材质(lambertian mirror dielectric roughdielectric roughconduct substrate)
 - 参与介质渲染(homogeneous and heterogeneous)
-- 面积光源
-- 多重重要性采样
-- 景深
-- 简单的场景加载
+- 光源(area infinite)
+- 多重重要性采样(mis)
+- 景深(dof)
+- 简单的场景加载(simple scene loader)
 
 依赖库
 ----
