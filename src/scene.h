@@ -12,6 +12,12 @@
 #include "medium.h"
 #include "infinite.h"
 
+enum IntegratorType{
+	IT_AO = 0,
+	IT_PATH,
+	IT_VOLPATH,
+};
+
 class Scene{
 public:
 	vector<Primitive> primitives;
@@ -24,6 +30,13 @@ public:
 	Camera* camera;
 	Infinite infinite;
 	BVH bvh;
+	struct{
+		IntegratorType type;
+		union{
+			float maxDist;
+			int maxDepth;
+		};
+	} integrator;
 
 public:
 	void Init(Camera* cam){

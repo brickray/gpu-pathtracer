@@ -5,7 +5,6 @@
 #include "device_launch_parameters.h"
 
 Camera* dev_camera;
-int maxDepth;
 float3* dev_image, *dev_color;
 LinearBVHNode* dev_bvh_nodes;
 Primitive* dev_primitives;
@@ -816,7 +815,205 @@ __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 
 	}
 }
 
-__global__ void Tracing(int iter, int maxDepth){
+__global__ void Ao(int iter, float maxDist){
+	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
+	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
+	unsigned pixel = x + y*blockDim.x*gridDim.x;
+
+	//init seed
+	int threadIndex = (blockIdx.x + blockIdx.y * gridDim.x) * (blockDim.x * blockDim.y) + (threadIdx.y * blockDim.x) + threadIdx.x;
+
+	curandState cudaRNG;
+	curand_init(WangHash(iter) + threadIndex, 0, 0, &cudaRNG);
+
+	//start
+	float offsetx = curand_uniform(&cudaRNG) - 0.5f;
+	float offsety = curand_uniform(&cudaRNG) - 0.5f;
+	float unuse;
+	float2 aperture = UniformDisk(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), unuse);//for dof
+	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, aperture);
+	ray.tmin = kernel_epsilon;
+
+	float3 L = { 0.f, 0.f, 0.f };
+	Intersection isect;
+	bool intersect = Intersect(ray, &isect);
+	if (!intersect){
+		kernel_color[pixel] = { 0, 0, 0 };
+		return;
+	}
+
+	float3 pos = isect.pos;
+	float3 nor = isect.nor;
+	float pdf = 0.f;
+	if (dot(-ray.d, nor) < 0.f)
+		nor = -nor;
+	float3 dir = CosineHemiSphere(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), nor, pdf);
+	float3 uu = isect.dpdu, ww;
+	ww = cross(uu, nor);
+	dir = ToWorld(dir, uu, nor, ww);
+	float cosine = dot(dir, nor);
+	Ray r(pos, dir, nullptr, kernel_epsilon, maxDist);
+	intersect = IntersectP(r);
+	if (!intersect){
+		float v = cosine*ONE_OVER_PI / pdf;
+		L += make_float3(v, v, v);
+	}
+
+	if (!(isnan(L.x) || isnan(L.y) || isnan(L.z)))
+		kernel_color[pixel] = L;
+}
+
+__global__ void Path(int iter, int maxDepth){
+	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
+	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
+	unsigned pixel = x + y*blockDim.x*gridDim.x;
+
+	//init seed
+	int threadIndex = (blockIdx.x + blockIdx.y * gridDim.x) * (blockDim.x * blockDim.y) + (threadIdx.y * blockDim.x) + threadIdx.x;
+
+	curandState cudaRNG;
+	curand_init(WangHash(iter) + threadIndex, 0, 0, &cudaRNG);
+
+	//start
+	float offsetx = curand_uniform(&cudaRNG) - 0.5f;
+	float offsety = curand_uniform(&cudaRNG) - 0.5f;
+	float unuse;
+	float2 aperture = UniformDisk(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), unuse);//for dof
+	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, aperture);
+	ray.tmin = kernel_epsilon;
+	
+	float3 Li = make_float3(0.f, 0.f, 0.f);
+	float3 beta = make_float3(1.f, 1.f, 1.f);
+	Ray r = ray;
+	Intersection isect;
+	bool specular = false;
+	for (int bounces = 0; bounces < maxDepth; ++bounces){
+		if (!Intersect(r, &isect)){
+			if ((bounces == 0 || specular) && kernel_infinite->isvalid)
+				Li += beta*kernel_infinite->Le(r.d);
+			break;
+		}
+
+		float3 pos = isect.pos;
+		float3 nor = isect.nor;
+		float2 uv = isect.uv;
+		float3 dpdu = isect.dpdu;
+		Material material = kernel_materials[isect.matIdx];
+		/*if (isect.bssrdf != -1){
+		float3 L = SingleScatter(&isect, -r.d, cudaRNG)
+		+MultipleScatter(&isect, -r.d, cudaRNG);
+		Li += beta*L;
+
+		break;
+		}*/
+		if (bounces == 0 || specular){
+			if (isect.lightIdx != -1){
+				Li += beta*kernel_lights[isect.lightIdx].Le(nor, -r.d);
+				break;
+			}
+		}
+
+		//direct light with multiple importance sampling
+		if (IsDiffuse(material.type)){
+			float3 Ld = make_float3(0.f, 0.f, 0.f);
+			bool inf = false;
+			float u = curand_uniform(&cudaRNG);
+			float choicePdf;
+			int idx = LookUpLightDistribution(u, choicePdf);
+			if (idx == kernel_light_size) inf = true;
+			float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+			float3 radiance, lightNor;
+			Ray shadowRay;
+			float lightPdf;
+			if (!inf)
+				kernel_lights[idx].SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+			else
+				kernel_infinite->SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+			shadowRay.medium = r.medium;
+
+			if (!IsBlack(radiance) && !IntersectP(shadowRay)){
+				float3 fr;
+				float samplePdf;
+
+				//Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, curand_uniform(&cudaRNG), fr, samplePdf);
+				Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
+
+				float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
+				Ld += weight*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);
+			}
+
+			float3 uniform = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+			float3 out, fr;
+			float pdf;
+			SampleBSDF(material, -r.d, nor, uv, dpdu, uniform, out, fr, pdf);
+			if (!(IsBlack(fr) || pdf == 0)){
+				Intersection lightIsect;
+				Ray lightRay(pos, out, r.medium, kernel_epsilon);
+				if (Intersect(lightRay, &lightIsect)){
+					float3 p = lightIsect.pos;
+					float3 n = lightIsect.nor;
+					float3 radiance = { 0.f, 0.f, 0.f };
+					if (lightIsect.lightIdx != -1)
+						radiance = kernel_lights[lightIsect.lightIdx].Le(n, -lightRay.d);
+					if (!IsBlack(radiance)){
+						float pdfA, pdfW;
+						kernel_lights[lightIsect.lightIdx].Pdf(Ray(p, -out, r.medium, kernel_epsilon), n, pdfA, pdfW);
+						float choicePdf = PdfFromLightDistribution(lightIsect.lightIdx);
+						float lenSquare = dot(p - pos, p - pos);
+						float costheta = fabs(dot(n, lightRay.d));
+						float lPdf = pdfA * lenSquare / (costheta);
+						float weight = PowerHeuristic(1, pdf, 1, lPdf * choicePdf);
+						
+						Ld += weight * fr * radiance * fabs(dot(out, nor)) / pdf;
+					}
+				}
+				else{
+					//infinite
+					if (kernel_infinite->isvalid){
+						float3 radiance = { 0.f, 0.f, 0.f };
+						radiance = kernel_infinite->Le(lightRay.d);
+						float choicePdf = PdfFromLightDistribution(kernel_light_size);
+						float lightPdf, pdfA;
+						float3 lightNor;
+						kernel_infinite->Pdf(lightRay, lightNor, pdfA, lightPdf);
+						float weight = PowerHeuristic(1, pdf, 1, lightPdf*choicePdf);
+						
+						Ld += weight * fr * radiance * fabs(dot(out, nor)) / pdf;
+					}
+				}
+			}
+
+			Li += beta*Ld;
+		}
+
+		float3 u = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+		float3 out, fr;
+		float pdf;
+
+		SampleBSDF(material, -r.d, nor, uv, dpdu, u, out, fr, pdf);
+		if (IsBlack(fr))
+			break;
+
+		beta *= fr*fabs(dot(nor, out)) / pdf;
+		specular = !IsDiffuse(material.type);
+
+		r = Ray(pos, out, nullptr, kernel_epsilon);
+
+		if (bounces > 3){
+			float illumate = clamp(1.f - Luminance(beta), 0.f, 1.f);
+			if (curand_uniform(&cudaRNG) < illumate)
+				break;
+
+			beta /= (1 - illumate);
+		}
+	}
+
+	if (!(isinf(Li.x) || isinf(Li.y) || isinf(Li.z)))
+		if (!(isnan(Li.x) || isnan(Li.y) || isnan(Li.z)))
+			kernel_color[pixel] = Li;
+}
+
+__global__ void Volpath(int iter, int maxDepth){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
 	unsigned pixel = x + y*blockDim.x*gridDim.x;
@@ -1092,14 +1289,12 @@ void BeginRender(
 	Scene& scene,
 	unsigned width,
 	unsigned height,
-	float ep,
-	int max_depth){
+	float ep){
 	int mesh_memory_use = 0;
 	int material_memory_use = 0;
 	int bvh_memory_use = 0;
 	int light_memory_use = 0;
 	int texture_memory_use = 0;
-	maxDepth = max_depth;
 	int num_primitives = scene.bvh.prims.size();
 	HANDLE_ERROR(cudaMalloc(&dev_camera, sizeof(Camera)));
 	HANDLE_ERROR(cudaMemcpy(dev_camera, scene.camera, sizeof(Camera), cudaMemcpyHostToDevice));
@@ -1225,7 +1420,12 @@ void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsig
 	dim3 block(block_x, block_y);
 	dim3 grid(width / block.x, height / block.y);
 
-	Tracing << <grid, block >> >(iter, maxDepth);
+	if (scene.integrator.type == IT_AO)
+		Ao << <grid, block >> >(iter, scene.integrator.maxDist);
+	else if (scene.integrator.type == IT_PATH)
+		Path << <grid, block >> >(iter, scene.integrator.maxDepth);
+	else if (scene.integrator.type == IT_VOLPATH)
+		Volpath << <grid, block >> >(iter, scene.integrator.maxDepth);
 
 	grid.x = width / block.x;
 	grid.y = height / block.y;

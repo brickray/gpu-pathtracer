@@ -290,7 +290,7 @@ int main(int argc, char**argv){
 	image = new float3[config.width*config.height];
 	HANDLE_ERROR(cudaMalloc(&dev_ptr, config.width*config.height*sizeof(float3)));
 
-	BeginRender(scene, config.width, config.height, config.epsilon, config.maxDepth);
+	BeginRender(scene, config.width, config.height, config.epsilon);
 
 	srand(time(NULL));
 

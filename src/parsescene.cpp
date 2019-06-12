@@ -17,6 +17,19 @@ int getFileLength(const char* filename){
 	return st.st_size;   //文件长度.
 }
 
+mat4 getMat4(Value& value){
+	float x[16];
+	int i = 0;
+	Value::ConstValueIterator it = value.Begin();
+	for (; it != value.End(); ++it, ++i){
+		x[i] = it->GetDouble();
+	}
+
+	mat4 ret;
+	memcpy(&ret[0], x, 16 * sizeof(float));
+	return ret;
+}
+
 float3 getFloat3(Value& value){
 	float x[3];
 	int i = 0;
@@ -142,7 +155,6 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			config.height = 512;
 		}
 
-		config.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
 		config.epsilon = doc.HasMember("epsilon") ? doc["epsilon"].GetDouble() : 0.01f;
 
 		if (doc.HasMember("camera")){
@@ -163,6 +175,27 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 		else{
 			fprintf(stderr, "Scene file must define camera\n");
 			return false;
+		}
+	}
+
+	//integrator
+	{
+		string integrator = doc.HasMember("integrator") ? doc["integrator"].GetString():"path";
+		if (integrator == "ao"){
+			scene.integrator.type = IT_AO;
+			scene.integrator.maxDist = doc.HasMember("maxDist") ? doc["maxDist"].GetDouble() : 0.5f;
+		}
+		else if (integrator == "path"){
+			scene.integrator.type = IT_PATH;
+			scene.integrator.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
+		}
+		else if (integrator == "volpath"){
+			scene.integrator.type = IT_VOLPATH;
+			scene.integrator.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
+		}
+		else{
+			printf("Unsupport integrator [%s]\n", integrator);
+			exit(1);
 		}
 	}
 
@@ -488,14 +521,24 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 						fprintf(stderr, "Couldn't load hdr file \"%s\", only support .exr format\n", file.c_str());
 						exit(1);
 					}
-					float3 r = unit.HasMember("rotate") ? getFloat3(unit["rotate"]) : make_float3(0.f, 0.f, 0.f);
-					mat4 rs;
-					rs = rotate(rs, radians(r.x), vec3(1, 0, 0));
-					rs = rotate(rs, radians(r.y), vec3(0, 1, 0));
-					rs = rotate(rs, radians(r.z), vec3(0, 0, 1));
-					vec3 uu = vec3(rs * vec4(1, 0, 0, 0));
-					vec3 vv = vec3(rs * vec4(0, 1, 0, 0));
-					vec3 ww = vec3(rs * vec4(0, 0, 1, 0));
+					vec3 uu, vv, ww;
+					if (unit.HasMember("rotate")){
+						float3 r = getFloat3(unit["rotate"]);
+						mat4 rs;
+						rs = rotate(rs, radians(r.x), vec3(1, 0, 0));
+						rs = rotate(rs, radians(r.y), vec3(0, 1, 0));
+						rs = rotate(rs, radians(r.z), vec3(0, 0, 1));
+						uu = vec3(rs * vec4(1, 0, 0, 0));
+						vv = vec3(rs * vec4(0, 1, 0, 0));
+						ww = vec3(rs * vec4(0, 0, 1, 0));
+					}
+					if (unit.HasMember("matrix")){
+						mat4 rs = getMat4(unit["matrix"]);
+						rs = inverse(rs);
+						uu = vec3(rs * vec4(1, 0, 0, 0));
+						vv = vec3(rs * vec4(0, 1, 0, 0));
+						ww = vec3(rs * vec4(0, 0, 1, 0));
+					}
 					Infinite infinite;
 					infinite.u = VecToFloat3(uu);
 					infinite.v = VecToFloat3(vv);

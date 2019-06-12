@@ -19,28 +19,30 @@ public:
 		int channel = curand_uniform(&rng) * 3;
 		channel = channel == 3 ? 2 : channel;
 		float dist = -std::log(1 - curand_uniform(&rng)) / (&sigmaT.x)[channel];
-		float tt = dist < ray.tmax ? dist : ray.tmax;
-		bool sampledMedium = tt < ray.tmax;
+		dist = dist < ray.tmax ? dist : ray.tmax;
+		bool sampledMedium = dist < ray.tmax;
 		sampled = sampledMedium;
 		if (sampledMedium)
-			t = tt;
+			t = dist;
 
-		float3 Tr = Exp(sigmaT * -tt);
+		float3 Tr = Exp(sigmaT * -dist);
 
 		float3 density = sampledMedium ? (sigmaT * Tr) : Tr;
 		float pdf = 0;
 		for (int i = 0; i < 3; ++i) pdf += (&density.x)[i];
-		pdf *= 1 / 3.f;
+		pdf /= 3.f;
 		if (pdf == 0) {
 		    pdf = 1;
 		}
+
+		return sampledMedium ? (Tr * sigmaS / pdf) : Tr / pdf;
 		/*float sigma = dot(sigmaT, { 0.212671f, 0.715160f, 0.072169f });
 		float dist = Exponential(curand_uniform(&rng), sigma);
 		bool sampledMedium = dist < ray.tmax;
 		sampled = sampledMedium;
-		t = dist;*/
+		t = dist;
 
-		return sampledMedium ? (Tr * sigmaS / pdf) : Tr / pdf;
+		return sampledMedium ? (sigmaS / sigmaT) : {1.f, 1.f, 1.f};*/
 	}
 };
 

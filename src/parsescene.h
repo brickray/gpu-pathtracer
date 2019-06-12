@@ -8,8 +8,6 @@
 struct GlobalConfig{
 	//default size[512,512]
 	int width, height; //canvas size 
-	//default [5]
-	int maxDepth; //max recurse depth
 
 	//default parameter
 	//position [0,0,0]
