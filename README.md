@@ -27,9 +27,12 @@ physically based path tracer on gpu
 
 图集
 ---
-![roughdielectric](result/rough_ball.png)
-![heterogeneous](result/heterogeneous.png) 
-![jade](result/jade.png)
-![skimmilk](result/skimmilk.png)
-![volume_caustic](result/volume_caustic.png)
-![cornell_dof](result/cornell_dof.png)
+<table> <tr>
+    <td> <img src="result/rough_ball.png" alt="Drawing" style="width: 200px;"/> </td>
+    <td> <img src="result/heterogeneous.png" alt="Drawing" style="width: 200px;"/> </td>
+    <td> <img src="result/jade.png" alt="Drawing" style="width: 200px;"/> </td>
+</tr> <tr>
+    <td> <img src="result/skimmilk.png" alt="Drawing" style="width: 200px;"/> </td>
+    <td> <img src="result/volume_caustic.png" alt="Drawing" style="width: 200px;"/> </td>
+    <td> <img src="result/cornell_dof.png" alt="Drawing" style="width: 200px;"/> </td>
+</tr> </table
