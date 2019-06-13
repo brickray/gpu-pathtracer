@@ -38,9 +38,10 @@ public:
 public:
 	BVH();
 
-	void Build(vector<Primitive>& primitives);
+	void LoadOrBuildBVH(vector<Primitive>& primitives, string file);
 
 private:
+	void build(vector<Primitive>& primitives);
 	BVHNode* split(vector<Primitive>& primitives, BBox& bbox);
 	void flatten(BVHNode* node, int cur, int& next);
 	void clearBVHNode(BVHNode* node);

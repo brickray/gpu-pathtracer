@@ -262,7 +262,7 @@ bool InitScene(string file){
 	Camera* camera = new Camera(cam.position, cam.u, cam.v, cam.w, make_float2(config.width, config.height), 0.1f, cam.fov, cam.apertureRadius, cam.focalDistance, cam.filmic, cam.medium);
 	camera->environment = cam.environment;
 	//init light distribution
-	scene.Init(camera);
+	scene.Init(camera, file);
 
 	printf("Load scene using %.3fms\n", float(clock() - now));
 	printf("Primitives [%d]\n", scene.bvh.prims.size());

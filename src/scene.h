@@ -39,11 +39,11 @@ public:
 	} integrator;
 
 public:
-	void Init(Camera* cam){
+	void Init(Camera* cam, string file){
 		camera = cam;
 
 		clock_t now = clock();
-		bvh.Build(primitives);
+		bvh.LoadOrBuildBVH(primitives, file);
 		printf("Build bvh using %.3fms\n", float(clock() - now));
 		printf("Bvh total nodes:%d\n", bvh.total_nodes);
 		printf("Scene Bounds [%.3f, %.3f, %.3f]-[%.3f, %.3f, %.3f]\n",

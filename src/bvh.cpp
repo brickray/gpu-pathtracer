@@ -5,7 +5,7 @@ BVH::BVH(){
 	total_nodes = 0;
 }
 
-void BVH::Build(vector<Primitive>& primitives){
+void BVH::build(vector<Primitive>& primitives){
 	if (primitives.size() == 0)
 		return;
 
@@ -191,4 +191,35 @@ void BVH::clearBVHNode(BVHNode* node){
 		clearBVHNode(node->right);
 
 	delete node;
+}
+
+void BVH::LoadOrBuildBVH(vector<Primitive>& primitives, string file){
+	string base = file.substr(0, file.find_last_of('/') + 1);
+	string bvhfile = base + "bvh.cache";
+	FILE* fp = nullptr;
+	fp = fopen(bvhfile.c_str(), "rb");
+	if (fp){
+		int size;
+		fread(&total_nodes, sizeof(int), 1, fp);
+		fread(&size, sizeof(int), 1, fp);
+		fread(&root_box.fmin.x, sizeof(float) * 3, 1, fp);
+		fread(&root_box.fmax.x, sizeof(float) * 3, 1, fp);
+		prims.resize(size);
+		fread(&prims[0], sizeof(Primitive)*size, 1, fp);
+		linear_root = new LinearBVHNode[total_nodes];
+		fread(linear_root, sizeof(LinearBVHNode)*total_nodes, 1, fp);
+		fclose(fp);
+	}
+	else{
+		build(primitives);
+		int size = prims.size();
+		fp = fopen(bvhfile.c_str(), "wb");
+		fwrite(&total_nodes, sizeof(int), 1, fp);
+		fwrite(&size, sizeof(int), 1, fp);
+		fwrite(&root_box.fmin.x, sizeof(float) * 3, 1, fp);
+		fwrite(&root_box.fmax.x, sizeof(float) * 3, 1, fp);
+		fwrite(&prims[0], sizeof(Primitive)*size, 1, fp);
+		fwrite(linear_root, sizeof(LinearBVHNode)*total_nodes, 1, fp);
+		fclose(fp);
+	}
 }
