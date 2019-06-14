@@ -8,6 +8,7 @@ class Area{
 public:
 	float3 radiance;
 	Triangle triangle;
+	int medium;
 
 public:
 	__host__ __device__ void SampleLight(float3& pos, float2& u, float3& rad, Ray& ray, float3& nor, float& pdf, float epsilon = 0.01) const{

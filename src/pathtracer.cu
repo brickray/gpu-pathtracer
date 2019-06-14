@@ -1100,13 +1100,20 @@ __global__ void Volpath(int iter, int maxDepth){
 			float2 phaseU = make_float2(uniform(rng), uniform(rng));
 			float3 dir;
 			r.medium->SamplePhase(phaseU, dir, phase, pdf);
-			r = Ray(r(sampledDist), dir, r.medium);
+			r = Ray(r(sampledDist), dir, r.medium, kernel_epsilon);
 			specular = false;
 		}
 		else{
 			if (bounces == 0 || specular){
 				if (isect.lightIdx != -1){
-					Li += beta*kernel_lights[isect.lightIdx].Le(nor, -r.d);
+					float3 tr = { 1.f, 1.f, 1.f };
+					if (r.medium){
+						if (r.medium->type == MT_HOMOGENEOUS)
+							tr = r.medium->homogeneous.Tr(r, uniform, rng);
+						else
+							tr = r.medium->heterogeneous.Tr(r, uniform, rng);
+					}
+					Li += tr*beta*kernel_lights[isect.lightIdx].Le(nor, -r.d);
 					break;
 				}
 			}
@@ -1268,14 +1275,17 @@ __global__ void LightTracing(int iter, int maxDepth){
 	float3 nor, radiance;
 	float pdfA, pdfW;
 	light.SampleLight(u, ray, nor, radiance, pdfA, pdfW, kernel_epsilon);
+	ray.medium = light.medium == -1 ? nullptr : &kernel_mediums[light.medium];
+
 	beta *= radiance*fabs(dot(ray.d, nor)) / (pdfA*pdfW*choicePdf);
 
 	Ray shadowRay;
 	float we, cameraPdf;
 	int raster;
 	kernel_camera->SampleCamera(ray.o, shadowRay, we, cameraPdf, raster, kernel_epsilon);
-	if (cameraPdf != 0.f && !IntersectP(shadowRay)){
-		kernel_color[raster] = radiance;
+	if (cameraPdf != 0.f){
+		float3 tr = Tr(shadowRay, uniform, rng);
+		kernel_color[raster] = tr*radiance*fabs(dot(shadowRay.d, nor));
 	}
 
 	Intersection isect;
@@ -1287,39 +1297,93 @@ __global__ void LightTracing(int iter, int maxDepth){
 		float3 pos = isect.pos;
 		float3 nor = isect.nor;
 		float2 uv = isect.uv;
-		Material mat = kernel_materials[isect.matIdx];
-		//direct
-		if (IsDiffuse(mat.type)){
+		float sampledDist;
+		bool sampledMedium = false;
+		if (ray.medium){
+			if (ray.medium->type == MT_HOMOGENEOUS)
+				beta *= ray.medium->homogeneous.Sample(ray, uniform, rng, sampledDist, sampledMedium);
+			else
+				beta *= ray.medium->heterogeneous.Sample(ray, uniform, rng, sampledDist, sampledMedium);
+		}
+		if (IsBlack(beta)) break;
+		if (sampledMedium){
+			float3 samplePos = ray(sampledDist);
 			Ray shadowRay;
 			float we, cameraPdf;
 			int raster;
-			kernel_camera->SampleCamera(pos, shadowRay, we, cameraPdf, raster, kernel_epsilon);
+			kernel_camera->SampleCamera(samplePos, shadowRay, we, cameraPdf, raster, kernel_epsilon);
+			shadowRay.medium = ray.medium;
+			float3 tr = Tr(shadowRay, uniform, rng);
+			float phase, unuse;
+			ray.medium->Phase(-ray.d, shadowRay.d, phase, unuse);
 
-			if (cameraPdf != 0.f && !IntersectP(shadowRay)){
-				float3 fr;
-				float unuse;
-				Fr(mat, -ray.d, shadowRay.d, nor, uv, isect.dpdu, fr, unuse);
-
-				float3 L = beta*fr*we*fabs(dot(shadowRay.d, nor)) / cameraPdf;
-				if (!(isinf(L.x) || isinf(L.y) || isinf(L.z)))
-					if (!(isnan(L.x) || isnan(L.y) || isnan(L.z))){
-						//kernel_color[raster] += L;
-						atomicAdd(&kernel_color[raster].x, L.x);
-						atomicAdd(&kernel_color[raster].y, L.y);
-						atomicAdd(&kernel_color[raster].z, L.z);
-					}
-				
+			float3 L = beta*we*tr*phase / cameraPdf;
+			if (!(isinf(L.x) || isinf(L.y) || isinf(L.z))){
+				if (!(isnan(L.x) || isnan(L.y) || isnan(L.z))){
+					//kernel_color[raster] += L;
+					atomicAdd(&kernel_color[raster].x, L.x);
+					atomicAdd(&kernel_color[raster].y, L.y);
+					atomicAdd(&kernel_color[raster].z, L.z);
+				}
 			}
-		}
 
-		float3 u = make_float3(uniform(rng), uniform(rng),uniform(rng));
-		float3 out, fr;
-		float pdf;
-		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf);
-		if (IsBlack(fr))
-			break;
-		beta *= fr*fabs(dot(out, nor)) / pdf;
-		ray = Ray(pos, out, nullptr, kernel_epsilon);
+			float pdf;
+			float2 phaseU = make_float2(uniform(rng), uniform(rng));
+			float3 dir;
+			ray.medium->SamplePhase(phaseU, dir, phase, pdf);
+			ray = Ray(samplePos, dir, ray.medium, kernel_epsilon);
+		}
+		else{
+			if (isect.matIdx == -1){
+				bounces--;
+				Medium* m = dot(ray.d, isect.nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
+					: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
+				ray = Ray(pos, ray.d, m);
+
+				continue;
+			}
+
+			Material mat = kernel_materials[isect.matIdx];
+
+			//direct
+			if (IsDiffuse(mat.type)){
+				Ray shadowRay;
+				float we, cameraPdf;
+				int raster;
+				kernel_camera->SampleCamera(pos, shadowRay, we, cameraPdf, raster, kernel_epsilon);
+				shadowRay.medium = ray.medium;
+
+				if (cameraPdf != 0.f){
+					float3 tr = Tr(shadowRay, uniform, rng);
+					float3 fr;
+					float unuse;
+					Fr(mat, -ray.d, shadowRay.d, nor, uv, isect.dpdu, fr, unuse);
+
+					float3 L = tr*beta*fr*we*fabs(dot(shadowRay.d, nor)) / cameraPdf;
+					if (!(isinf(L.x) || isinf(L.y) || isinf(L.z))){
+						if (!(isnan(L.x) || isnan(L.y) || isnan(L.z))){
+							//kernel_color[raster] += L;
+							atomicAdd(&kernel_color[raster].x, L.x);
+							atomicAdd(&kernel_color[raster].y, L.y);
+							atomicAdd(&kernel_color[raster].z, L.z);
+						}
+					}
+				}
+			}
+
+			float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
+			float3 out, fr;
+			float pdf;
+			SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf);
+			if (IsBlack(fr))
+				break;
+			beta *= fr*fabs(dot(out, nor)) / pdf;
+			Medium* m = dot(out, nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
+				: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
+			m = dot(-ray.d, nor)*dot(out, nor) > 0 ? ray.medium : m;
+
+			ray = Ray(pos, out, m, kernel_epsilon);
+		}
 
 		if (bounces > 3){
 			float illumate = clamp(1.f - Luminance(beta), 0.f, 1.f);

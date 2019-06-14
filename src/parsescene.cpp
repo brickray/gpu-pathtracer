@@ -484,6 +484,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					string file = unit["mesh"].GetString();
 					string mat_name = unit.HasMember("material") ? unit["material"].GetString() : "matte";
 					float3 radiance = unit.HasMember("radiance") ? getFloat3(unit["radiance"]) : make_float3(0.f, 0.f, 0.f);
+					string m = unit.HasMember("medium") ? unit["medium"].GetString() : "";
 					float3 scale = unit.HasMember("scale") ? getFloat3(unit["scale"]) : make_float3(1, 1, 1);
 					float3 translate = unit.HasMember("translate") ? getFloat3(unit["translate"]) : make_float3(0, 0, 0);
 					float3 rotate = unit.HasMember("rotate") ? getFloat3(unit["rotate"]) : make_float3(0, 0, 0);
@@ -519,6 +520,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 						Area area;
 						area.radiance = radiance;
 						area.triangle = mesh.triangles[i];
+						area.medium = getMedium(m);
 						scene.lights.push_back(area);
 					}
 				}
