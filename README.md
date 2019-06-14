@@ -9,8 +9,8 @@ physically based path tracer on gpu
 特点
 ----
 
-- 积分器(ao path volpath)
-- 材质(lambertian mirror dielectric roughdielectric roughconduct substrate)
+- 积分器(ambient occlusion, path tracing, light tracing, volumetric path tracing)
+- 材质(lambertian, mirror, dielectric, roughdielectric, roughconduct, substrate)
 - 参与介质渲染(homogeneous and heterogeneous)
 - 光源(area infinite)
 - 多重重要性采样(mis)
