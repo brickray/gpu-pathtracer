@@ -1283,9 +1283,11 @@ __global__ void LightTracing(int iter, int maxDepth){
 	float we, cameraPdf;
 	int raster;
 	kernel_camera->SampleCamera(ray.o, shadowRay, we, cameraPdf, raster, kernel_epsilon);
+	shadowRay.medium = ray.medium;
 	if (cameraPdf != 0.f){
 		float3 tr = Tr(shadowRay, uniform, rng);
-		kernel_color[raster] = tr*radiance*fabs(dot(shadowRay.d, nor));
+		if (!IsBlack(tr))
+			kernel_color[raster] += tr*radiance;
 	}
 
 	Intersection isect;
