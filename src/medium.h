@@ -4,21 +4,22 @@
 #include "common.h"
 #include "ray.h"
 #include "wrap.h"
+#include <thrust/random.h>
 
 class Homogeneous{
 public:
 	float3 sigmaA, sigmaS, sigmaT;
 
 public:
-	__device__ float3 Tr(const Ray& ray, curandState& rng) const{
+	__device__ float3 Tr(const Ray& ray, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng) const{
 		float3 c = sigmaT*(-ray.tmax);
 		return Exp(c);
 	}
 
-	__device__ float3 Sample(const Ray& ray, curandState& rng, float& t, bool& sampled) const{
-		int channel = curand_uniform(&rng) * 3;
+	__device__ float3 Sample(const Ray& ray, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng, float& t, bool& sampled) const{
+		int channel = uniform(rng) * 3;
 		channel = channel == 3 ? 2 : channel;
-		float dist = -std::log(1 - curand_uniform(&rng)) / (&sigmaT.x)[channel];
+		float dist = -std::log(1 - uniform(rng)) / (&sigmaT.x)[channel];
 		dist = dist < ray.tmax ? dist : ray.tmax;
 		bool sampledMedium = dist < ray.tmax;
 		sampled = sampledMedium;
@@ -57,7 +58,7 @@ public:
 
 public:
 	//有时候会因为迭代过于深而导致timeout
-	__device__ float3 Tr(const Ray& ray, curandState& rng) const{
+	__device__ float3 Tr(const Ray& ray, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng) const{
 		float sigma = dot(sigmaT, { 0.212671f, 0.715160f, 0.072169f });
 		Ray r = ray;
 		float3 d = p1 - p0;
@@ -65,7 +66,7 @@ public:
 		float dist = 0.f;
 		int iter = iterMax;
 		while (true){
-			dist += -log(curand_uniform(&rng)) * invMaxDensity / sigma;
+			dist += -log(uniform(rng)) * invMaxDensity / sigma;
 			if (dist >= r.tmax) break;
 			float3 p = r(dist);
 			p = (p - p0) / d;
@@ -73,7 +74,7 @@ public:
 
 			if (tr < 0.1f){
 				float q = 1.f - tr;
-				if (curand_uniform(&rng) < q) return{ 0.f, 0.f, 0.f };
+				if (uniform(rng) < q) return{ 0.f, 0.f, 0.f };
 				tr /= (1.f - q);
 			}
 
@@ -84,18 +85,18 @@ public:
 		return{ tr, tr, tr };
 	}
 
-	__device__ float3 Sample(const Ray& ray, curandState& rng, float& t, bool& sampled) const{
+	__device__ float3 Sample(const Ray& ray, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng, float& t, bool& sampled) const{
 		float sigma = dot(sigmaT, { 0.212671f, 0.715160f, 0.072169f });
 		Ray r = ray;
 		float3 d = p1 - p0;
 		float dist = 0.f;
 		int iter = iterMax;
 		while (true){
-			dist += -log(curand_uniform(&rng)) * invMaxDensity / sigma;
+			dist += -log(uniform(rng)) * invMaxDensity / sigma;
 			if (dist >= r.tmax) break;
 			float3 p = r(dist);
 			p = (p - p0) / d;
-			if (getDensity(p)*invMaxDensity > curand_uniform(&rng)){
+			if (getDensity(p)*invMaxDensity > uniform(rng)){
 				t = dist;
 				sampled = true;
 				return sigmaS / sigmaT;

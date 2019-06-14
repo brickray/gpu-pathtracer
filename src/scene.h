@@ -14,8 +14,10 @@
 
 enum IntegratorType{
 	IT_AO = 0,
-	IT_PATH,
-	IT_VOLPATH,
+	IT_PT,
+	IT_VPT,
+	IT_LT,
+	IT_BDPT,
 };
 
 class Scene{

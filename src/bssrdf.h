@@ -4,6 +4,17 @@
 #include "common.h"
 #include "wrap.h"
 
+struct BssrdfTable{
+	const int nRhoSamples, nRadiusSamples;
+	vector<float> rhoSamples;
+	vector<float> radiusSamples;
+	vector<float> profile;
+	vector<float> rhoEff;
+	vector<float> profileCDF;
+
+	BssrdfTable(int nRhoSamples, int nRadiusSamples);
+};
+
 class Bssrdf{
 public:
 	float3 absorb, scatterPrime;
@@ -133,6 +144,30 @@ public:
 static float BeamDiffusionSS(float sigmaS, float sigmaA, float g, float eta, float r){
 	float sigmaT = sigmaA + sigmaS, albedo = sigmaS / sigmaT;
 
+}
+
+static void ComputeBeamDiffusionBSSRDF(float g, float eta, BssrdfTable& table){
+	table.radiusSamples[0] = 0.f;
+	table.radiusSamples[1] = 2.5e-3f;
+	for (int i = 2; i < table.nRadiusSamples; ++i)
+		table.radiusSamples[i] = table.radiusSamples[i - 1] * 1.2f;
+
+	//albedo values;
+	for (int i = 0; i < table.nRhoSamples; ++i)
+		table.rhoSamples[i] = (1.f - exp(-8.f*i / (float)(table.nRhoSamples - 1.f))) / (1.f - exp(-8.f));
+	
+	//diffusion profile
+	for (int i = 0; i < table.nRhoSamples; ++i){
+		//scattering profile
+		for (int j = 0; j < table.nRadiusSamples; ++j){
+			float rho = table.rhoSamples[i];
+			float r = table.radiusSamples[j];
+			table.profile[i*table.nRadiusSamples + j] = TWOPI*r;
+			
+			//compute effective albedo and CDF for importance sampling
+			//table.rhoEff[i] = 
+		}
+	}
 }
 
 #endif

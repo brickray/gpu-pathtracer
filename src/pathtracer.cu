@@ -3,6 +3,7 @@
 #include "scene.h"
 #include "bvh.h"
 #include "device_launch_parameters.h"
+#include <thrust/random.h>
 
 Camera* dev_camera;
 float3* dev_image, *dev_color;
@@ -293,7 +294,7 @@ __device__ bool IntersectP(Ray& ray){
 	return false;
 }
 
-__device__ float3 Tr(Ray& ray, curandState& rng){
+__device__ float3 Tr(Ray& ray, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
 	float3 tr = make_float3(1, 1, 1);
 	float tmax = ray.tmax;
 	while (true){
@@ -304,9 +305,9 @@ __device__ float3 Tr(Ray& ray, curandState& rng){
 
 		if (ray.medium){
 			if (ray.medium->type == MT_HOMOGENEOUS)
-				tr *= ray.medium->homogeneous.Tr(ray, rng);
+				tr *= ray.medium->homogeneous.Tr(ray, uniform, rng);
 			else
-				tr *= ray.medium->heterogeneous.Tr(ray, rng);
+				tr *= ray.medium->heterogeneous.Tr(ray, uniform, rng);
 		}
 
 		if (!invisible) break;
@@ -357,7 +358,7 @@ __device__ inline float4 GetTexel(Material material, float2 uv){
 }
 
 //**************************bssrdf*****************
-__device__ float3 SingleScatter(Intersection* isect, float3 in, curandState& cudaRNG){
+__device__ float3 SingleScatter(Intersection* isect, float3 in, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
 	float3 pos = isect->pos;
 	float3 nor = isect->nor;
 	float coso = fabs(dot(in, nor));
@@ -383,18 +384,18 @@ __device__ float3 SingleScatter(Intersection* isect, float3 in, curandState& cud
 	float len = length(tIsect.pos - pos);
 	int samples = 1;
 	for (int i = 0; i < samples; ++i){
-		float d = Exponential(curand_uniform(&cudaRNG), sigmaTr);
+		float d = Exponential(uniform(rng), sigmaTr);
 		if (d > len) continue;
 		float3 pSample = pos + tdir*d;
 		float pdf = ExponentialPdf(d, sigmaTr);
 		float choicePdf;
-		float u = curand_uniform(&cudaRNG);
+		float u = uniform(rng);
 		int idx = LookUpLightDistribution(u, choicePdf);
 		Area light = kernel_lights[idx];
 		float lightPdf;
 		Ray shadowRay;
 		float3 radiance, lightNor;
-		float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+		float2 u1 = make_float2(uniform(rng), uniform(rng));
 		light.SampleLight(pSample, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
 		if (IsBlack(radiance))
 			continue;
@@ -431,7 +432,7 @@ __device__ float3 SingleScatter(Intersection* isect, float3 in, curandState& cud
 	return L;
 }
 
-__device__ float3 MultipleScatter(Intersection* isect, float3 in, curandState& cudaRNG){
+__device__ float3 MultipleScatter(Intersection* isect, float3 in, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
 	float3 pos = isect->pos;
 	float3 nor = isect->nor;
 	float coso = fabs(dot(in, nor));
@@ -448,7 +449,7 @@ __device__ float3 MultipleScatter(Intersection* isect, float3 in, curandState& c
 	for (int i = 0; i < samples; ++i){
 		Ray probeRay;
 		float pdf;
-		float2 u = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+		float2 u = make_float2(uniform(rng), uniform(rng));
 		bssrdf.SampleProbeRay(pos, nor, u, sigmaTr, rMax, probeRay, pdf);
 		probeRay.tmin = kernel_epsilon;
 
@@ -459,11 +460,11 @@ __device__ float3 MultipleScatter(Intersection* isect, float3 in, curandState& c
 				float3 probeNor = probeIsect.nor;
 				float3 rd = bssrdf.Rd(dot(probePos - pos, probePos - pos));
 				float choicePdf;
-				float u = curand_uniform(&cudaRNG);
+				float u = uniform(rng);
 				int idx = LookUpLightDistribution(u, choicePdf);
 				Area light = kernel_lights[idx];
 				float lightPdf;
-				float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+				float2 u1 = make_float2(uniform(rng), uniform(rng));
 				float3 radiance, lightNor;
 				Ray shadowRay;
 				light.SampleLight(probePos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
@@ -485,6 +486,7 @@ __device__ float3 MultipleScatter(Intersection* isect, float3 in, curandState& c
 }
 //**************************bssrdf end*************
 
+//**************************BSDF Sampling**************************
 __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, float3 dpdu, float3 u, float3& out, float3& fr, float& pdf){
 	switch(material.type){
 	case MT_LAMBERTIAN:{
@@ -814,7 +816,9 @@ __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 
 	}
 	}
 }
+//**************************BSDF End*******************************
 
+//**************************AO Integrator**************************
 __global__ void Ao(int iter, float maxDist){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
@@ -823,14 +827,14 @@ __global__ void Ao(int iter, float maxDist){
 	//init seed
 	int threadIndex = (blockIdx.x + blockIdx.y * gridDim.x) * (blockDim.x * blockDim.y) + (threadIdx.y * blockDim.x) + threadIdx.x;
 
-	curandState cudaRNG;
-	curand_init(WangHash(iter) + threadIndex, 0, 0, &cudaRNG);
+	thrust::default_random_engine rng(WangHash(pixel) + WangHash(iter));
+	thrust::uniform_real_distribution<float> uniform(0.0f, 1.0f);
 
 	//start
-	float offsetx = curand_uniform(&cudaRNG) - 0.5f;
-	float offsety = curand_uniform(&cudaRNG) - 0.5f;
+	float offsetx = uniform(rng) - 0.5f;
+	float offsety = uniform(rng) - 0.5f;
 	float unuse;
-	float2 aperture = UniformDisk(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), unuse);//for dof
+	float2 aperture = UniformDisk(uniform(rng), uniform(rng), unuse);//for dof
 	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, aperture);
 	ray.tmin = kernel_epsilon;
 
@@ -847,7 +851,7 @@ __global__ void Ao(int iter, float maxDist){
 	float pdf = 0.f;
 	if (dot(-ray.d, nor) < 0.f)
 		nor = -nor;
-	float3 dir = CosineHemiSphere(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), nor, pdf);
+	float3 dir = CosineHemiSphere(uniform(rng), uniform(rng), nor, pdf);
 	float3 uu = isect.dpdu, ww;
 	ww = cross(uu, nor);
 	dir = ToWorld(dir, uu, nor, ww);
@@ -862,7 +866,9 @@ __global__ void Ao(int iter, float maxDist){
 	if (!(isnan(L.x) || isnan(L.y) || isnan(L.z)))
 		kernel_color[pixel] = L;
 }
+//**************************AO End*********************************
 
+//**************************Path Integrator************************
 __global__ void Path(int iter, int maxDepth){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
@@ -871,14 +877,14 @@ __global__ void Path(int iter, int maxDepth){
 	//init seed
 	int threadIndex = (blockIdx.x + blockIdx.y * gridDim.x) * (blockDim.x * blockDim.y) + (threadIdx.y * blockDim.x) + threadIdx.x;
 
-	curandState cudaRNG;
-	curand_init(WangHash(iter) + threadIndex, 0, 0, &cudaRNG);
+	thrust::default_random_engine rng(WangHash(pixel) + WangHash(iter));
+	thrust::uniform_real_distribution<float> uniform(0.0f, 1.0f);
 
 	//start
-	float offsetx = curand_uniform(&cudaRNG) - 0.5f;
-	float offsety = curand_uniform(&cudaRNG) - 0.5f;
+	float offsetx = uniform(rng) - 0.5f;
+	float offsety = uniform(rng) - 0.5f;
 	float unuse;
-	float2 aperture = UniformDisk(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), unuse);//for dof
+	float2 aperture = UniformDisk(uniform(rng), uniform(rng), unuse);//for dof
 	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, aperture);
 	ray.tmin = kernel_epsilon;
 	
@@ -917,11 +923,11 @@ __global__ void Path(int iter, int maxDepth){
 		if (IsDiffuse(material.type)){
 			float3 Ld = make_float3(0.f, 0.f, 0.f);
 			bool inf = false;
-			float u = curand_uniform(&cudaRNG);
+			float u = uniform(rng);
 			float choicePdf;
 			int idx = LookUpLightDistribution(u, choicePdf);
 			if (idx == kernel_light_size) inf = true;
-			float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+			float2 u1 = make_float2(uniform(rng), uniform(rng));
 			float3 radiance, lightNor;
 			Ray shadowRay;
 			float lightPdf;
@@ -935,17 +941,17 @@ __global__ void Path(int iter, int maxDepth){
 				float3 fr;
 				float samplePdf;
 
-				//Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, curand_uniform(&cudaRNG), fr, samplePdf);
+				//Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, uniform(rng), fr, samplePdf);
 				Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
 
 				float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
 				Ld += weight*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);
 			}
 
-			float3 uniform = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+			float3 us = make_float3(uniform(rng), uniform(rng), uniform(rng));
 			float3 out, fr;
 			float pdf;
-			SampleBSDF(material, -r.d, nor, uv, dpdu, uniform, out, fr, pdf);
+			SampleBSDF(material, -r.d, nor, uv, dpdu, us, out, fr, pdf);
 			if (!(IsBlack(fr) || pdf == 0)){
 				Intersection lightIsect;
 				Ray lightRay(pos, out, r.medium, kernel_epsilon);
@@ -986,7 +992,7 @@ __global__ void Path(int iter, int maxDepth){
 			Li += beta*Ld;
 		}
 
-		float3 u = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+		float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
 		float3 out, fr;
 		float pdf;
 
@@ -1001,7 +1007,7 @@ __global__ void Path(int iter, int maxDepth){
 
 		if (bounces > 3){
 			float illumate = clamp(1.f - Luminance(beta), 0.f, 1.f);
-			if (curand_uniform(&cudaRNG) < illumate)
+			if (uniform(rng) < illumate)
 				break;
 
 			beta /= (1 - illumate);
@@ -1012,7 +1018,9 @@ __global__ void Path(int iter, int maxDepth){
 		if (!(isnan(Li.x) || isnan(Li.y) || isnan(Li.z)))
 			kernel_color[pixel] = Li;
 }
+//**************************Path End*******************************
 
+//**************************VolPath Integrator*********************
 __global__ void Volpath(int iter, int maxDepth){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
@@ -1021,14 +1029,14 @@ __global__ void Volpath(int iter, int maxDepth){
 	//init seed
 	int threadIndex = (blockIdx.x + blockIdx.y * gridDim.x) * (blockDim.x * blockDim.y) + (threadIdx.y * blockDim.x) + threadIdx.x;
 
-	curandState cudaRNG;
-	curand_init(WangHash(iter) + threadIndex, 0, 0, &cudaRNG);
+	thrust::default_random_engine rng(WangHash(pixel) + WangHash(iter));
+	thrust::uniform_real_distribution<float> uniform(0.0f, 1.0f);
 
 	//start
-	float offsetx = curand_uniform(&cudaRNG) - 0.5f;
-	float offsety = curand_uniform(&cudaRNG) - 0.5f;
+	float offsetx = uniform(rng) - 0.5f;
+	float offsety = uniform(rng) - 0.5f;
 	float unuse;
-	float2 aperture = UniformDisk(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), unuse);//for dof
+	float2 aperture = UniformDisk(uniform(rng), uniform(rng), unuse);//for dof
 	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, aperture);
 	ray.tmin = kernel_epsilon;
 	ray.medium = kernel_camera->medium == -1 ? nullptr : &kernel_mediums[kernel_camera->medium];
@@ -1060,19 +1068,19 @@ __global__ void Volpath(int iter, int maxDepth){
 		bool sampledMedium = false;
 		if (r.medium){
 			if (r.medium->type == MT_HOMOGENEOUS)
-				beta *= r.medium->homogeneous.Sample(r, cudaRNG, sampledDist, sampledMedium);
+				beta *= r.medium->homogeneous.Sample(r, uniform, rng, sampledDist, sampledMedium);
 			else
-				beta *= r.medium->heterogeneous.Sample(r, cudaRNG, sampledDist, sampledMedium);
+				beta *= r.medium->heterogeneous.Sample(r, uniform, rng, sampledDist, sampledMedium);
 		}
 		if (IsBlack(beta)) break;
 		if (sampledMedium){
 			//TODO:多重重要性采样
 			bool inf = false;
-			float u = curand_uniform(&cudaRNG);
+			float u = uniform(rng);
 			float choicePdf;
 			int idx = LookUpLightDistribution(u, choicePdf);
 			if (idx == kernel_light_size) inf = true;
-			float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+			float2 u1 = make_float2(uniform(rng), uniform(rng));
 			float3 radiance, lightNor;
 			Ray shadowRay;
 			float lightPdf;
@@ -1081,7 +1089,7 @@ __global__ void Volpath(int iter, int maxDepth){
 			else
 				kernel_infinite->SampleLight(r(sampledDist), u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
 			shadowRay.medium = r.medium;
-			float3 tr = Tr(shadowRay, cudaRNG);
+			float3 tr = Tr(shadowRay, uniform, rng);
 			float phase, unuse;
 			r.medium->Phase(-r.d, shadowRay.d, phase, unuse);
 
@@ -1089,7 +1097,7 @@ __global__ void Volpath(int iter, int maxDepth){
 				Li += tr*beta*phase*radiance / (lightPdf * choicePdf);
 
 			float pdf;
-			float2 phaseU = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+			float2 phaseU = make_float2(uniform(rng), uniform(rng));
 			float3 dir;
 			r.medium->SamplePhase(phaseU, dir, phase, pdf);
 			r = Ray(r(sampledDist), dir, r.medium);
@@ -1117,11 +1125,11 @@ __global__ void Volpath(int iter, int maxDepth){
 			if (IsDiffuse(material.type)){
 				float3 Ld = make_float3(0.f, 0.f, 0.f);
 				bool inf = false;
-				float u = curand_uniform(&cudaRNG);
+				float u = uniform(rng);
 				float choicePdf;
 				int idx = LookUpLightDistribution(u, choicePdf);
 				if (idx == kernel_light_size) inf = true;
-				float2 u1 = make_float2(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+				float2 u1 = make_float2(uniform(rng), uniform(rng));
 				float3 radiance, lightNor;
 				Ray shadowRay;
 				float lightPdf;
@@ -1135,18 +1143,18 @@ __global__ void Volpath(int iter, int maxDepth){
 					float3 fr;
 					float samplePdf;
 
-					//Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, curand_uniform(&cudaRNG), fr, samplePdf);
+					//Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, uniform(rng), fr, samplePdf);
 					Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
-					float3 tr = Tr(shadowRay, cudaRNG);
+					float3 tr = Tr(shadowRay, uniform, rng);
 
 					float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
 					Ld += weight*tr*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);
 				}
 
-				float3 uniform = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+				float3 us = make_float3(uniform(rng), uniform(rng), uniform(rng));
 				float3 out, fr;
 				float pdf;
-				SampleBSDF(material, -r.d, nor, uv, dpdu, uniform, out, fr, pdf);
+				SampleBSDF(material, -r.d, nor, uv, dpdu, us, out, fr, pdf);
 				if (!(IsBlack(fr) || pdf == 0)){
 					Intersection lightIsect;
 					Ray lightRay(pos, out, r.medium, kernel_epsilon);
@@ -1167,9 +1175,9 @@ __global__ void Volpath(int iter, int maxDepth){
 							float3 tr = { 1.f, 1.f, 1.f };
 							if (lightRay.medium){
 								if (lightRay.medium->type == MT_HOMOGENEOUS)
-									tr = lightRay.medium->homogeneous.Tr(lightRay, cudaRNG);
+									tr = lightRay.medium->homogeneous.Tr(lightRay, uniform, rng);
 								else
-									tr = lightRay.medium->heterogeneous.Tr(lightRay, cudaRNG);
+									tr = lightRay.medium->heterogeneous.Tr(lightRay, uniform, rng);
 							}
 							Ld += weight * tr * fr * radiance * fabs(dot(out, nor)) / pdf;
 						}
@@ -1187,9 +1195,9 @@ __global__ void Volpath(int iter, int maxDepth){
 							float3 tr = { 1.f, 1.f, 1.f };
 							if (lightRay.medium){
 								if (lightRay.medium->type == MT_HOMOGENEOUS)
-									tr = lightRay.medium->homogeneous.Tr(lightRay, cudaRNG);
+									tr = lightRay.medium->homogeneous.Tr(lightRay, uniform, rng);
 								else
-									tr = lightRay.medium->heterogeneous.Tr(lightRay, cudaRNG);
+									tr = lightRay.medium->heterogeneous.Tr(lightRay, uniform, rng);
 							}
 							Ld += weight * tr * fr * radiance * fabs(dot(out, nor)) / pdf;
 						}
@@ -1199,7 +1207,7 @@ __global__ void Volpath(int iter, int maxDepth){
 				Li += beta*Ld;
 			}
 
-			float3 u = make_float3(curand_uniform(&cudaRNG), curand_uniform(&cudaRNG), curand_uniform(&cudaRNG));
+			float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
 			float3 out, fr;
 			float pdf;
 
@@ -1219,7 +1227,7 @@ __global__ void Volpath(int iter, int maxDepth){
 
 		if (bounces > 3){
 			float illumate = clamp(1.f - Luminance(beta), 0.f, 1.f);
-			if (curand_uniform(&cudaRNG) < illumate)
+			if (uniform(rng) < illumate)
 				break;
 
 			beta /= (1 - illumate);
@@ -1230,6 +1238,186 @@ __global__ void Volpath(int iter, int maxDepth){
 		if (!(isnan(Li.x) || isnan(Li.y) || isnan(Li.z)))
 			kernel_color[pixel] = Li;
 }
+//**************************VolPath End****************************
+
+//**************************Lighttracing Integrator****************
+__global__ void LightTracingInit(){
+	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
+	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
+	unsigned pixel = x + y*blockDim.x*gridDim.x;
+
+	kernel_color[pixel] = { 0.f, 0.f, 0.f };
+}
+
+__global__ void LightTracing(int iter, int maxDepth){
+	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
+	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
+	unsigned pixel = x + y*blockDim.x*gridDim.x;
+
+	//init seed
+	int threadIndex = (blockIdx.x + blockIdx.y * gridDim.x) * (blockDim.x * blockDim.y) + (threadIdx.y * blockDim.x) + threadIdx.x;
+	thrust::default_random_engine rng(WangHash(pixel) + WangHash(iter));
+	thrust::uniform_real_distribution<float> uniform(0.0f, 1.0f);
+
+	float3 beta = { 1.f, 1.f, 1.f };
+	float choicePdf;
+	int lightIdx = LookUpLightDistribution(uniform(rng), choicePdf);
+	Area light = kernel_lights[lightIdx];
+	float4 u = make_float4(uniform(rng), uniform(rng), uniform(rng), uniform(rng));
+	Ray ray;
+	float3 nor, radiance;
+	float pdfA, pdfW;
+	light.SampleLight(u, ray, nor, radiance, pdfA, pdfW, kernel_epsilon);
+	beta *= radiance*fabs(dot(ray.d, nor)) / (pdfA*pdfW*choicePdf);
+
+	Ray shadowRay;
+	float we, cameraPdf;
+	int raster;
+	kernel_camera->SampleCamera(ray.o, shadowRay, we, cameraPdf, raster, kernel_epsilon);
+	if (cameraPdf != 0.f && !IntersectP(shadowRay)){
+		kernel_color[raster] = radiance;
+	}
+
+	Intersection isect;
+	for (int bounces = 0; bounces < maxDepth; ++bounces){
+		if (!Intersect(ray, &isect)){
+			break;
+		}
+
+		float3 pos = isect.pos;
+		float3 nor = isect.nor;
+		float2 uv = isect.uv;
+		Material mat = kernel_materials[isect.matIdx];
+		//direct
+		if (IsDiffuse(mat.type)){
+			Ray shadowRay;
+			float we, cameraPdf;
+			int raster;
+			kernel_camera->SampleCamera(pos, shadowRay, we, cameraPdf, raster, kernel_epsilon);
+
+			if (cameraPdf != 0.f && !IntersectP(shadowRay)){
+				float3 fr;
+				float unuse;
+				Fr(mat, -ray.d, shadowRay.d, nor, uv, isect.dpdu, fr, unuse);
+
+				float3 L = beta*fr*we*fabs(dot(shadowRay.d, nor)) / cameraPdf;
+				if (!(isinf(L.x) || isinf(L.y) || isinf(L.z)))
+					if (!(isnan(L.x) || isnan(L.y) || isnan(L.z))){
+						//kernel_color[raster] += L;
+						atomicAdd(&kernel_color[raster].x, L.x);
+						atomicAdd(&kernel_color[raster].y, L.y);
+						atomicAdd(&kernel_color[raster].z, L.z);
+					}
+				
+			}
+		}
+
+		float3 u = make_float3(uniform(rng), uniform(rng),uniform(rng));
+		float3 out, fr;
+		float pdf;
+		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf);
+		if (IsBlack(fr))
+			break;
+		beta *= fr*fabs(dot(out, nor)) / pdf;
+		ray = Ray(pos, out, nullptr, kernel_epsilon);
+
+		if (bounces > 3){
+			float illumate = clamp(1.f - Luminance(beta), 0.f, 1.f);
+			if (uniform(rng) < illumate)
+				break;
+
+			beta /= (1 - illumate);
+		}
+	}
+}
+//**************************Lighttracing End***********************
+
+//**************************Bdpt Integrator************************
+struct BdptVertex{
+	float3 beta;
+	float3 pos;
+	bool delta;
+	float fwd;
+	float rev;
+};
+
+__device__ int GenerateCameraPath(int x, int y, BdptVertex* path, int maxDepth, curandState& rng){
+	//start
+	float offsetx = curand_uniform(&rng) - 0.5f;
+	float offsety = curand_uniform(&rng) - 0.5f;
+	float unuse;
+	//bdpt doesn't support dof now
+	//float2 aperture = UniformDisk(uniform(rng), uniform(rng), unuse);//for dof
+	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, make_float2(0, 0));
+	ray.tmin = kernel_epsilon;
+	float3 beta = { 1.f, 1.f, 1.f };
+	Intersection isect;
+	
+
+	for (int bounces = 0; bounces < maxDepth; ++bounces){
+		if (!Intersect(ray, &isect)){
+			break;
+		}
+
+		float3 pos = isect.pos;
+		float3 nor = isect.nor;
+		float2 uv = isect.uv;
+		Material mat = kernel_materials[isect.matIdx];
+		float3 uniform = make_float3(curand_uniform(&rng), curand_uniform(&rng), curand_uniform(&rng));
+		float3 out, fr;
+		float pdf;
+		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, uniform, out, fr, pdf);
+		if (IsBlack(fr))
+			break;
+		beta *= fr*fabs(dot(out, nor)) / pdf;
+	}
+}
+
+__device__ int GenerateLightPath(BdptVertex* path, int maxDepth, curandState& rng){
+	float3 beta;
+	float choicePdf;
+	int lightIdx = LookUpLightDistribution(curand_uniform(&rng), choicePdf);
+	Area light = kernel_lights[lightIdx];
+	float4 uniform = make_float4(curand_uniform(&rng), curand_uniform(&rng), curand_uniform(&rng), curand_uniform(&rng));
+	Ray ray;
+	float3 nor, radiance;
+	float pdfA, pdfW;
+	light.SampleLight(uniform, ray, nor, radiance, pdfA, pdfW, kernel_epsilon);
+	
+	Intersection isect;
+	for (int bounces = 0; bounces < maxDepth; ++bounces){
+		if (!Intersect(ray, &isect)){
+			break;
+		}
+
+		float3 pos = isect.pos;
+		float3 nor = isect.nor;
+		float2 uv = isect.uv;
+		Material mat = kernel_materials[isect.matIdx];
+		float3 uniform = make_float3(curand_uniform(&rng), curand_uniform(&rng), curand_uniform(&rng));
+		float3 out, fr;
+		float pdf;
+		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, uniform, out, fr, pdf);
+		if (IsBlack(fr))
+			break;
+		beta *= fr*fabs(dot(out, nor)) / pdf;
+	}
+}
+
+__global__ void Bdpt(int iter, int maxDepth){
+	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
+	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
+	unsigned pixel = x + y*blockDim.x*gridDim.x;
+
+	//init seed
+	int threadIndex = (blockIdx.x + blockIdx.y * gridDim.x) * (blockDim.x * blockDim.y) + (threadIdx.y * blockDim.x) + threadIdx.x;
+
+	curandState cudaRNG;
+	curand_init(WangHash(iter) + threadIndex, 0, 0, &cudaRNG);
+
+	
+}
+//**************************Bdpt End*******************************
 
 __global__ void Output(int iter, float3* output, bool reset, bool filmic){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
@@ -1264,8 +1452,9 @@ __global__ void InitRender(
 	int light_size,
 	int ld_size,
 	int* tex_size,
-	float3* image, 
+	float3* image,
 	float3* color,
+	int* counter,
 	float ep){
 	kernel_camera = camera;
 	kernel_linear = bvh_nodes;
@@ -1385,6 +1574,11 @@ void BeginRender(
 	texture_memory_use += num_pixel*sizeof(float3);
 	HANDLE_ERROR(cudaMalloc(&dev_color, num_pixel*sizeof(float3)));
 	texture_memory_use += num_pixel*sizeof(float3);
+	int* counter;
+	if (scene.integrator.type == IT_LT){
+		HANDLE_ERROR(cudaMalloc(&counter, num_pixel*sizeof(int)));
+		texture_memory_use += num_pixel*sizeof(int);
+	}
 
 	int ld_size = scene.lightDistribution.size();
 	HANDLE_ERROR(cudaMalloc(&dev_light_distribution, ld_size*sizeof(float)));
@@ -1393,7 +1587,7 @@ void BeginRender(
 	
 	InitRender << <1, 1 >> >(dev_camera, dev_bvh_nodes,
 		dev_primitives, dev_materials, dev_bssrdfs, dev_mediums, dev_lights, dev_infinite, dev_textures, dev_light_distribution, num_lights, ld_size,
-		texture_size, dev_image, dev_color, ep);
+		texture_size, dev_image, dev_color, counter, ep);
 
 
 	HANDLE_ERROR(cudaDeviceSynchronize());
@@ -1422,10 +1616,16 @@ void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsig
 
 	if (scene.integrator.type == IT_AO)
 		Ao << <grid, block >> >(iter, scene.integrator.maxDist);
-	else if (scene.integrator.type == IT_PATH)
+	else if (scene.integrator.type == IT_PT)
 		Path << <grid, block >> >(iter, scene.integrator.maxDepth);
-	else if (scene.integrator.type == IT_VOLPATH)
+	else if (scene.integrator.type == IT_VPT)
 		Volpath << <grid, block >> >(iter, scene.integrator.maxDepth);
+	else if (scene.integrator.type == IT_LT){
+		LightTracingInit << <grid, block >> >();
+		LightTracing << <grid, block >> >(iter, scene.integrator.maxDepth);
+	}
+	else if (scene.integrator.type == IT_BDPT)
+		Bdpt << <grid, block >> >(iter, scene.integrator.maxDepth);
 
 	grid.x = width / block.x;
 	grid.y = height / block.y;

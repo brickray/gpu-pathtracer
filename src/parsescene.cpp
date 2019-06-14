@@ -155,7 +155,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			config.height = 512;
 		}
 
-		config.epsilon = doc.HasMember("epsilon") ? doc["epsilon"].GetDouble() : 0.01f;
+		config.epsilon = doc.HasMember("epsilon") ? doc["epsilon"].GetDouble() : 0.001f;
 
 		if (doc.HasMember("camera")){
 			Value& camera = doc["camera"];
@@ -180,21 +180,30 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 
 	//integrator
 	{
-		string integrator = doc.HasMember("integrator") ? doc["integrator"].GetString():"path";
+		string integrator = doc.HasMember("integrator") ? doc["integrator"].GetString():"pt";
 		if (integrator == "ao"){
 			scene.integrator.type = IT_AO;
 			scene.integrator.maxDist = doc.HasMember("maxDist") ? doc["maxDist"].GetDouble() : 0.5f;
 		}
-		else if (integrator == "path"){
-			scene.integrator.type = IT_PATH;
+		else if (integrator == "pt"){
+			scene.integrator.type = IT_PT;
 			scene.integrator.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
 		}
-		else if (integrator == "volpath"){
-			scene.integrator.type = IT_VOLPATH;
+		else if (integrator == "vpt"){
+			scene.integrator.type = IT_VPT;
+			scene.integrator.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
+		}
+		else if (integrator == "lt"){
+			scene.integrator.type = IT_LT;
+			scene.integrator.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
+		}
+		else if (integrator == "bdpt"){
+			scene.integrator.type = IT_BDPT;
 			scene.integrator.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
 		}
 		else{
 			printf("Unsupport integrator [%s]\n", integrator);
+			printf("Choose one of them[ao, pt, vpt, lt, bdpt]\n");
 			exit(1);
 		}
 	}

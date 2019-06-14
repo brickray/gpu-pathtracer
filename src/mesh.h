@@ -92,6 +92,17 @@ public:
 		if (dot(normal, dir) >= 0.f)
 			pdf = 0.f;
 	}
+
+	__host__ __device__ void SampleShape(float4& u, float3& pos, float3& dir, float3& nor, float& pdfA, float& pdfW){
+		float2 uv = UniformTriangle(u.x, u.y);
+		pos = uv.x * v1.v + uv.y * v2.v + (1 - uv.x - uv.y)*v3.v;
+	    nor = normalize(uv.x*v1.n + uv.y*v2.n + (1 - uv.x - uv.y)*v3.n);
+		dir = CosineHemiSphere(u.z, u.w, nor, pdfW);
+		float3 uu, ww;
+		MakeCoordinate(nor, uu, ww);
+		dir = ToWorld(dir, uu, nor, ww);
+		pdfA = 1.f / GetSurfaceArea();
+	}
 };
 
 class Scene;
