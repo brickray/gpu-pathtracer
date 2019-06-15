@@ -32,7 +32,7 @@ physically based path tracer on gpu
     <td> <img src="result/heterogeneous.png" alt="Drawing" style="width: 200px;"/> </td>
     <td> <img src="result/jade.png" alt="Drawing" style="width: 200px;"/> </td>
 </tr> <tr>
-    <td> <img src="result/skimmilk.png" alt="Drawing" style="width: 200px;"/> </td>
+    <td> <img src="result/volumetric_caustic.png" alt="Drawing" style="width: 200px;"/> </td>
     <td> <img src="result/volume_caustic.png" alt="Drawing" style="width: 200px;"/> </td>
     <td> <img src="result/cornell_dof.png" alt="Drawing" style="width: 200px;"/> </td>
 </tr> </table
