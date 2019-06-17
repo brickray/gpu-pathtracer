@@ -9,7 +9,7 @@ physically based path tracer on gpu
 特点
 ----
 
-- 积分器(ambient occlusion, path tracing, light tracing, volumetric path tracing)
+- 积分器(ambient occlusion, path tracing, light tracing, volumetric path tracing, bidirectional path tracing)
 - 材质(lambertian, mirror, dielectric, roughdielectric, roughconduct, substrate)
 - 参与介质渲染(homogeneous and heterogeneous)
 - 光源(area infinite)
