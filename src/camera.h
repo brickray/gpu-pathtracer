@@ -113,6 +113,13 @@ public:
 		we = distance*distance / (area*costheta*costheta*costheta*costheta);
 	}
 
+	//dir must from camera pos to dest pos
+	__host__ __device__ void PdfCamera(float3& dir, float& pdfA, float& pdfW){
+		pdfA = 1.f;
+		float costheta = dot(dir, -w);
+		pdfW = distance*distance / (area*costheta*costheta*costheta);
+	}
+
 	__host__ __device__ void Lookat(const float3& eye_pos, const float3& dest, const float3& up){
 		position = eye_pos;
 		w = normalize(eye_pos - dest);

@@ -1399,28 +1399,53 @@ __global__ void LightTracing(int iter, int maxDepth){
 //**************************Lighttracing End***********************
 
 //**************************Bdpt Integrator************************
+#define BDPT_MAX_DEPTH 7
+
 struct BdptVertex{
 	float3 beta;
-	float3 pos;
+	Intersection isect;
 	bool delta;
 	float fwd;
 	float rev;
 };
 
-__device__ int GenerateCameraPath(int x, int y, BdptVertex* path, int maxDepth, curandState& rng){
+//convert pdf from area to omega
+__device__ float ConvertPdf(float pdf, Intersection& prev, Intersection& cur){
+	float3 dir = prev.pos - cur.pos;
+	float square = dot(dir, dir);
+	dir = normalize(dir);
+	float costheta = fabs(dot(dir, cur.nor));
+	return pdf*costheta / square;
+}
+
+__device__ int GenerateCameraPath(int x, int y, BdptVertex* path, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
 	//start
-	float offsetx = curand_uniform(&rng) - 0.5f;
-	float offsety = curand_uniform(&rng) - 0.5f;
+	float offsetx = uniform(rng) - 0.5f;
+	float offsety = uniform(rng) - 0.5f;
 	float unuse;
 	//bdpt doesn't support dof now
 	//float2 aperture = UniformDisk(uniform(rng), uniform(rng), unuse);//for dof
 	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, make_float2(0, 0));
 	ray.tmin = kernel_epsilon;
 	float3 beta = { 1.f, 1.f, 1.f };
-	Intersection isect;
-	
+	//set camera isect
+	{
+		Intersection cameraIsect;
+		cameraIsect.pos = kernel_camera->position;
+		cameraIsect.nor = -kernel_camera->w;
+		BdptVertex vertex;
+		vertex.beta = beta;
+		vertex.isect = cameraIsect;
+		vertex.delta = false;
+		vertex.fwd = 1.f;
+		path[0] = vertex;
+	}
 
-	for (int bounces = 0; bounces < maxDepth; ++bounces){
+	float forward = 0.f;
+	kernel_camera->PdfCamera(ray.d, unuse, forward);
+	Intersection isect;
+	int bounces = 0;
+	for(; bounces < BDPT_MAX_DEPTH; ++bounces){
 		if (!Intersect(ray, &isect)){
 			break;
 		}
@@ -1429,29 +1454,67 @@ __device__ int GenerateCameraPath(int x, int y, BdptVertex* path, int maxDepth, 
 		float3 nor = isect.nor;
 		float2 uv = isect.uv;
 		Material mat = kernel_materials[isect.matIdx];
-		float3 uniform = make_float3(curand_uniform(&rng), curand_uniform(&rng), curand_uniform(&rng));
+
+		{
+			BdptVertex vertex;
+			vertex.beta = beta;
+			vertex.isect = isect;
+			vertex.delta = !IsDiffuse(mat.type);
+			path[bounces + 1] = vertex;
+			path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
+		}
+
+		float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
 		float3 out, fr;
 		float pdf;
-		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, uniform, out, fr, pdf);
+		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf);
 		if (IsBlack(fr))
 			break;
 		beta *= fr*fabs(dot(out, nor)) / pdf;
+
+		forward = pdf;
+		//calc reverse pdf
+		{
+			float3 unuseFr;
+			float pdf;
+			Fr(mat, out, -ray.d, nor, uv, isect.dpdu, unuseFr, pdf);
+			path[bounces].rev = ConvertPdf(pdf, path[bounces + 1].isect, path[bounces].isect);
+		}
+		ray = Ray(pos, out, nullptr, kernel_epsilon);
 	}
+
+	return bounces + 2;
 }
 
-__device__ int GenerateLightPath(BdptVertex* path, int maxDepth, curandState& rng){
-	float3 beta;
+__device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
+	float3 beta = { 1.f, 1.f, 1.f };
 	float choicePdf;
-	int lightIdx = LookUpLightDistribution(curand_uniform(&rng), choicePdf);
+	int lightIdx = LookUpLightDistribution(uniform(rng), choicePdf);
 	Area light = kernel_lights[lightIdx];
-	float4 uniform = make_float4(curand_uniform(&rng), curand_uniform(&rng), curand_uniform(&rng), curand_uniform(&rng));
+	float4 u = make_float4(uniform(rng), uniform(rng), uniform(rng), uniform(rng));
 	Ray ray;
-	float3 nor, radiance;
+	float3 lightNor, radiance;
 	float pdfA, pdfW;
-	light.SampleLight(uniform, ray, nor, radiance, pdfA, pdfW, kernel_epsilon);
-	
+	light.SampleLight(u, ray, lightNor, radiance, pdfA, pdfW, kernel_epsilon);
+	//set light isect
+	{
+		Intersection lightIsect;
+		lightIsect.pos = ray.o;
+		lightIsect.nor = lightNor;
+		lightIsect.lightIdx = lightIdx;
+		BdptVertex vertex;
+		vertex.beta = radiance;
+		vertex.isect = lightIsect;
+		vertex.delta = false;
+		vertex.fwd = pdfA * choicePdf;
+		path[0] = vertex;
+	}
+	beta *= radiance*fabs(dot(ray.d, lightNor)) / (pdfA*pdfW*choicePdf);
+
 	Intersection isect;
-	for (int bounces = 0; bounces < maxDepth; ++bounces){
+	float forward = pdfW;
+	int bounces = 0;
+	for ( ; bounces < BDPT_MAX_DEPTH; ++bounces){
 		if (!Intersect(ray, &isect)){
 			break;
 		}
@@ -1460,14 +1523,243 @@ __device__ int GenerateLightPath(BdptVertex* path, int maxDepth, curandState& rn
 		float3 nor = isect.nor;
 		float2 uv = isect.uv;
 		Material mat = kernel_materials[isect.matIdx];
-		float3 uniform = make_float3(curand_uniform(&rng), curand_uniform(&rng), curand_uniform(&rng));
+
+		{
+			BdptVertex vertex;
+			vertex.beta = beta;
+			vertex.isect = isect; 
+			vertex.delta = !IsDiffuse(mat.type);
+			path[bounces + 1] = vertex;
+			path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
+		}
+
+		float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
 		float3 out, fr;
 		float pdf;
-		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, uniform, out, fr, pdf);
+		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf);
 		if (IsBlack(fr))
 			break;
 		beta *= fr*fabs(dot(out, nor)) / pdf;
+
+		forward = pdf;
+		//calc reverse pdf
+		{
+			float3 unuseFr;
+			float pdf;
+			Fr(mat, out, -ray.d, nor, uv, isect.dpdu, unuseFr, pdf);
+			path[bounces].rev = ConvertPdf(pdf, path[bounces + 1].isect, path[bounces].isect);
+		}
+		ray = Ray(pos, out, nullptr, kernel_epsilon);
 	}
+
+	return bounces + 2;
+}
+
+__device__ float MisWeight(BdptVertex* cameraPath, BdptVertex* lightPath, int s, int t){
+	if (s + t == 2)//light source is directly visible
+		return 1.f;
+
+	//delta bsdf pdf is 0
+	auto remap = [](float pdf)->float{
+		return pdf == 0 ? 1.f : pdf;
+	};
+
+	float sumW = 0.f;
+	float ri = 1.f;
+	for (int i = s - 1; i > 0; --i){
+		ri *= remap(cameraPath[i].rev) / remap(cameraPath[i].fwd);
+
+		if (!cameraPath[i].delta && !cameraPath[i - 1].delta)
+			sumW += ri;
+	}
+
+	ri = 1.f;
+	for (int i = t - 1; i >= 0; --i){
+		ri *= remap(lightPath[i].rev) / remap(lightPath[i].fwd);
+
+		bool delta = i == 1 ? false : lightPath[i == 0 ? 0 : i - 1].delta;
+		if (!lightPath[i].delta && !delta)
+			sumW += ri;
+	}
+
+	return 1.f / (sumW + 1.f);
+}
+
+__device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, int t, int& raster){
+	float3 L = { 0.f, 0.f, 0.f };
+
+	if (t == 0){
+		//naive path tracing
+		BdptVertex& cur = cameraPath[s - 1];
+		BdptVertex& prev = cameraPath[s - 2];
+		if (cur.isect.lightIdx == -1)
+			return{ 0.f, 0.f, 0.f };
+
+		float3 dir = prev.isect.pos - cur.isect.pos;
+		Area light = kernel_lights[cur.isect.lightIdx];
+		L += cur.beta*light.Le(cur.isect.nor, normalize(dir));
+		if (IsBlack(L))
+			return L;
+
+		Ray ray(cur.isect.pos, dir);
+		float choicePdf = PdfFromLightDistribution(cur.isect.lightIdx);
+		float pdfA, pdfW;
+		light.Pdf(ray, cur.isect.nor, pdfA, pdfW);
+		float curRev = cur.rev;
+		float prevRev = prev.rev;
+		cur.rev = pdfA*choicePdf;
+		prev.rev = ConvertPdf(pdfW, cur.isect, prev.isect);
+		float mis = MisWeight(cameraPath, lightPath, s, t);
+		//reset
+		cur.rev = curRev;
+		prev.rev = prevRev;
+
+		return mis*L;
+	}
+	else if (t == 1){
+		//next event path tracing
+		BdptVertex& prev = cameraPath[s - 2];
+		BdptVertex& cur = cameraPath[s - 1];
+		BdptVertex& next = lightPath[0];
+		float3 in = normalize(prev.isect.pos - cur.isect.pos);
+		float3 out = next.isect.pos - cur.isect.pos;
+		float distanceSquare = dot(out, out);
+		float3 nout = normalize(out);
+		Material mat = kernel_materials[cur.isect.matIdx];
+		Area light = kernel_lights[next.isect.lightIdx];
+		float3 radiance = light.Le(next.isect.nor, -nout);
+		if (!IsDiffuse(mat.type) || IsBlack(radiance))
+			return{ 0.f, 0.f, 0.f };
+		Ray shadowRay;
+		shadowRay.o = cur.isect.pos;
+		shadowRay.d = nout;
+		shadowRay.tmin = kernel_epsilon;
+		shadowRay.tmax = sqrtf(distanceSquare) - kernel_epsilon;
+		if (IntersectP(shadowRay))
+			return{ 0.f, 0.f, 0.f };
+
+		float3 fr;
+		float nextPdf;
+		Fr(mat, in, nout, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, nextPdf);
+		float G = fabs(dot(cur.isect.nor, nout))*fabs(dot(next.isect.nor, nout)) / distanceSquare;
+		L += cur.beta*fr*radiance*G / next.fwd;
+		if (IsBlack(L)) return{ 0.f, 0.f, 0.f };
+
+		Ray ray(next.isect.pos, -nout);
+		float pdfA, pdfW;
+		light.Pdf(ray, next.isect.nor, pdfA, pdfW);
+		float nextRev = next.rev;
+		float curRev = cur.rev;
+		float prevRev = prev.rev;
+		next.rev = ConvertPdf(nextPdf, cur.isect, next.isect);
+		cur.rev = ConvertPdf(pdfW, next.isect, cur.isect);
+		float pdf;
+		Fr(mat, nout, in, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, pdf);
+		prev.rev = ConvertPdf(pdf, cur.isect, prev.isect);
+		float mis = MisWeight(cameraPath, lightPath, s, t);
+		next.rev = nextRev;
+		cur.rev = curRev;
+		prev.rev = prevRev;
+
+		return mis*L;
+	}
+	else if (s == 1){
+		//light tracing
+		BdptVertex& prev = lightPath[t - 2];
+		BdptVertex& cur = lightPath[t - 1];
+		BdptVertex& next = cameraPath[0];
+		float3 in = normalize(prev.isect.pos - cur.isect.pos);
+		Material mat = kernel_materials[cur.isect.matIdx];
+		Ray shadowRay;
+		float we, cameraPdf;
+		kernel_camera->SampleCamera(cur.isect.pos, shadowRay, we, cameraPdf, raster, kernel_epsilon);
+		if (!IsDiffuse(mat.type) || cameraPdf == 0 || IntersectP(shadowRay))
+			return{ 0.f, 0.f, 0.f };
+
+		float3 fr;
+		float nextPdf;
+		Fr(mat, in, shadowRay.d, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, nextPdf);
+		L += cur.beta*fr*we*fabs(dot(shadowRay.d, cur.isect.nor)) / cameraPdf;
+		if (IsBlack(L)) return{ 0.f, 0.f, 0.f };
+
+		float nextRev = next.rev;
+		float curRev = cur.rev;
+		float prevRev = prev.rev;
+		next.rev = ConvertPdf(nextPdf, cur.isect, next.isect);
+		float pdfA, pdfW;
+		kernel_camera->PdfCamera(-shadowRay.d, pdfA, pdfW);
+		cur.rev = ConvertPdf(pdfW, next.isect, cur.isect);
+		float pdf;
+		Fr(mat, shadowRay.d, in, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, pdf);
+		prev.rev = ConvertPdf(pdf, cur.isect, prev.isect);
+		float mis = MisWeight(cameraPath, lightPath, s, t);
+		next.rev = nextRev;
+		cur.rev = curRev;
+		prev.rev = prevRev;
+
+		return mis*L;
+	}
+	else{
+		//other
+		BdptVertex& c2 = cameraPath[s - 2];
+		BdptVertex& c1 = cameraPath[s - 1];
+		BdptVertex& l1 = lightPath[t - 1];
+		BdptVertex& l2 = lightPath[t - 2];
+		float3 l1Tol2 = normalize(l2.isect.pos - l1.isect.pos);
+		float3 l1Toc1 = normalize(c1.isect.pos - l1.isect.pos);
+		float3 c1Tol1 = -l1Toc1;
+		float3 c1Toc2 = normalize(c2.isect.pos - c1.isect.pos);
+		float3 dir = c1.isect.pos - l1.isect.pos;
+		Material c1Mat = kernel_materials[c1.isect.matIdx];
+		Material l1Mat = kernel_materials[l1.isect.matIdx];
+		Ray shadowRay;
+		shadowRay.o = c1.isect.pos;
+		shadowRay.d = c1Tol1;
+		shadowRay.tmin = kernel_epsilon;
+		shadowRay.tmax = length(dir) - kernel_epsilon;
+		if (!IsDiffuse(c1Mat.type) || !IsDiffuse(l1Mat.type) || 
+			IntersectP(shadowRay))
+			return{ 0.f, 0.f, 0.f };
+		float cos1 = fabs(dot(l1Toc1, l1.isect.nor));
+		float cos2 = fabs(dot(c1Tol1, c1.isect.nor));
+
+		float3 c1Fr, l1Fr;
+		float l1Pdf, c1Pdf;
+		Fr(c1Mat, c1Toc2, c1Tol1, c1.isect.nor, c1.isect.uv, c1.isect.dpdu, c1Fr, l1Pdf);
+		Fr(l1Mat, l1Tol2, l1Toc1, l1.isect.nor, l1.isect.uv, l1.isect.dpdu, l1Fr, c1Pdf);
+		float G = cos1*cos2 / dot(dir, dir);
+		L += c1.beta*c1Fr*G*l1Fr*l1.beta;
+		if (IsBlack(L)) return{ 0.f, 0.f, 0.f };
+
+		float c2Rev = c2.rev;
+		float c1Rev = c1.rev;
+		float l1Rev = l1.rev;
+		float l2Rev = l2.rev;
+		c1.rev = ConvertPdf(c1Pdf, l1.isect, c1.isect);
+		l1.rev = ConvertPdf(l1Pdf, c1.isect, l1.isect);
+		float l2Pdf, c2Pdf;
+		Fr(l1Mat, l1Toc1, l1Tol2, l1.isect.nor, l1.isect.uv, l1.isect.dpdu, l1Fr, l2Pdf);
+		Fr(c1Mat, c1Tol1, c1Toc2, c1.isect.nor, c1.isect.uv, c1.isect.dpdu, c1Fr, c2Pdf);
+		l2.rev = ConvertPdf(l2Pdf, l1.isect, l2.isect);
+		c2.rev = ConvertPdf(c2Pdf, c1.isect, c2.isect);
+		float mis = MisWeight(cameraPath, lightPath, s, t);
+		c2.rev = c2Rev;
+		c1.rev = c1Rev;
+		l1.rev = l1Rev;
+		l2.rev = l2Rev;
+
+		return mis*L;
+	}
+
+	return L;
+}
+
+__global__ void BdptInit(){
+	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
+	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
+	unsigned pixel = x + y*blockDim.x*gridDim.x;
+
+	kernel_color[pixel] = { 0.f, 0.f, 0.f };
 }
 
 __global__ void Bdpt(int iter, int maxDepth){
@@ -1477,11 +1769,38 @@ __global__ void Bdpt(int iter, int maxDepth){
 
 	//init seed
 	int threadIndex = (blockIdx.x + blockIdx.y * gridDim.x) * (blockDim.x * blockDim.y) + (threadIdx.y * blockDim.x) + threadIdx.x;
+	thrust::default_random_engine rng(WangHash(pixel) + WangHash(iter));
+	thrust::uniform_real_distribution<float> uniform(0.0f, 1.0f);
 
-	curandState cudaRNG;
-	curand_init(WangHash(iter) + threadIndex, 0, 0, &cudaRNG);
+	//too slow to use dynamic allocate
+	BdptVertex cameraPath[BDPT_MAX_DEPTH + 2];
+	BdptVertex lightPath[BDPT_MAX_DEPTH + 2];
+	int nCamera = GenerateCameraPath(x, y, cameraPath, uniform, rng);
+	int nLight = GenerateLightPath(lightPath, uniform, rng);
+	for (int s = 1; s <= nCamera; ++s){
+		for (int t = 0; t <= nLight; ++t){
+			if ((s == 1 && t == 0) || (s == 1 && t == 1))
+				continue;
 
-	
+			int raster;
+			float3 L = Connect(cameraPath, lightPath, s, t, raster);
+			if ((isinf(L.x) || isinf(L.y) || isinf(L.z)) || 
+				(isnan(L.x) || isnan(L.y) || isnan(L.z)) || 
+				IsBlack(L))
+					continue;
+
+			if (s == 1){
+				atomicAdd(&kernel_color[raster].x, L.x);
+				atomicAdd(&kernel_color[raster].y, L.y);
+				atomicAdd(&kernel_color[raster].z, L.z);
+				continue;
+			}
+
+			atomicAdd(&kernel_color[pixel].x, L.x);
+			atomicAdd(&kernel_color[pixel].y, L.y);
+			atomicAdd(&kernel_color[pixel].z, L.z);
+		}
+	}
 }
 //**************************Bdpt End*******************************
 
@@ -1520,7 +1839,6 @@ __global__ void InitRender(
 	int* tex_size,
 	float3* image,
 	float3* color,
-	int* counter,
 	float ep){
 	kernel_camera = camera;
 	kernel_linear = bvh_nodes;
@@ -1640,11 +1958,6 @@ void BeginRender(
 	texture_memory_use += num_pixel*sizeof(float3);
 	HANDLE_ERROR(cudaMalloc(&dev_color, num_pixel*sizeof(float3)));
 	texture_memory_use += num_pixel*sizeof(float3);
-	int* counter;
-	if (scene.integrator.type == IT_LT){
-		HANDLE_ERROR(cudaMalloc(&counter, num_pixel*sizeof(int)));
-		texture_memory_use += num_pixel*sizeof(int);
-	}
 
 	int ld_size = scene.lightDistribution.size();
 	HANDLE_ERROR(cudaMalloc(&dev_light_distribution, ld_size*sizeof(float)));
@@ -1653,7 +1966,7 @@ void BeginRender(
 	
 	InitRender << <1, 1 >> >(dev_camera, dev_bvh_nodes,
 		dev_primitives, dev_materials, dev_bssrdfs, dev_mediums, dev_lights, dev_infinite, dev_textures, dev_light_distribution, num_lights, ld_size,
-		texture_size, dev_image, dev_color, counter, ep);
+		texture_size, dev_image, dev_color, ep);
 
 
 	HANDLE_ERROR(cudaDeviceSynchronize());
@@ -1690,8 +2003,10 @@ void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsig
 		LightTracingInit << <grid, block >> >();
 		LightTracing << <grid, block >> >(iter, scene.integrator.maxDepth);
 	}
-	else if (scene.integrator.type == IT_BDPT)
+	else if (scene.integrator.type == IT_BDPT){
+		BdptInit << <grid, block >> >();
 		Bdpt << <grid, block >> >(iter, scene.integrator.maxDepth);
+	}
 
 	grid.x = width / block.x;
 	grid.y = height / block.y;
