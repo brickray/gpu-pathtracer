@@ -47,6 +47,21 @@ __device__ inline unsigned int WangHash(unsigned int seed)
 	return seed;
 }
 
+__device__ inline unsigned int utilhash(unsigned int a) {
+	a = (a + 0x7ed55d16) + (a << 12);
+	a = (a ^ 0xc761c23c) ^ (a >> 19);
+	a = (a + 0x165667b1) + (a << 5);
+	a = (a + 0xd3a2646c) ^ (a << 9);
+	a = (a + 0xfd7046c5) + (a << 3);
+	a = (a ^ 0xb55a4f09) ^ (a >> 16);
+	return a;
+}
+
+__device__ thrust::default_random_engine MakeSeededRandomEngine(int iter, int index, int depth){
+	int h = utilhash((1 << 31) | (depth << 22) | iter) ^ utilhash(index);
+	return thrust::default_random_engine(h);
+}
+
 __device__ inline float DielectricFresnel(float cosi, float cost, const float& etai, const float& etat){
 	float Rparl = (etat * cosi - etai * cost) / (etat * cosi + etai * cost);
 	float Rperp = (etai * cosi - etat * cost) / (etai * cosi + etat * cost);
@@ -1428,6 +1443,8 @@ __device__ int GenerateCameraPath(int x, int y, BdptVertex* path, thrust::unifor
 	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, make_float2(0, 0));
 	ray.tmin = kernel_epsilon;
 	float3 beta = { 1.f, 1.f, 1.f };
+
+	int nVertex = 0;
 	//set camera isect
 	{
 		Intersection cameraIsect;
@@ -1440,12 +1457,13 @@ __device__ int GenerateCameraPath(int x, int y, BdptVertex* path, thrust::unifor
 		vertex.fwd = 1.f;
 		path[0] = vertex;
 	}
+	nVertex++;
 
 	float forward = 0.f;
 	kernel_camera->PdfCamera(ray.d, unuse, forward);
 	Intersection isect;
 	int bounces = 0;
-	for(; bounces < BDPT_MAX_DEPTH; ++bounces){
+	for (; bounces < BDPT_MAX_DEPTH; ++bounces){
 		if (!Intersect(ray, &isect)){
 			break;
 		}
@@ -1463,6 +1481,7 @@ __device__ int GenerateCameraPath(int x, int y, BdptVertex* path, thrust::unifor
 			path[bounces + 1] = vertex;
 			path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
 		}
+		nVertex++;
 
 		float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
 		float3 out, fr;
@@ -1483,7 +1502,7 @@ __device__ int GenerateCameraPath(int x, int y, BdptVertex* path, thrust::unifor
 		ray = Ray(pos, out, nullptr, kernel_epsilon);
 	}
 
-	return bounces + 2;
+	return nVertex;
 }
 
 __device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
@@ -1496,6 +1515,8 @@ __device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribu
 	float3 lightNor, radiance;
 	float pdfA, pdfW;
 	light.SampleLight(u, ray, lightNor, radiance, pdfA, pdfW, kernel_epsilon);
+	
+	int nVertex = 0;
 	//set light isect
 	{
 		Intersection lightIsect;
@@ -1509,12 +1530,13 @@ __device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribu
 		vertex.fwd = pdfA * choicePdf;
 		path[0] = vertex;
 	}
+	nVertex++;
 	beta *= radiance*fabs(dot(ray.d, lightNor)) / (pdfA*pdfW*choicePdf);
 
 	Intersection isect;
 	float forward = pdfW;
 	int bounces = 0;
-	for ( ; bounces < BDPT_MAX_DEPTH; ++bounces){
+	for (; bounces < BDPT_MAX_DEPTH; ++bounces){
 		if (!Intersect(ray, &isect)){
 			break;
 		}
@@ -1527,11 +1549,12 @@ __device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribu
 		{
 			BdptVertex vertex;
 			vertex.beta = beta;
-			vertex.isect = isect; 
+			vertex.isect = isect;
 			vertex.delta = !IsDiffuse(mat.type);
 			path[bounces + 1] = vertex;
 			path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
 		}
+		nVertex++;
 
 		float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
 		float3 out, fr;
@@ -1552,7 +1575,7 @@ __device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribu
 		ray = Ray(pos, out, nullptr, kernel_epsilon);
 	}
 
-	return bounces + 2;
+	return nVertex;
 }
 
 __device__ float MisWeight(BdptVertex* cameraPath, BdptVertex* lightPath, int s, int t){
@@ -1717,7 +1740,7 @@ __device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, 
 		shadowRay.d = c1Tol1;
 		shadowRay.tmin = kernel_epsilon;
 		shadowRay.tmax = length(dir) - kernel_epsilon;
-		if (!IsDiffuse(c1Mat.type) || !IsDiffuse(l1Mat.type) || 
+		if (!IsDiffuse(c1Mat.type) || !IsDiffuse(l1Mat.type) ||
 			IntersectP(shadowRay))
 			return{ 0.f, 0.f, 0.f };
 		float cos1 = fabs(dot(l1Toc1, l1.isect.nor));
@@ -1784,10 +1807,10 @@ __global__ void Bdpt(int iter, int maxDepth){
 
 			int raster;
 			float3 L = Connect(cameraPath, lightPath, s, t, raster);
-			if ((isinf(L.x) || isinf(L.y) || isinf(L.z)) || 
-				(isnan(L.x) || isnan(L.y) || isnan(L.z)) || 
+			if ((isinf(L.x) || isinf(L.y) || isinf(L.z)) ||
+				(isnan(L.x) || isnan(L.y) || isnan(L.z)) ||
 				IsBlack(L))
-					continue;
+				continue;
 
 			if (s == 1){
 				atomicAdd(&kernel_color[raster].x, L.x);
