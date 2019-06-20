@@ -70,6 +70,14 @@ __host__ __device__ inline bool IsBlack(float3& c){
 	return c.x == 0 && c.y == 0 && c.z == 0;
 }
 
+__host__ __device__ inline bool IsNan(float3& c){
+	return isnan(c.x) || isnan(c.y) || isnan(c.z);
+}
+
+__host__ __device__ inline bool IsInf(float3& c){
+	return isinf(c.x) || isinf(c.y) || isinf(c.z);
+}
+
 __host__ __device__ inline float3 Exp(const float3& c){
 	float r = expf(c.x);
 	float g = expf(c.y);
@@ -84,8 +92,9 @@ __host__ __device__ inline float3 Sqrt(const float3& c){
 	return{ r, g, b };
 }
 
-__host__ __device__ inline bool Max(float c0, float c1){
-	return c0 > c1 ? c0 : c1;
+template<typename T>
+__host__ __device__ inline T Max(T c0, T c1){
+	return (c0 > c1 ? c0 : c1);
 }
 
 inline float3 VecToFloat3(vec3& v){
