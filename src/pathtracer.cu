@@ -47,21 +47,6 @@ __device__ inline unsigned int WangHash(unsigned int seed)
 	return seed;
 }
 
-__device__ inline unsigned int utilhash(unsigned int a) {
-	a = (a + 0x7ed55d16) + (a << 12);
-	a = (a ^ 0xc761c23c) ^ (a >> 19);
-	a = (a + 0x165667b1) + (a << 5);
-	a = (a + 0xd3a2646c) ^ (a << 9);
-	a = (a + 0xfd7046c5) + (a << 3);
-	a = (a ^ 0xb55a4f09) ^ (a >> 16);
-	return a;
-}
-
-__device__ thrust::default_random_engine MakeSeededRandomEngine(int iter, int index, int depth){
-	int h = utilhash((1 << 31) | (depth << 22) | iter) ^ utilhash(index);
-	return thrust::default_random_engine(h);
-}
-
 __device__ inline float DielectricFresnel(float cosi, float cost, const float& etai, const float& etat){
 	float Rparl = (etat * cosi - etai * cost) / (etat * cosi + etai * cost);
 	float Rperp = (etai * cosi - etat * cost) / (etai * cosi + etat * cost);
@@ -878,7 +863,7 @@ __global__ void Ao(int iter, float maxDist){
 		L += make_float3(v, v, v);
 	}
 
-	if (!(isnan(L.x) || isnan(L.y) || isnan(L.z)))
+	if (!IsNan(L))
 		kernel_color[pixel] = L;
 }
 //**************************AO End*********************************
@@ -1029,8 +1014,7 @@ __global__ void Path(int iter, int maxDepth){
 		}
 	}
 
-	if (!(isinf(Li.x) || isinf(Li.y) || isinf(Li.z)))
-		if (!(isnan(Li.x) || isnan(Li.y) || isnan(Li.z)))
+	if (!IsInf(Li) && !IsNan(Li))
 			kernel_color[pixel] = Li;
 }
 //**************************Path End*******************************
@@ -1256,8 +1240,7 @@ __global__ void Volpath(int iter, int maxDepth){
 		}
 	}
 
-	if (!(isinf(Li.x) || isinf(Li.y) || isinf(Li.z)))
-		if (!(isnan(Li.x) || isnan(Li.y) || isnan(Li.z)))
+	if (!IsInf(Li) && !IsNan(Li))
 			kernel_color[pixel] = Li;
 }
 //**************************VolPath End****************************
@@ -1335,13 +1318,11 @@ __global__ void LightTracing(int iter, int maxDepth){
 			ray.medium->Phase(-ray.d, shadowRay.d, phase, unuse);
 
 			float3 L = beta*we*tr*phase / cameraPdf;
-			if (!(isinf(L.x) || isinf(L.y) || isinf(L.z))){
-				if (!(isnan(L.x) || isnan(L.y) || isnan(L.z))){
-					//kernel_color[raster] += L;
-					atomicAdd(&kernel_color[raster].x, L.x);
-					atomicAdd(&kernel_color[raster].y, L.y);
-					atomicAdd(&kernel_color[raster].z, L.z);
-				}
+			if (!IsInf(L) && !IsNan(L)){
+				//kernel_color[raster] += L;
+				atomicAdd(&kernel_color[raster].x, L.x);
+				atomicAdd(&kernel_color[raster].y, L.y);
+				atomicAdd(&kernel_color[raster].z, L.z);
 			}
 
 			float pdf;
@@ -1377,13 +1358,11 @@ __global__ void LightTracing(int iter, int maxDepth){
 					Fr(mat, -ray.d, shadowRay.d, nor, uv, isect.dpdu, fr, unuse);
 
 					float3 L = tr*beta*fr*we*fabs(dot(shadowRay.d, nor)) / cameraPdf;
-					if (!(isinf(L.x) || isinf(L.y) || isinf(L.z))){
-						if (!(isnan(L.x) || isnan(L.y) || isnan(L.z))){
-							//kernel_color[raster] += L;
-							atomicAdd(&kernel_color[raster].x, L.x);
-							atomicAdd(&kernel_color[raster].y, L.y);
-							atomicAdd(&kernel_color[raster].z, L.z);
-						}
+					if (!IsInf(L) && !IsNan(L)){
+						//kernel_color[raster] += L;
+						atomicAdd(&kernel_color[raster].x, L.x);
+						atomicAdd(&kernel_color[raster].y, L.y);
+						atomicAdd(&kernel_color[raster].z, L.z);
 					}
 				}
 			}
@@ -1414,7 +1393,7 @@ __global__ void LightTracing(int iter, int maxDepth){
 //**************************Lighttracing End***********************
 
 //**************************Bdpt Integrator************************
-#define BDPT_MAX_DEPTH 7
+#define BDPT_MAX_DEPTH 12
 
 struct BdptVertex{
 	float3 beta;
@@ -1807,9 +1786,7 @@ __global__ void Bdpt(int iter, int maxDepth){
 
 			int raster;
 			float3 L = Connect(cameraPath, lightPath, s, t, raster);
-			if ((isinf(L.x) || isinf(L.y) || isinf(L.z)) ||
-				(isnan(L.x) || isnan(L.y) || isnan(L.z)) ||
-				IsBlack(L))
+			if (IsInf(L) || IsNan(L) || IsBlack(L))
 				continue;
 
 			if (s == 1){
@@ -1827,22 +1804,380 @@ __global__ void Bdpt(int iter, int maxDepth){
 }
 //**************************Bdpt End*******************************
 
-__global__ void Output(int iter, float3* output, bool reset, bool filmic){
+//**************************Mlt Integrator*************************
+
+//gaussian distribution for small step
+class MLTSampler{
+
+};
+
+__global__ void Mlt(int iter, int maxDepth){
+
+}
+//**************************Mlt End********************************
+
+//**************************PPM Integrator*************************
+struct VisiblePoint{
+	float3 ld; //direct light
+	float3 beta; //throughput
+	float3 dir; 
+	Intersection isect;
+
+	float3 tau;
+	float radius;
+	int n;
+	bool valid = false;
+};
+
+struct GridNode{
+	int vpIdx[100];
+	int vpSize = 0, mSize = 0;
+};
+
+VisiblePoint* device_vps;
+GridNode* device_grid;
+__device__ VisiblePoint* vps;
+__device__ GridNode* grid;
+__device__ float3 boundsMin, boundsMax;
+__device__ int gridRes[3], hashSize;
+
+//from pbrt-v3
+__host__ __device__ bool ToGrid(float3& p, BBox& bounds, int gridRes[3], float3& pi){
+	bool inBounds = true;
+	float3 pg = bounds.Offset(p);
+	for (int i = 0; i < 3; ++i){
+		(&pi.x)[i] = (int)(gridRes[i] * (&pg.x)[i]);
+		inBounds &= ((&pi.x)[i] >= 0 && (&pi.x)[i] < gridRes[i]);
+		(&pi.x)[i] = clamp((int)(&pi.x)[i], 0, gridRes[i] - 1);
+	}
+
+	return inBounds;
+}
+
+__host__ __device__ unsigned int Hash(int x, int y, int z, int hashSize){
+	//those magic number are some large primes
+	return (unsigned int)((x * 73856093) ^ (y * 19349663) ^ (z * 83492791)) % hashSize;
+}
+
+__global__ void PPMSetParam(GridNode* n, float3 bmin, float3 bmax, int res[3], int hsize){
+	grid = n;
+	boundsMin = bmin;
+	boundsMax = bmax;
+	for (int i = 0; i < 3; ++i) gridRes[i] = res[i];
+	hashSize = hsize;
+}
+
+__host__ void BuildHashTable(int width, int height, float initRadius){
+	VisiblePoint* host_vps = new VisiblePoint[width*height];
+	HANDLE_ERROR(cudaMemcpy(host_vps, device_vps, width*height*sizeof(VisiblePoint), cudaMemcpyDeviceToHost));
+	
+	int hashSize = width*height;
+	GridNode* grid = new GridNode[hashSize];
+
+	BBox gridBounds;
+	for (int i = 0; i < width*height; ++i){
+		gridBounds.Expand(host_vps[i].isect.pos);
+	}
+	float3 radius3f = make_float3(initRadius, initRadius, initRadius);
+	gridBounds.fmin -= radius3f;
+	gridBounds.fmax += radius3f;
+	float3 diag = gridBounds.Diagonal();
+	float maxDiag = (&diag.x)[gridBounds.GetMaxExtent()];
+	int baseGridRes = (int)(maxDiag / initRadius);
+	int gridRes[3];
+	for (int i = 0; i < 3;++i)
+		gridRes[i] = Max((int)(baseGridRes*(&diag.x)[i] / maxDiag), 1);
+
+	int m = 0;
+	for (int i = 0; i < width*height; ++i){
+		VisiblePoint vp = host_vps[i];
+		float radius = vp.radius;
+		float3 pMin, pMax;
+		ToGrid(vp.isect.pos - radius3f, gridBounds, gridRes, pMin);
+		ToGrid(vp.isect.pos + radius3f, gridBounds, gridRes, pMax);
+		for (int z = pMin.z; z <= pMax.z; ++z){
+			for (int y = pMin.y; y <= pMax.y; ++y){
+				for (int x = pMin.x; x <= pMax.x; ++x){
+					int h = Hash(x, y, z, hashSize);
+					
+					if (grid[h].vpSize < 100)
+						grid[h].vpIdx[grid[h].vpSize++] = i;
+					/*if (grid[h].vpIdx == nullptr){
+						grid[h].vpIdx = new int[1];
+						grid[h].vpIdx[grid[h].vpSize++] = i;
+						grid[h].mSize = 1;
+						continue;
+					}
+					
+					if (grid[h].vpSize == grid[h].mSize){
+						grid[h].mSize *= 2;
+						int* p = new int[grid[h].mSize];
+						for (int i = 0; i < grid[h].vpSize; ++i)
+							p[i] = grid[h].vpIdx[i];
+						delete[] grid[h].vpIdx;
+						grid[h].vpIdx = p;
+						grid[h].vpIdx[grid[h].vpSize++] = i;
+					}*/
+				}
+			}
+		}
+	}
+
+	HANDLE_ERROR(cudaMalloc(&device_grid, width*height*sizeof(GridNode)));
+	//for (int i = 0; i < width*height; ++i){
+	//	/*int* t;
+	//	if (grid[i].vpSize > 0){
+	//		HANDLE_ERROR(cudaMalloc(&t, grid[i].vpSize*sizeof(int)));
+	//		HANDLE_ERROR(cudaMemcpy(t, grid[i].vpIdx, grid[i].vpSize*sizeof(int), cudaMemcpyHostToDevice));
+	//		HANDLE_ERROR(cudaMemcpy(&device_grid[i].vpIdx, &t, sizeof(int*), cudaMemcpyHostToDevice));
+	//	}
+	//	HANDLE_ERROR(cudaMemcpy(&device_grid[i].vpSize, &grid[i].vpSize, sizeof(int), cudaMemcpyHostToDevice));*/
+	//	
+	//}
+	HANDLE_ERROR(cudaMemcpy(device_grid, grid, width*height*sizeof(GridNode), cudaMemcpyHostToDevice));
+
+	PPMSetParam << <1, 1 >> >(device_grid, gridBounds.fmin, gridBounds.fmax, gridRes, hashSize);
+	
+	delete[] host_vps;
+	/*for (int i = 0; i < width*height; ++i){
+		delete[] grid[i].vpIdx;
+	}*/
+	delete[] grid;
+}
+
+__device__ VisiblePoint TraceRay(int x, int y, int maxDepth, int directSamples, float initRadius, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
+	VisiblePoint vp;
+	vp.radius = initRadius;
+	vp.n = 0;
+	vp.valid = false;
+	vp.ld = { 0.f, 0.f, 0.f };
+	vp.tau = { 0.f, 0.f, 0.f };
+
+	for (int i = 0; i < directSamples; ++i){
+		float offsetx = uniform(rng) - 0.5f;
+		float offsety = uniform(rng) - 0.5f;
+		float unuse;
+		//ppm doesn't support dof now
+		//float2 aperture = UniformDisk(uniform(rng), uniform(rng), unuse);//for dof
+		Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, make_float2(0, 0));
+		ray.tmin = kernel_epsilon;
+
+		float3 beta = { 1.f, 1.f, 1.f };
+		Intersection isect;
+		for (int bounces = 0; bounces < maxDepth; ++bounces){
+			if (!Intersect(ray, &isect)){
+				break;
+			}
+
+			float3 pos = isect.pos;
+			float3 nor = isect.nor;
+			float2 uv = isect.uv;
+			float3 dpdu = isect.dpdu;
+			Material mat = kernel_materials[isect.matIdx];
+			float3 Ld = { 0.f, 0.f, 0.f };
+			if (IsDiffuse(mat.type) && isect.lightIdx == -1){
+				float u = uniform(rng);
+				float choicePdf;
+				int idx = LookUpLightDistribution(u, choicePdf);
+				float2 u1 = make_float2(uniform(rng), uniform(rng));
+				float3 radiance, lightNor;
+				Ray shadowRay;
+				float lightPdf;
+				kernel_lights[idx].SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+
+				if (!IsBlack(radiance) && !IntersectP(shadowRay)){
+					float3 fr;
+					float samplePdf;
+
+					//Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, uniform(rng), fr, samplePdf);
+					Fr(mat, -ray.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
+
+					float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
+					Ld += weight*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);
+				}
+
+				float3 us = make_float3(uniform(rng), uniform(rng), uniform(rng));
+				float3 out, fr;
+				float pdf;
+				SampleBSDF(mat, -ray.d, nor, uv, dpdu, us, out, fr, pdf);
+				if (!(IsBlack(fr) || pdf == 0)){
+					Intersection lightIsect;
+					Ray lightRay(pos, out, nullptr, kernel_epsilon);
+					if (Intersect(lightRay, &lightIsect) && lightIsect.lightIdx != -1){
+						float3 p = lightIsect.pos;
+						float3 n = lightIsect.nor;
+						float3 radiance = { 0.f, 0.f, 0.f };
+						radiance = kernel_lights[lightIsect.lightIdx].Le(n, -lightRay.d);
+						if (!IsBlack(radiance)){
+							float pdfA, pdfW;
+							kernel_lights[lightIsect.lightIdx].Pdf(Ray(p, -out, nullptr, kernel_epsilon), n, pdfA, pdfW);
+							float choicePdf = PdfFromLightDistribution(lightIsect.lightIdx);
+							float lenSquare = dot(p - pos, p - pos);
+							float costheta = fabs(dot(n, lightRay.d));
+							float lPdf = pdfA * lenSquare / (costheta);
+							float weight = PowerHeuristic(1, pdf, 1, lPdf * choicePdf);
+
+							Ld += weight * fr * radiance * fabs(dot(out, nor)) / pdf;
+						}
+					}
+
+				}
+			}
+
+			//light vp
+			if (isect.lightIdx != -1){
+				Ld += kernel_lights[isect.lightIdx].Le(isect.nor, -ray.d);
+			}
+
+			if (!IsNan(Ld)) vp.ld += beta*Ld;
+			if (i == 0){
+				vp.beta = beta;
+				vp.dir = -ray.d;
+				vp.isect = isect;
+				vp.valid = true;
+			}
+
+			break;
+		}
+	}
+
+	vp.ld /= directSamples;
+	return vp;
+}
+
+__device__ void TracePhoton(int maxDepth, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
+	float3 beta = { 1.f, 1.f, 1.f };
+	float choicePdf;
+	int idx = LookUpLightDistribution(uniform(rng), choicePdf);
+	Area light = kernel_lights[idx];
+	float3 radiance, lightNor;
+	float4 lightUniform = { uniform(rng), uniform(rng), uniform(rng), uniform(rng) };
+	Ray ray;
+	float pdfA, pdfW;
+	light.SampleLight(lightUniform, ray, lightNor, radiance, pdfA, pdfW, kernel_epsilon);
+	beta *= radiance*fabs(dot(lightNor, ray.d)) / (pdfA*pdfW*choicePdf);
+
+	Intersection isect;
+	for (int bounces = 0; bounces < maxDepth; ++bounces){
+		if (!Intersect(ray, &isect)){
+			break;
+		}
+
+		float3 pos = isect.pos;
+		float3 nor = isect.nor;
+		float2 uv = isect.uv;
+		float3 dpdu = isect.dpdu;
+		Material mat = kernel_materials[isect.matIdx];
+		if (bounces > 0){//bounces = 0 are already taken into account
+			float3 gridCoord;
+			BBox gridBounds(boundsMin, boundsMax);
+		//	if (ToGrid(pos, gridBounds, gridRes, gridCoord))
+			{
+		//		int h = Hash(gridCoord.x, gridCoord.y, gridCoord.z, hashSize);
+		//		GridNode node = grid[h];
+				for (int i = 0; i < 512 * 512; ++i){
+					VisiblePoint& vp = vps[i];
+					if (!vp.valid) continue;
+					float3 out = pos - vp.isect.pos;
+					float distanceSquare = dot(out, out);
+					if (distanceSquare > vp.radius*vp.radius) continue;
+					out = normalize(out);
+					Material vpMat = kernel_materials[vp.isect.matIdx];
+					float3 fr;
+					float pdf;
+					Fr(vpMat, vp.dir, out, vp.isect.nor, vp.isect.uv, vp.isect.dpdu, fr, pdf);
+					float3 b = fr * beta * vp.beta;
+					if (!IsNan(b)) vp.tau += b;
+
+					float alpha = 0.7f;
+					float rnew = vp.radius*sqrtf((vp.n + alpha) / (vp.n + 1.f));
+					vp.tau *= rnew*rnew / (vp.radius*vp.radius);
+					vp.n += 1;
+					vp.radius = rnew;
+				}
+			}
+		}
+
+		float3 fr, out;
+		float3 bsdfUniform = make_float3(uniform(rng), uniform(rng), uniform(rng));
+		float pdf;
+		SampleBSDF(mat, -ray.d, nor, uv, dpdu, bsdfUniform, out, fr, pdf);
+		if (pdf == 0) break;
+
+		beta *= fr*fabs(dot(nor, out)) / pdf;
+
+		ray = Ray(pos, out, nullptr, kernel_epsilon);
+	}
+}
+
+__global__ void ProgressivePhotonmapperInit(VisiblePoint* v){
+	vps = v;
+}
+
+//first pass trace eye ray
+__global__ void ProgressivePhotonmapperFP(int iter, int maxDepth, int directSamples = 32, float initRadius = 0.5f){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
 	unsigned pixel = x + y*blockDim.x*gridDim.x;
 
-	if (reset){
-		kernel_acc_image[pixel] = { 0, 0, 0 };
-	}
-	float3 color = kernel_color[pixel];
-	kernel_acc_image[pixel] += color;
+	//init seed
+	int threadIndex = (blockIdx.x + blockIdx.y * gridDim.x) * (blockDim.x * blockDim.y) + (threadIdx.y * blockDim.x) + threadIdx.x;
+	thrust::default_random_engine rng(WangHash(pixel) + WangHash(iter));
+	thrust::uniform_real_distribution<float> uniform(0.0f, 1.0f);
 
-	color = kernel_acc_image[pixel] / iter;
-	if (filmic)
-		FilmicTonemapping(color);
-	else
-		GammaCorrection(color);
+	VisiblePoint vp = TraceRay(x, y, maxDepth, directSamples, initRadius, uniform, rng);
+	vps[pixel] = vp;
+}
+
+//build hash table for vp
+__host__ void ProgressivePhotonmapperBuildHashTable(int width, int height, float initRadius){
+	BuildHashTable(width, height, initRadius);
+}
+
+//second pass trace photon
+__global__ void ProgressivePhotonmapperSP(int iter, int maxDepth){
+	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
+	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
+	unsigned pixel = x + y*blockDim.x*gridDim.x;
+
+	//init seed
+	int threadIndex = (blockIdx.x + blockIdx.y * gridDim.x) * (blockDim.x * blockDim.y) + (threadIdx.y * blockDim.x) + threadIdx.x;
+	thrust::default_random_engine rng(WangHash(pixel) + WangHash(iter*iter));
+	thrust::uniform_real_distribution<float> uniform(0.0f, 1.0f);
+
+	TracePhoton(maxDepth, uniform, rng);
+}
+
+//third pass density evaluate
+__global__ void ProgressivePhotonmapperTP(int iter){
+	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
+	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
+	unsigned pixel = x + y*blockDim.x*gridDim.x;
+
+	VisiblePoint vp = vps[pixel];
+
+	float3 indirect = vp.tau / (PI*vp.radius*vp.radius * 1000*(iter+1));
+	//skip if color is not a number
+	if (IsNan(indirect)) indirect = { 0, 0, 0 };
+	float3 L = vp.ld + indirect;
+	kernel_color[pixel] = L;
+}
+//**************************PPM End********************************
+
+__global__ void Output(int iter, float3* output, bool reset, bool filmic, IntegratorType type){
+	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
+	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
+	unsigned pixel = x + y*blockDim.x*gridDim.x;
+
+	if (reset) kernel_acc_image[pixel] = { 0, 0, 0 };
+
+	float3 color = kernel_color[pixel];
+	if (type != IT_PPM){
+		kernel_acc_image[pixel] += color;
+		color = kernel_acc_image[pixel] / iter;
+	}
+	if (filmic) FilmicTonemapping(color);
+	else GammaCorrection(color);
 	output[pixel] = color;
 }
 
@@ -1991,6 +2326,11 @@ void BeginRender(
 		dev_primitives, dev_materials, dev_bssrdfs, dev_mediums, dev_lights, dev_infinite, dev_textures, dev_light_distribution, num_lights, ld_size,
 		texture_size, dev_image, dev_color, ep);
 
+	//init for progressive photon mapper
+	if (scene.integrator.type == IT_PPM){
+		HANDLE_ERROR(cudaMalloc(&device_vps, width*height*sizeof(VisiblePoint)));
+		ProgressivePhotonmapperInit << <1, 1 >> >(device_vps);
+	}
 
 	HANDLE_ERROR(cudaDeviceSynchronize());
 
@@ -2016,22 +2356,38 @@ void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsig
 	dim3 block(block_x, block_y);
 	dim3 grid(width / block.x, height / block.y);
 
-	if (scene.integrator.type == IT_AO)
+	IntegratorType type = scene.integrator.type;
+	if (type == IT_AO)
 		Ao << <grid, block >> >(iter, scene.integrator.maxDist);
-	else if (scene.integrator.type == IT_PT)
+	else if (type == IT_PT)
 		Path << <grid, block >> >(iter, scene.integrator.maxDepth);
-	else if (scene.integrator.type == IT_VPT)
+	else if (type == IT_VPT)
 		Volpath << <grid, block >> >(iter, scene.integrator.maxDepth);
-	else if (scene.integrator.type == IT_LT){
+	else if (type == IT_LT){
 		LightTracingInit << <grid, block >> >();
 		LightTracing << <grid, block >> >(iter, scene.integrator.maxDepth);
 	}
-	else if (scene.integrator.type == IT_BDPT){
+	else if (type == IT_BDPT){
 		BdptInit << <grid, block >> >();
 		Bdpt << <grid, block >> >(iter, scene.integrator.maxDepth);
+	}
+	else if (type == IT_PPM){
+		static bool first = true;
+		if (first){
+			clock_t now = clock();
+			ProgressivePhotonmapperFP << <grid, block >> >(iter, scene.integrator.maxDepth,
+				scene.integrator.directSamples, scene.integrator.initRadius);
+			//build hash grid on cpu
+		//	ProgressivePhotonmapperBuildHashTable(width, height, scene.integrator.initRadius);
+			first = false;
+
+			printf("PPM Init [%.3fs]\n", float(clock() - now) / CLOCKS_PER_SEC);
+		}
+		ProgressivePhotonmapperSP << <100, 10 >> >(iter, scene.integrator.maxDepth);
+		ProgressivePhotonmapperTP << <grid, block >> >(iter);
 	}
 
 	grid.x = width / block.x;
 	grid.y = height / block.y;
-	Output << <grid, block >> >(iter, output, reset, camera->filmic);
+	Output << <grid, block >> >(iter, output, reset, camera->filmic, type);
 }

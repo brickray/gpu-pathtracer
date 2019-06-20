@@ -201,9 +201,19 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			scene.integrator.type = IT_BDPT;
 			scene.integrator.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
 		}
+		else if (integrator == "mlt"){
+			scene.integrator.type = IT_MLT;
+			scene.integrator.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
+		}
+		else if (integrator == "ppm"){
+			scene.integrator.type = IT_PPM;
+			scene.integrator.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
+			scene.integrator.directSamples = doc.HasMember("directSamples") ? doc["directSamples"].GetInt() : 32;
+			scene.integrator.initRadius = doc.HasMember("initRadius") ? doc["initRadius"].GetDouble() : 0.5f;
+		}
 		else{
 			printf("Unsupport integrator [%s]\n", integrator);
-			printf("Choose one of them[ao, pt, vpt, lt, bdpt]\n");
+			printf("Choose one of them[ao, pt, vpt, lt, bdpt, mlt, ppm(underdeveloped)]\n");
 			exit(1);
 		}
 	}

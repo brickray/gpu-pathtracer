@@ -53,9 +53,25 @@ public:
 		return fmax - fmin;
 	}
 
+	__host__ __device__ float3 Offset(float3 p) const{
+		float3 diag = Diagonal();
+		float3 delta = p - fmin;
+		return delta / diag;
+	}
+
 	__host__ __device__ float SurfaceArea() const{
 		float3 delta = fmax - fmin;
 		return 2.f*(delta.x*delta.y + delta.y*delta.z + delta.z*delta.x);
+	}
+
+	__host__ __device__ int GetMaxExtent() const{
+		float3 diag = Diagonal();
+		if (diag.x > diag.y && diag.x > diag.z)
+			return 0;
+		else if (diag.y > diag.z)
+			return 1;
+		else
+			return 2;
 	}
 
 	__host__ __device__ bool Intersect(Ray& r) const{
