@@ -1830,8 +1830,12 @@ struct VisiblePoint{
 };
 
 struct GridNode{
-	int vpIdx[100];
-	int vpSize = 0, mSize = 0;
+	int* vpIdx = nullptr;
+	int vpSize = 0;
+};
+
+struct CPUGridNode{
+	vector<int> vpIdx;
 };
 
 VisiblePoint* device_vps;
@@ -1840,6 +1844,15 @@ __device__ VisiblePoint* vps;
 __device__ GridNode* grid;
 __device__ float3 boundsMin, boundsMax;
 __device__ int gridRes[3], hashSize;
+
+__global__ void PPMSetParam(float3 fmin, float3 fmax, int x, int y, int z, int hsize){
+	boundsMin = fmin;
+	boundsMax = fmax;
+	gridRes[0] = x;
+	gridRes[1] = y;
+	gridRes[2] = z;
+	hashSize = hsize;
+}
 
 //from pbrt-v3
 __host__ __device__ bool ToGrid(float3& p, BBox& bounds, int gridRes[3], float3& pi){
@@ -1859,20 +1872,12 @@ __host__ __device__ unsigned int Hash(int x, int y, int z, int hashSize){
 	return (unsigned int)((x * 73856093) ^ (y * 19349663) ^ (z * 83492791)) % hashSize;
 }
 
-__global__ void PPMSetParam(GridNode* n, float3 bmin, float3 bmax, int res[3], int hsize){
-	grid = n;
-	boundsMin = bmin;
-	boundsMax = bmax;
-	for (int i = 0; i < 3; ++i) gridRes[i] = res[i];
-	hashSize = hsize;
-}
-
-__host__ void BuildHashTable(int width, int height, float initRadius){
+void BuildHashTable(int width, int height, float initRadius){
 	VisiblePoint* host_vps = new VisiblePoint[width*height];
 	HANDLE_ERROR(cudaMemcpy(host_vps, device_vps, width*height*sizeof(VisiblePoint), cudaMemcpyDeviceToHost));
-	
-	int hashSize = width*height;
-	GridNode* grid = new GridNode[hashSize];
+
+	int hSize = width*height;
+	CPUGridNode* grid = new CPUGridNode[hSize];
 
 	BBox gridBounds;
 	for (int i = 0; i < width*height; ++i){
@@ -1884,64 +1889,41 @@ __host__ void BuildHashTable(int width, int height, float initRadius){
 	float3 diag = gridBounds.Diagonal();
 	float maxDiag = (&diag.x)[gridBounds.GetMaxExtent()];
 	int baseGridRes = (int)(maxDiag / initRadius);
-	int gridRes[3];
-	for (int i = 0; i < 3;++i)
-		gridRes[i] = Max((int)(baseGridRes*(&diag.x)[i] / maxDiag), 1);
+	int gRes[3];
+	for (int i = 0; i < 3; ++i)
+		gRes[i] = Max((int)(baseGridRes*(&diag.x)[i] / maxDiag), 1);
 
-	int m = 0;
 	for (int i = 0; i < width*height; ++i){
 		VisiblePoint vp = host_vps[i];
-		float radius = vp.radius;
 		float3 pMin, pMax;
-		ToGrid(vp.isect.pos - radius3f, gridBounds, gridRes, pMin);
-		ToGrid(vp.isect.pos + radius3f, gridBounds, gridRes, pMax);
+		ToGrid(vp.isect.pos - radius3f, gridBounds, gRes, pMin);
+		ToGrid(vp.isect.pos + radius3f, gridBounds, gRes, pMax);
 		for (int z = pMin.z; z <= pMax.z; ++z){
 			for (int y = pMin.y; y <= pMax.y; ++y){
 				for (int x = pMin.x; x <= pMax.x; ++x){
-					int h = Hash(x, y, z, hashSize);
-					
-					if (grid[h].vpSize < 100)
-						grid[h].vpIdx[grid[h].vpSize++] = i;
-					/*if (grid[h].vpIdx == nullptr){
-						grid[h].vpIdx = new int[1];
-						grid[h].vpIdx[grid[h].vpSize++] = i;
-						grid[h].mSize = 1;
-						continue;
-					}
-					
-					if (grid[h].vpSize == grid[h].mSize){
-						grid[h].mSize *= 2;
-						int* p = new int[grid[h].mSize];
-						for (int i = 0; i < grid[h].vpSize; ++i)
-							p[i] = grid[h].vpIdx[i];
-						delete[] grid[h].vpIdx;
-						grid[h].vpIdx = p;
-						grid[h].vpIdx[grid[h].vpSize++] = i;
-					}*/
+					int h = Hash(x, y, z, hSize);
+
+					grid[h].vpIdx.push_back(i);
 				}
 			}
 		}
 	}
 
-	HANDLE_ERROR(cudaMalloc(&device_grid, width*height*sizeof(GridNode)));
-	//for (int i = 0; i < width*height; ++i){
-	//	/*int* t;
-	//	if (grid[i].vpSize > 0){
-	//		HANDLE_ERROR(cudaMalloc(&t, grid[i].vpSize*sizeof(int)));
-	//		HANDLE_ERROR(cudaMemcpy(t, grid[i].vpIdx, grid[i].vpSize*sizeof(int), cudaMemcpyHostToDevice));
-	//		HANDLE_ERROR(cudaMemcpy(&device_grid[i].vpIdx, &t, sizeof(int*), cudaMemcpyHostToDevice));
-	//	}
-	//	HANDLE_ERROR(cudaMemcpy(&device_grid[i].vpSize, &grid[i].vpSize, sizeof(int), cudaMemcpyHostToDevice));*/
-	//	
-	//}
-	HANDLE_ERROR(cudaMemcpy(device_grid, grid, width*height*sizeof(GridNode), cudaMemcpyHostToDevice));
-
-	PPMSetParam << <1, 1 >> >(device_grid, gridBounds.fmin, gridBounds.fmax, gridRes, hashSize);
+	for (int i = 0; i < width*height; ++i){
+		int* t;
+		int size = grid[i].vpIdx.size();
+		if (size > 0){
+			HANDLE_ERROR(cudaMalloc(&t, size*sizeof(int)));
+			HANDLE_ERROR(cudaMemcpy(t, &grid[i].vpIdx[0], size*sizeof(int), cudaMemcpyHostToDevice));
+			HANDLE_ERROR(cudaMemcpy(&device_grid[i].vpIdx, &t, sizeof(int*), cudaMemcpyHostToDevice));
+		}
+		HANDLE_ERROR(cudaMemcpy(&device_grid[i].vpSize, &size, sizeof(int), cudaMemcpyHostToDevice));
+		
+	}
 	
+	PPMSetParam << <1, 1 >> >(gridBounds.fmin, gridBounds.fmax, gRes[0], gRes[1], gRes[2], hSize);
 	delete[] host_vps;
-	/*for (int i = 0; i < width*height; ++i){
-		delete[] grid[i].vpIdx;
-	}*/
+	
 	delete[] grid;
 }
 
@@ -1989,7 +1971,6 @@ __device__ VisiblePoint TraceRay(int x, int y, int maxDepth, int directSamples, 
 					float3 fr;
 					float samplePdf;
 
-					//Fr(material, -r.d, shadowRay.d, nor, uv, dpdu, uniform(rng), fr, samplePdf);
 					Fr(mat, -ray.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
 
 					float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
@@ -2024,6 +2005,16 @@ __device__ VisiblePoint TraceRay(int x, int y, int maxDepth, int directSamples, 
 				}
 			}
 
+			if (!IsDiffuse(mat.type)){
+				float3 fr, out;
+				float pdf;
+				float3 uniformBsdf = make_float3(uniform(rng), uniform(rng), uniform(rng));
+				SampleBSDF(mat, -ray.d, nor, uv, dpdu, uniformBsdf, out, fr, pdf);
+				if (IsBlack(fr)) break;
+
+				ray = Ray(pos, out, nullptr, kernel_epsilon);
+				continue;
+			}
 			//light vp
 			if (isect.lightIdx != -1){
 				Ld += kernel_lights[isect.lightIdx].Le(isect.nor, -ray.d);
@@ -2071,27 +2062,28 @@ __device__ void TracePhoton(int maxDepth, thrust::uniform_real_distribution<floa
 		if (bounces > 0){//bounces = 0 are already taken into account
 			float3 gridCoord;
 			BBox gridBounds(boundsMin, boundsMax);
-		//	if (ToGrid(pos, gridBounds, gridRes, gridCoord))
-			{
-		//		int h = Hash(gridCoord.x, gridCoord.y, gridCoord.z, hashSize);
-		//		GridNode node = grid[h];
-				for (int i = 0; i < 512 * 512; ++i){
-					VisiblePoint& vp = vps[i];
+			if (ToGrid(pos, gridBounds, gridRes, gridCoord)){
+				int h = Hash(gridCoord.x, gridCoord.y, gridCoord.z, hashSize);
+				GridNode node = grid[h];
+				for (int i = 0; i < node.vpSize; ++i){
+					int idx = node.vpIdx[i];
+					VisiblePoint& vp = vps[idx];
 					if (!vp.valid) continue;
 					float3 out = pos - vp.isect.pos;
 					float distanceSquare = dot(out, out);
 					if (distanceSquare > vp.radius*vp.radius) continue;
-					out = normalize(out);
 					Material vpMat = kernel_materials[vp.isect.matIdx];
 					float3 fr;
 					float pdf;
-					Fr(vpMat, vp.dir, out, vp.isect.nor, vp.isect.uv, vp.isect.dpdu, fr, pdf);
+					Fr(vpMat, vp.dir, -ray.d, vp.isect.nor, vp.isect.uv, vp.isect.dpdu, fr, pdf);
+					if (IsBlack(fr) || IsNan(fr)) continue;
 					float3 b = fr * beta * vp.beta;
-					if (!IsNan(b)) vp.tau += b;
+					b += vp.tau;
 
+					//suppose just a photon hit the same visible point at the same time
 					float alpha = 0.7f;
 					float rnew = vp.radius*sqrtf((vp.n + alpha) / (vp.n + 1.f));
-					vp.tau *= rnew*rnew / (vp.radius*vp.radius);
+					vp.tau = b*rnew*rnew / (vp.radius*vp.radius);
 					vp.n += 1;
 					vp.radius = rnew;
 				}
@@ -2110,8 +2102,9 @@ __device__ void TracePhoton(int maxDepth, thrust::uniform_real_distribution<floa
 	}
 }
 
-__global__ void ProgressivePhotonmapperInit(VisiblePoint* v){
+__global__ void ProgressivePhotonmapperInit(VisiblePoint* v, GridNode* n){
 	vps = v;
+	grid = n;
 }
 
 //first pass trace eye ray
@@ -2130,7 +2123,7 @@ __global__ void ProgressivePhotonmapperFP(int iter, int maxDepth, int directSamp
 }
 
 //build hash table for vp
-__host__ void ProgressivePhotonmapperBuildHashTable(int width, int height, float initRadius){
+void ProgressivePhotonmapperBuildHashTable(int width, int height, float initRadius){
 	BuildHashTable(width, height, initRadius);
 }
 
@@ -2156,7 +2149,7 @@ __global__ void ProgressivePhotonmapperTP(int iter){
 
 	VisiblePoint vp = vps[pixel];
 
-	float3 indirect = vp.tau / (PI*vp.radius*vp.radius * 1000*(iter+1));
+	float3 indirect = vp.tau / (PI*vp.radius*vp.radius*10000*(iter+1));
 	//skip if color is not a number
 	if (IsNan(indirect)) indirect = { 0, 0, 0 };
 	float3 L = vp.ld + indirect;
@@ -2329,7 +2322,9 @@ void BeginRender(
 	//init for progressive photon mapper
 	if (scene.integrator.type == IT_PPM){
 		HANDLE_ERROR(cudaMalloc(&device_vps, width*height*sizeof(VisiblePoint)));
-		ProgressivePhotonmapperInit << <1, 1 >> >(device_vps);
+		HANDLE_ERROR(cudaMalloc(&device_grid, width*height*sizeof(GridNode)));
+
+		ProgressivePhotonmapperInit << <1, 1 >> >(device_vps, device_grid);
 	}
 
 	HANDLE_ERROR(cudaDeviceSynchronize());
@@ -2378,12 +2373,12 @@ void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsig
 			ProgressivePhotonmapperFP << <grid, block >> >(iter, scene.integrator.maxDepth,
 				scene.integrator.directSamples, scene.integrator.initRadius);
 			//build hash grid on cpu
-		//	ProgressivePhotonmapperBuildHashTable(width, height, scene.integrator.initRadius);
+			ProgressivePhotonmapperBuildHashTable(width, height, scene.integrator.initRadius);
 			first = false;
 
 			printf("PPM Init [%.3fs]\n", float(clock() - now) / CLOCKS_PER_SEC);
 		}
-		ProgressivePhotonmapperSP << <100, 10 >> >(iter, scene.integrator.maxDepth);
+		ProgressivePhotonmapperSP << <1000, 10 >> >(iter, scene.integrator.maxDepth);
 		ProgressivePhotonmapperTP << <grid, block >> >(iter);
 	}
 
