@@ -1819,13 +1819,14 @@ __global__ void Mlt(int iter, int maxDepth){
 //**************************PPM Integrator*************************
 struct VisiblePoint{
 	float3 ld; //direct light
+	float3 ind; //indirect light
 	float3 beta; //throughput
 	float3 dir; 
 	Intersection isect;
 
 	float3 tau;
 	float radius;
-	int n;
+	uint64_t n;
 	bool valid = false;
 };
 
@@ -1844,7 +1845,6 @@ __device__ VisiblePoint* vps;
 __device__ GridNode* grid;
 __device__ float3 boundsMin, boundsMax;
 __device__ int gridRes[3], hashSize;
-
 __global__ void PPMSetParam(float3 fmin, float3 fmax, int x, int y, int z, int hsize){
 	boundsMin = fmin;
 	boundsMax = fmax;
@@ -1883,6 +1883,7 @@ void BuildHashTable(int width, int height, float initRadius){
 	for (int i = 0; i < width*height; ++i){
 		gridBounds.Expand(host_vps[i].isect.pos);
 	}
+	
 	float3 radius3f = make_float3(initRadius, initRadius, initRadius);
 	gridBounds.fmin -= radius3f;
 	gridBounds.fmax += radius3f;
@@ -1918,7 +1919,9 @@ void BuildHashTable(int width, int height, float initRadius){
 			HANDLE_ERROR(cudaMemcpy(&device_grid[i].vpIdx, &t, sizeof(int*), cudaMemcpyHostToDevice));
 		}
 		HANDLE_ERROR(cudaMemcpy(&device_grid[i].vpSize, &size, sizeof(int), cudaMemcpyHostToDevice));
-		
+
+		if (i%width == 0)
+			fprintf(stdout, "[%.3f%%]\r", float(i) / (width*height - 1) * 100);
 	}
 	
 	PPMSetParam << <1, 1 >> >(gridBounds.fmin, gridBounds.fmax, gRes[0], gRes[1], gRes[2], hSize);
@@ -2082,8 +2085,9 @@ __device__ void TracePhoton(int maxDepth, thrust::uniform_real_distribution<floa
 
 					//suppose just a photon hit the same visible point at the same time
 					float alpha = 0.7f;
-					float rnew = vp.radius*sqrtf((vp.n + alpha) / (vp.n + 1.f));
-					vp.tau = b*rnew*rnew / (vp.radius*vp.radius);
+					float g = (vp.n + alpha) / (vp.n + 1.f);
+					float rnew = vp.radius*sqrt(g);
+					vp.tau = b*g;
 					vp.n += 1;
 					vp.radius = rnew;
 				}
@@ -2147,12 +2151,19 @@ __global__ void ProgressivePhotonmapperTP(int iter){
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
 	unsigned pixel = x + y*blockDim.x*gridDim.x;
 
-	VisiblePoint vp = vps[pixel];
+	VisiblePoint& vp = vps[pixel];
 
-	float3 indirect = vp.tau / (PI*vp.radius*vp.radius*10000*(iter+1));
-	//skip if color is not a number
-	if (IsNan(indirect)) indirect = { 0, 0, 0 };
-	float3 L = vp.ld + indirect;
+	float3 L = { 0.f, 0.f, 0.f };
+	if (vp.valid){
+		int photonsPerIteration = 10000;
+		//as the number of iterations increases, the radius becomes
+		//smaller and samller, eventually producing infinity indirect
+		float3 indirect = vp.tau / (PI*vp.radius*vp.radius*photonsPerIteration*(iter + 1));
+		//skip if color is not a number
+		if (IsNan(indirect) || IsInf(indirect)) indirect = vp.ind;
+		vp.ind = indirect;
+		L = vp.ld + indirect;
+	}
 	kernel_color[pixel] = L;
 }
 //**************************PPM End********************************
