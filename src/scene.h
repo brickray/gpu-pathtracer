@@ -42,6 +42,7 @@ public:
 		};
 		int directSamples;
 		float initRadius;
+		int photonsPerIteration;
 	} integrator;
 
 public:

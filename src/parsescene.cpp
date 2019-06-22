@@ -210,6 +210,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			scene.integrator.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
 			scene.integrator.directSamples = doc.HasMember("directSamples") ? doc["directSamples"].GetInt() : 32;
 			scene.integrator.initRadius = doc.HasMember("initRadius") ? doc["initRadius"].GetDouble() : 0.5f;
+			scene.integrator.photonsPerIteration = doc.HasMember("photonsPerIteration") ? doc["photonsPerIteration"].GetInt() : 100000;
 		}
 		else{
 			printf("Unsupport integrator [%s]\n", integrator);

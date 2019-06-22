@@ -1830,9 +1830,9 @@ struct VisiblePoint{
 	bool valid = false;
 };
 
-struct GridNode{
-	int* vpIdx = nullptr;
-	int vpSize = 0;
+struct VPList{
+	VisiblePoint vp;
+	VPList* next = nullptr;
 };
 
 struct CPUGridNode{
@@ -1840,12 +1840,14 @@ struct CPUGridNode{
 };
 
 VisiblePoint* device_vps;
-GridNode* device_grid;
+int* device_vpIdx, *device_vpOffset;
 __device__ VisiblePoint* vps;
-__device__ GridNode* grid;
+__device__ int* vpIdx, *vpOffset;//grid info
 __device__ float3 boundsMin, boundsMax;
 __device__ int gridRes[3], hashSize;
-__global__ void PPMSetParam(float3 fmin, float3 fmax, int x, int y, int z, int hsize){
+__global__ void PPMSetParam(int* idx, int* offset, float3 fmin, float3 fmax, int x, int y, int z, int hsize){
+	vpIdx = idx;
+	vpOffset = offset;
 	boundsMin = fmin;
 	boundsMax = fmax;
 	gridRes[0] = x;
@@ -1872,6 +1874,7 @@ __host__ __device__ unsigned int Hash(int x, int y, int z, int hashSize){
 	return (unsigned int)((x * 73856093) ^ (y * 19349663) ^ (z * 83492791)) % hashSize;
 }
 
+//Still too slow, i will be very grateful if someone tells me how to optimize!!
 void BuildHashTable(int width, int height, float initRadius){
 	VisiblePoint* host_vps = new VisiblePoint[width*height];
 	HANDLE_ERROR(cudaMemcpy(host_vps, device_vps, width*height*sizeof(VisiblePoint), cudaMemcpyDeviceToHost));
@@ -1883,7 +1886,7 @@ void BuildHashTable(int width, int height, float initRadius){
 	for (int i = 0; i < width*height; ++i){
 		gridBounds.Expand(host_vps[i].isect.pos);
 	}
-	
+
 	float3 radius3f = make_float3(initRadius, initRadius, initRadius);
 	gridBounds.fmin -= radius3f;
 	gridBounds.fmax += radius3f;
@@ -1894,6 +1897,7 @@ void BuildHashTable(int width, int height, float initRadius){
 	for (int i = 0; i < 3; ++i)
 		gRes[i] = Max((int)(baseGridRes*(&diag.x)[i] / maxDiag), 1);
 
+    int total = 0;
 	for (int i = 0; i < width*height; ++i){
 		VisiblePoint vp = host_vps[i];
 		float3 pMin, pMax;
@@ -1903,140 +1907,135 @@ void BuildHashTable(int width, int height, float initRadius){
 			for (int y = pMin.y; y <= pMax.y; ++y){
 				for (int x = pMin.x; x <= pMax.x; ++x){
 					int h = Hash(x, y, z, hSize);
-
 					grid[h].vpIdx.push_back(i);
+					total++;
 				}
 			}
 		}
 	}
 
-	for (int i = 0; i < width*height; ++i){
-		int* t;
-		int size = grid[i].vpIdx.size();
-		if (size > 0){
-			HANDLE_ERROR(cudaMalloc(&t, size*sizeof(int)));
-			HANDLE_ERROR(cudaMemcpy(t, &grid[i].vpIdx[0], size*sizeof(int), cudaMemcpyHostToDevice));
-			HANDLE_ERROR(cudaMemcpy(&device_grid[i].vpIdx, &t, sizeof(int*), cudaMemcpyHostToDevice));
-		}
-		HANDLE_ERROR(cudaMemcpy(&device_grid[i].vpSize, &size, sizeof(int), cudaMemcpyHostToDevice));
-
-		if (i%width == 0)
-			fprintf(stdout, "[%.3f%%]\r", float(i) / (width*height - 1) * 100);
+	vector<int> temp(total), off(hSize + 1); off[0] = 0;
+	int* start = &temp[0], offset = 0;
+	for (int i = 0; i < hSize; ++i){
+		memcpy(start + offset, &grid[i].vpIdx[0], grid[i].vpIdx.size()*sizeof(int));
+		offset += grid[i].vpIdx.size();
+		off[i + 1] = offset;
 	}
+
+	HANDLE_ERROR(cudaMalloc(&device_vpIdx, total*sizeof(int)));
+	HANDLE_ERROR(cudaMalloc(&device_vpOffset, (hSize + 1)*sizeof(int)));
+	HANDLE_ERROR(cudaMemcpy(device_vpIdx, &temp[0], total*sizeof(int), cudaMemcpyHostToDevice));
+	HANDLE_ERROR(cudaMemcpy(device_vpOffset, &off[0], (hSize + 1)*sizeof(int), cudaMemcpyHostToDevice));
 	
-	PPMSetParam << <1, 1 >> >(gridBounds.fmin, gridBounds.fmax, gRes[0], gRes[1], gRes[2], hSize);
+	PPMSetParam << <1, 1 >> >(device_vpIdx, device_vpOffset, gridBounds.fmin, gridBounds.fmax, gRes[0], gRes[1], gRes[2], hSize);
 	delete[] host_vps;
 	
 	delete[] grid;
 }
 
-__device__ VisiblePoint TraceRay(int x, int y, int maxDepth, int directSamples, float initRadius, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
-	VisiblePoint vp;
-	vp.radius = initRadius;
-	vp.n = 0;
-	vp.valid = false;
-	vp.ld = { 0.f, 0.f, 0.f };
-	vp.tau = { 0.f, 0.f, 0.f };
+__device__ void TraceRay(int pixel, Ray r, VisiblePoint& vp, int iter, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
+	Ray stack[64];
+	Ray* stackTop = stack + 1;
+	Ray* stackBottom = stack;
+	stack[0] = r;
 
-	for (int i = 0; i < directSamples; ++i){
-		float offsetx = uniform(rng) - 0.5f;
-		float offsety = uniform(rng) - 0.5f;
-		float unuse;
-		//ppm doesn't support dof now
-		//float2 aperture = UniformDisk(uniform(rng), uniform(rng), unuse);//for dof
-		Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, make_float2(0, 0));
-		ray.tmin = kernel_epsilon;
-
-		float3 beta = { 1.f, 1.f, 1.f };
+	float3 beta = { 1.f, 1.f, 1.f };
+	do{
+		Ray ray = *(--stackTop);
 		Intersection isect;
-		for (int bounces = 0; bounces < maxDepth; ++bounces){
-			if (!Intersect(ray, &isect)){
-				break;
-			}
-
-			float3 pos = isect.pos;
-			float3 nor = isect.nor;
-			float2 uv = isect.uv;
-			float3 dpdu = isect.dpdu;
-			Material mat = kernel_materials[isect.matIdx];
-			float3 Ld = { 0.f, 0.f, 0.f };
-			if (IsDiffuse(mat.type) && isect.lightIdx == -1){
-				float u = uniform(rng);
-				float choicePdf;
-				int idx = LookUpLightDistribution(u, choicePdf);
-				float2 u1 = make_float2(uniform(rng), uniform(rng));
-				float3 radiance, lightNor;
-				Ray shadowRay;
-				float lightPdf;
-				kernel_lights[idx].SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
-
-				if (!IsBlack(radiance) && !IntersectP(shadowRay)){
-					float3 fr;
-					float samplePdf;
-
-					Fr(mat, -ray.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
-
-					float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
-					Ld += weight*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);
-				}
-
-				float3 us = make_float3(uniform(rng), uniform(rng), uniform(rng));
-				float3 out, fr;
-				float pdf;
-				SampleBSDF(mat, -ray.d, nor, uv, dpdu, us, out, fr, pdf);
-				if (!(IsBlack(fr) || pdf == 0)){
-					Intersection lightIsect;
-					Ray lightRay(pos, out, nullptr, kernel_epsilon);
-					if (Intersect(lightRay, &lightIsect) && lightIsect.lightIdx != -1){
-						float3 p = lightIsect.pos;
-						float3 n = lightIsect.nor;
-						float3 radiance = { 0.f, 0.f, 0.f };
-						radiance = kernel_lights[lightIsect.lightIdx].Le(n, -lightRay.d);
-						if (!IsBlack(radiance)){
-							float pdfA, pdfW;
-							kernel_lights[lightIsect.lightIdx].Pdf(Ray(p, -out, nullptr, kernel_epsilon), n, pdfA, pdfW);
-							float choicePdf = PdfFromLightDistribution(lightIsect.lightIdx);
-							float lenSquare = dot(p - pos, p - pos);
-							float costheta = fabs(dot(n, lightRay.d));
-							float lPdf = pdfA * lenSquare / (costheta);
-							float weight = PowerHeuristic(1, pdf, 1, lPdf * choicePdf);
-
-							Ld += weight * fr * radiance * fabs(dot(out, nor)) / pdf;
-						}
-					}
-
-				}
-			}
-
-			if (!IsDiffuse(mat.type)){
-				float3 fr, out;
-				float pdf;
-				float3 uniformBsdf = make_float3(uniform(rng), uniform(rng), uniform(rng));
-				SampleBSDF(mat, -ray.d, nor, uv, dpdu, uniformBsdf, out, fr, pdf);
-				if (IsBlack(fr)) break;
-
-				ray = Ray(pos, out, nullptr, kernel_epsilon);
-				continue;
-			}
-			//light vp
-			if (isect.lightIdx != -1){
-				Ld += kernel_lights[isect.lightIdx].Le(isect.nor, -ray.d);
-			}
-
-			if (!IsNan(Ld)) vp.ld += beta*Ld;
-			if (i == 0){
-				vp.beta = beta;
-				vp.dir = -ray.d;
-				vp.isect = isect;
-				vp.valid = true;
-			}
-
+		if (!Intersect(ray, &isect)){
 			break;
 		}
-	}
 
-	vp.ld /= directSamples;
-	return vp;
+		float3 pos = isect.pos;
+		float3 nor = isect.nor;
+		float2 uv = isect.uv;
+		float3 dpdu = isect.dpdu;
+		Material mat = kernel_materials[isect.matIdx];
+
+		//delta material should be more careful
+		if (!IsDiffuse(mat.type)){
+			float3 fr, out;
+			float pdf;
+			float3 uniformBsdf = make_float3(uniform(rng), uniform(rng), uniform(rng));
+			SampleBSDF(mat, -ray.d, nor, uv, dpdu, uniformBsdf, out, fr, pdf);
+			if (IsBlack(fr)) return;
+
+			beta *= fr*fabs(dot(out, nor)) / pdf;
+
+			ray = Ray(pos, out, nullptr, kernel_epsilon);
+
+			*stackTop++ = ray;
+			continue;
+		}
+
+		float3 Ld = { 0.f, 0.f, 0.f };
+		if (IsDiffuse(mat.type) && isect.lightIdx == -1){
+			float u = uniform(rng);
+			float choicePdf;
+			int idx = LookUpLightDistribution(u, choicePdf);
+			float2 u1 = make_float2(uniform(rng), uniform(rng));
+			float3 radiance, lightNor;
+			Ray shadowRay;
+			float lightPdf;
+			kernel_lights[idx].SampleLight(pos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+
+			if (!IsBlack(radiance) && !IntersectP(shadowRay)){
+				float3 fr;
+				float samplePdf;
+
+				Fr(mat, -ray.d, shadowRay.d, nor, uv, dpdu, fr, samplePdf);
+
+				float weight = PowerHeuristic(1, lightPdf * choicePdf, 1, samplePdf);
+				Ld += weight*fr*radiance*fabs(dot(nor, shadowRay.d)) / (lightPdf*choicePdf);
+			}
+
+			float3 us = make_float3(uniform(rng), uniform(rng), uniform(rng));
+			float3 out, fr;
+			float pdf;
+			SampleBSDF(mat, -ray.d, nor, uv, dpdu, us, out, fr, pdf);
+			if (!(IsBlack(fr) || pdf == 0)){
+				Intersection lightIsect;
+				Ray lightRay(pos, out, nullptr, kernel_epsilon);
+				if (Intersect(lightRay, &lightIsect) && lightIsect.lightIdx != -1){
+					float3 p = lightIsect.pos;
+					float3 n = lightIsect.nor;
+					float3 radiance = { 0.f, 0.f, 0.f };
+					radiance = kernel_lights[lightIsect.lightIdx].Le(n, -lightRay.d);
+					if (!IsBlack(radiance)){
+						float pdfA, pdfW;
+						kernel_lights[lightIsect.lightIdx].Pdf(Ray(p, -out, nullptr, kernel_epsilon), n, pdfA, pdfW);
+						float choicePdf = PdfFromLightDistribution(lightIsect.lightIdx);
+						float lenSquare = dot(p - pos, p - pos);
+						float costheta = fabs(dot(n, lightRay.d));
+						float lPdf = pdfA * lenSquare / (costheta);
+						float weight = PowerHeuristic(1, pdf, 1, lPdf * choicePdf);
+
+						Ld += weight * fr * radiance * fabs(dot(out, nor)) / pdf;
+					}
+				}
+
+			}
+		}
+
+		//light vp
+		if (isect.lightIdx != -1){
+			Ld += kernel_lights[isect.lightIdx].Le(isect.nor, -ray.d);
+		}
+
+		if (!IsNan(Ld)) vp.ld += beta*Ld;
+
+		if (iter == 0){
+			vp.beta = beta;
+			vp.dir = -ray.d;
+			vp.isect = isect;
+			vp.valid = true;
+			vps[pixel] = vp;
+		}
+
+		if (stackTop == stackBottom)
+			break;
+	} while (true);
 }
 
 __device__ void TracePhoton(int maxDepth, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
@@ -2067,9 +2066,10 @@ __device__ void TracePhoton(int maxDepth, thrust::uniform_real_distribution<floa
 			BBox gridBounds(boundsMin, boundsMax);
 			if (ToGrid(pos, gridBounds, gridRes, gridCoord)){
 				int h = Hash(gridCoord.x, gridCoord.y, gridCoord.z, hashSize);
-				GridNode node = grid[h];
-				for (int i = 0; i < node.vpSize; ++i){
-					int idx = node.vpIdx[i];
+				int start = vpOffset[h];
+				int vpSize = vpOffset[h + 1] - start;
+				for (int i = 0; i < vpSize; ++i){
+					int idx = vpIdx[start + i];
 					VisiblePoint& vp = vps[idx];
 					if (!vp.valid) continue;
 					float3 out = pos - vp.isect.pos;
@@ -2103,12 +2103,19 @@ __device__ void TracePhoton(int maxDepth, thrust::uniform_real_distribution<floa
 		beta *= fr*fabs(dot(nor, out)) / pdf;
 
 		ray = Ray(pos, out, nullptr, kernel_epsilon);
+
+		if (bounces > 3){
+			float illumate = clamp(1.f - Luminance(beta), 0.f, 1.f);
+			if (uniform(rng) < illumate)
+				break;
+
+			beta /= (1 - illumate);
+		}
 	}
 }
 
-__global__ void ProgressivePhotonmapperInit(VisiblePoint* v, GridNode* n){
+__global__ void ProgressivePhotonmapperInit(VisiblePoint* v){
 	vps = v;
-	grid = n;
 }
 
 //first pass trace eye ray
@@ -2122,8 +2129,25 @@ __global__ void ProgressivePhotonmapperFP(int iter, int maxDepth, int directSamp
 	thrust::default_random_engine rng(WangHash(pixel) + WangHash(iter));
 	thrust::uniform_real_distribution<float> uniform(0.0f, 1.0f);
 
-	VisiblePoint vp = TraceRay(x, y, maxDepth, directSamples, initRadius, uniform, rng);
-	vps[pixel] = vp;
+	VisiblePoint& vp = vps[pixel];
+	vp.radius = initRadius;
+	vp.n = 0;
+	vp.valid = false;
+	vp.ld = { 0.f, 0.f, 0.f };
+	vp.tau = { 0.f, 0.f, 0.f };
+	for (int i = 0; i < directSamples; ++i){
+		float offsetx = uniform(rng) - 0.5f;
+		float offsety = uniform(rng) - 0.5f;
+		float unuse;
+		//ppm doesn't support dof now
+		//float2 aperture = UniformDisk(uniform(rng), uniform(rng), unuse);//for dof
+		Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, make_float2(0, 0));
+		ray.tmin = kernel_epsilon;
+
+		TraceRay(pixel, ray, vp, i, uniform, rng);
+	}
+
+	vp.ld /= directSamples;
 }
 
 //build hash table for vp
@@ -2146,7 +2170,7 @@ __global__ void ProgressivePhotonmapperSP(int iter, int maxDepth){
 }
 
 //third pass density evaluate
-__global__ void ProgressivePhotonmapperTP(int iter){
+__global__ void ProgressivePhotonmapperTP(int iter, int photonsPerIteration){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
 	unsigned pixel = x + y*blockDim.x*gridDim.x;
@@ -2155,7 +2179,6 @@ __global__ void ProgressivePhotonmapperTP(int iter){
 
 	float3 L = { 0.f, 0.f, 0.f };
 	if (vp.valid){
-		int photonsPerIteration = 10000;
 		//as the number of iterations increases, the radius becomes
 		//smaller and samller, eventually producing infinity indirect
 		float3 indirect = vp.tau / (PI*vp.radius*vp.radius*photonsPerIteration*(iter + 1));
@@ -2333,9 +2356,8 @@ void BeginRender(
 	//init for progressive photon mapper
 	if (scene.integrator.type == IT_PPM){
 		HANDLE_ERROR(cudaMalloc(&device_vps, width*height*sizeof(VisiblePoint)));
-		HANDLE_ERROR(cudaMalloc(&device_grid, width*height*sizeof(GridNode)));
 
-		ProgressivePhotonmapperInit << <1, 1 >> >(device_vps, device_grid);
+		ProgressivePhotonmapperInit << <1, 1 >> >(device_vps);
 	}
 
 	HANDLE_ERROR(cudaDeviceSynchronize());
@@ -2383,14 +2405,16 @@ void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsig
 			clock_t now = clock();
 			ProgressivePhotonmapperFP << <grid, block >> >(iter, scene.integrator.maxDepth,
 				scene.integrator.directSamples, scene.integrator.initRadius);
+			
 			//build hash grid on cpu
 			ProgressivePhotonmapperBuildHashTable(width, height, scene.integrator.initRadius);
-			first = false;
+			printf("PPM Trace And Build Hash Grid [%.3fs]\n", float(clock() - now) / CLOCKS_PER_SEC);
 
-			printf("PPM Init [%.3fs]\n", float(clock() - now) / CLOCKS_PER_SEC);
+			first = false;
 		}
-		ProgressivePhotonmapperSP << <1000, 10 >> >(iter, scene.integrator.maxDepth);
-		ProgressivePhotonmapperTP << <grid, block >> >(iter);
+		int photonsPerIteration = scene.integrator.photonsPerIteration;
+		ProgressivePhotonmapperSP << < photonsPerIteration / 10, 10 >> >(iter, scene.integrator.maxDepth);
+		ProgressivePhotonmapperTP << <grid, block >> >(iter, photonsPerIteration);
 	}
 
 	grid.x = width / block.x;
