@@ -1826,13 +1826,8 @@ struct VisiblePoint{
 
 	float3 tau;
 	float radius;
-	uint64_t n;
+	float n;
 	bool valid = false;
-};
-
-struct VPList{
-	VisiblePoint vp;
-	VPList* next = nullptr;
 };
 
 struct CPUGridNode{
@@ -1841,13 +1836,13 @@ struct CPUGridNode{
 
 VisiblePoint* device_vps;
 int* device_vpIdx, *device_vpOffset;
+int totalNodes = 0;
 __device__ VisiblePoint* vps;
 __device__ int* vpIdx, *vpOffset;//grid info
 __device__ float3 boundsMin, boundsMax;
 __device__ int gridRes[3], hashSize;
-__global__ void PPMSetParam(int* idx, int* offset, float3 fmin, float3 fmax, int x, int y, int z, int hsize){
+__global__ void PPMSetParam(int* idx, float3 fmin, float3 fmax, int x, int y, int z, int hsize){
 	vpIdx = idx;
-	vpOffset = offset;
 	boundsMin = fmin;
 	boundsMax = fmax;
 	gridRes[0] = x;
@@ -1875,7 +1870,7 @@ __host__ __device__ unsigned int Hash(int x, int y, int z, int hashSize){
 }
 
 //Still too slow, i will be very grateful if someone tells me how to optimize!!
-void BuildHashTable(int width, int height, float initRadius){
+void BuildHashTable(int width, int height){
 	VisiblePoint* host_vps = new VisiblePoint[width*height];
 	HANDLE_ERROR(cudaMemcpy(host_vps, device_vps, width*height*sizeof(VisiblePoint), cudaMemcpyDeviceToHost));
 
@@ -1883,8 +1878,10 @@ void BuildHashTable(int width, int height, float initRadius){
 	CPUGridNode* grid = new CPUGridNode[hSize];
 
 	BBox gridBounds;
+	float initRadius = 0.f;
 	for (int i = 0; i < width*height; ++i){
 		gridBounds.Expand(host_vps[i].isect.pos);
+		if (host_vps[i].radius > initRadius) initRadius = host_vps[i].radius;
 	}
 
 	float3 radius3f = make_float3(initRadius, initRadius, initRadius);
@@ -1922,26 +1919,32 @@ void BuildHashTable(int width, int height, float initRadius){
 		off[i + 1] = offset;
 	}
 
-	HANDLE_ERROR(cudaMalloc(&device_vpIdx, total*sizeof(int)));
-	HANDLE_ERROR(cudaMalloc(&device_vpOffset, (hSize + 1)*sizeof(int)));
+	if (total != totalNodes){
+		HANDLE_ERROR(cudaFree(device_vpIdx));
+		HANDLE_ERROR(cudaMalloc(&device_vpIdx, total*sizeof(int)));
+	}
 	HANDLE_ERROR(cudaMemcpy(device_vpIdx, &temp[0], total*sizeof(int), cudaMemcpyHostToDevice));
 	HANDLE_ERROR(cudaMemcpy(device_vpOffset, &off[0], (hSize + 1)*sizeof(int), cudaMemcpyHostToDevice));
 	
-	PPMSetParam << <1, 1 >> >(device_vpIdx, device_vpOffset, gridBounds.fmin, gridBounds.fmax, gRes[0], gRes[1], gRes[2], hSize);
+	PPMSetParam << <1, 1 >> >(device_vpIdx, gridBounds.fmin, gridBounds.fmax, gRes[0], gRes[1], gRes[2], hSize);
 	delete[] host_vps;
 	
 	delete[] grid;
 }
 
-__device__ void TraceRay(int pixel, Ray r, VisiblePoint& vp, int iter, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
-	Ray stack[64];
-	Ray* stackTop = stack + 1;
-	Ray* stackBottom = stack;
-	stack[0] = r;
+__device__ void TraceRay(int pixel, Ray r, int iter, int maxDepth, float initRadius, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
+	VisiblePoint& vp = vps[pixel];
+	if (iter == 1){
+		vp.radius = initRadius;
+		vp.n = 0.f;
+		vp.ld = { 0.f, 0.f, 0.f };
+		vp.tau = { 0.f, 0.f, 0.f };
+		vp.valid = false;
+	}
 
 	float3 beta = { 1.f, 1.f, 1.f };
-	do{
-		Ray ray = *(--stackTop);
+	Ray ray = r;
+	for (int bounces = 0; bounces < maxDepth; ++bounces){
 		Intersection isect;
 		if (!Intersect(ray, &isect)){
 			break;
@@ -1965,7 +1968,6 @@ __device__ void TraceRay(int pixel, Ray r, VisiblePoint& vp, int iter, thrust::u
 
 			ray = Ray(pos, out, nullptr, kernel_epsilon);
 
-			*stackTop++ = ray;
 			continue;
 		}
 
@@ -2025,17 +2027,13 @@ __device__ void TraceRay(int pixel, Ray r, VisiblePoint& vp, int iter, thrust::u
 
 		if (!IsNan(Ld)) vp.ld += beta*Ld;
 
-		if (iter == 0){
-			vp.beta = beta;
-			vp.dir = -ray.d;
-			vp.isect = isect;
-			vp.valid = true;
-			vps[pixel] = vp;
-		}
+		vp.beta = beta;
+		vp.dir = -ray.d;
+		vp.isect = isect;
+		vp.valid = true;
 
-		if (stackTop == stackBottom)
-			break;
-	} while (true);
+		break;
+	};
 }
 
 __device__ void TracePhoton(int maxDepth, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
@@ -2088,7 +2086,7 @@ __device__ void TracePhoton(int maxDepth, thrust::uniform_real_distribution<floa
 					float g = (vp.n + alpha) / (vp.n + 1.f);
 					float rnew = vp.radius*sqrt(g);
 					vp.tau = b*g;
-					vp.n += 1;
+					vp.n += alpha;
 					vp.radius = rnew;
 				}
 			}
@@ -2114,12 +2112,13 @@ __device__ void TracePhoton(int maxDepth, thrust::uniform_real_distribution<floa
 	}
 }
 
-__global__ void ProgressivePhotonmapperInit(VisiblePoint* v){
+__global__ void StochasticProgressivePhotonmapperInit(VisiblePoint* v, int* offset){
 	vps = v;
+	vpOffset = offset;
 }
 
 //first pass trace eye ray
-__global__ void ProgressivePhotonmapperFP(int iter, int maxDepth, int directSamples = 32, float initRadius = 0.5f){
+__global__ void StochasticProgressivePhotonmapperFP(int iter, int maxDepth, float initRadius = 0.5f){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
 	unsigned pixel = x + y*blockDim.x*gridDim.x;
@@ -2129,34 +2128,24 @@ __global__ void ProgressivePhotonmapperFP(int iter, int maxDepth, int directSamp
 	thrust::default_random_engine rng(WangHash(pixel) + WangHash(iter));
 	thrust::uniform_real_distribution<float> uniform(0.0f, 1.0f);
 
-	VisiblePoint& vp = vps[pixel];
-	vp.radius = initRadius;
-	vp.n = 0;
-	vp.valid = false;
-	vp.ld = { 0.f, 0.f, 0.f };
-	vp.tau = { 0.f, 0.f, 0.f };
-	for (int i = 0; i < directSamples; ++i){
-		float offsetx = uniform(rng) - 0.5f;
-		float offsety = uniform(rng) - 0.5f;
-		float unuse;
-		//ppm doesn't support dof now
-		//float2 aperture = UniformDisk(uniform(rng), uniform(rng), unuse);//for dof
-		Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, make_float2(0, 0));
-		ray.tmin = kernel_epsilon;
+	float offsetx = uniform(rng) - 0.5f;
+	float offsety = uniform(rng) - 0.5f;
+	float unuse;
+	//ppm doesn't support dof now
+	//float2 aperture = UniformDisk(uniform(rng), uniform(rng), unuse);//for dof
+	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, make_float2(0, 0));
+	ray.tmin = kernel_epsilon;
 
-		TraceRay(pixel, ray, vp, i, uniform, rng);
-	}
-
-	vp.ld /= directSamples;
+	TraceRay(pixel, ray, iter, maxDepth, initRadius, uniform, rng);
 }
 
 //build hash table for vp
-void ProgressivePhotonmapperBuildHashTable(int width, int height, float initRadius){
-	BuildHashTable(width, height, initRadius);
+void StochasticProgressivePhotonmapperBuildHashTable(int width, int height){
+	BuildHashTable(width, height);
 }
 
 //second pass trace photon
-__global__ void ProgressivePhotonmapperSP(int iter, int maxDepth){
+__global__ void StochasticProgressivePhotonmapperSP(int iter, int maxDepth){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
 	unsigned pixel = x + y*blockDim.x*gridDim.x;
@@ -2170,7 +2159,7 @@ __global__ void ProgressivePhotonmapperSP(int iter, int maxDepth){
 }
 
 //third pass density evaluate
-__global__ void ProgressivePhotonmapperTP(int iter, int photonsPerIteration){
+__global__ void StochasticProgressivePhotonmapperTP(int iter, int photonsPerIteration){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
 	unsigned pixel = x + y*blockDim.x*gridDim.x;
@@ -2181,11 +2170,11 @@ __global__ void ProgressivePhotonmapperTP(int iter, int photonsPerIteration){
 	if (vp.valid){
 		//as the number of iterations increases, the radius becomes
 		//smaller and samller, eventually producing infinity indirect
-		float3 indirect = vp.tau / (PI*vp.radius*vp.radius*photonsPerIteration*(iter + 1));
+		float3 indirect = vp.tau / (PI*vp.radius*vp.radius*photonsPerIteration*iter);
 		//skip if color is not a number
 		if (IsNan(indirect) || IsInf(indirect)) indirect = vp.ind;
 		vp.ind = indirect;
-		L = vp.ld + indirect;
+		L = vp.ld / iter + indirect;
 	}
 	kernel_color[pixel] = L;
 }
@@ -2199,7 +2188,7 @@ __global__ void Output(int iter, float3* output, bool reset, bool filmic, Integr
 	if (reset) kernel_acc_image[pixel] = { 0, 0, 0 };
 
 	float3 color = kernel_color[pixel];
-	if (type != IT_PPM){
+	if (type != IT_SPPM){
 		kernel_acc_image[pixel] += color;
 		color = kernel_acc_image[pixel] / iter;
 	}
@@ -2354,10 +2343,12 @@ void BeginRender(
 		texture_size, dev_image, dev_color, ep);
 
 	//init for progressive photon mapper
-	if (scene.integrator.type == IT_PPM){
+	if (scene.integrator.type == IT_SPPM){
 		HANDLE_ERROR(cudaMalloc(&device_vps, width*height*sizeof(VisiblePoint)));
+		HANDLE_ERROR(cudaMalloc(&device_vpOffset, (width*height + 1)*sizeof(int)));
+		HANDLE_ERROR(cudaMalloc(&device_vpIdx, sizeof(int)));
 
-		ProgressivePhotonmapperInit << <1, 1 >> >(device_vps);
+		StochasticProgressivePhotonmapperInit << <1, 1 >> >(device_vps, device_vpOffset);
 	}
 
 	HANDLE_ERROR(cudaDeviceSynchronize());
@@ -2399,22 +2390,17 @@ void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsig
 		BdptInit << <grid, block >> >();
 		Bdpt << <grid, block >> >(iter, scene.integrator.maxDepth);
 	}
-	else if (type == IT_PPM){
-		static bool first = true;
-		if (first){
-			clock_t now = clock();
-			ProgressivePhotonmapperFP << <grid, block >> >(iter, scene.integrator.maxDepth,
-				scene.integrator.directSamples, scene.integrator.initRadius);
-			
-			//build hash grid on cpu
-			ProgressivePhotonmapperBuildHashTable(width, height, scene.integrator.initRadius);
-			printf("PPM Trace And Build Hash Grid [%.3fs]\n", float(clock() - now) / CLOCKS_PER_SEC);
+	else if (type == IT_SPPM){
+		StochasticProgressivePhotonmapperFP << <grid, block >> >(iter, scene.integrator.maxDepth,
+			scene.integrator.initRadius);
 
-			first = false;
-		}
+		//build hash grid on cpu
+		StochasticProgressivePhotonmapperBuildHashTable(width, height);
+
 		int photonsPerIteration = scene.integrator.photonsPerIteration;
-		ProgressivePhotonmapperSP << < photonsPerIteration / 10, 10 >> >(iter, scene.integrator.maxDepth);
-		ProgressivePhotonmapperTP << <grid, block >> >(iter, photonsPerIteration);
+		StochasticProgressivePhotonmapperSP << < photonsPerIteration / 10, 10 >> >(iter, scene.integrator.maxDepth);
+		
+		StochasticProgressivePhotonmapperTP << <grid, block >> >(iter, photonsPerIteration);
 	}
 
 	grid.x = width / block.x;
