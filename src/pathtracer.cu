@@ -487,7 +487,7 @@ __device__ float3 MultipleScatter(Intersection* isect, float3 in, thrust::unifor
 //**************************bssrdf end*************
 
 //**************************BSDF Sampling**************************
-__device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, float3 dpdu, float3 u, float3& out, float3& fr, float& pdf){
+__device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, float3 dpdu, float3 u, float3& out, float3& fr, float& pdf, TransportMode mode = TransportMode::Radiance){
 	switch(material.type){
 	case MT_LAMBERTIAN:{
 		float3 n = nor;
@@ -536,7 +536,9 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 		float fresnel = DielectricFresnel(fabs(cost), fabs(cosi), et, ei);
 		if (u.x > fresnel){//refract
 			out = tdir;
-			fr = material.specular*eta*eta / fabs(dot(out, normal)) * (1.f - fresnel);
+			fr = material.specular / fabs(dot(out, normal)) * (1.f - fresnel);
+			if (mode == TransportMode::Radiance)
+				fr *= eta*eta;
 			pdf = 1.f - fresnel;
 		}
 		else{//reflect
@@ -673,8 +675,11 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 			out = tdir;
 			float G = GGX_G(in, out, n, wh, dpdu, material.alphaU, material.alphaV);
 			float c = et*dot(out, wh) + ei*dot(in, wh);
-			fr = material.specular*et*et * D * G* (1.f - fresnel) * fabs(dot(in,wh)) * fabs(dot(out,wh)) / 
+			fr = material.specular*ei*ei * D * G* (1.f - fresnel) * fabs(dot(in, wh)) * fabs(dot(out, wh)) /
 				(fabs(dot(out, n)) * fabs(dot(in, n)) * c*c);
+			if (mode == TransportMode::Radiance)
+				fr *= (1.f / (eta*eta));
+			
 			pdf = (1.f - fresnel) * D*fabs(dot(wh, n))* et*et*fabs(dot(out, wh)) / (c*c);
 		}
 		else{//reflect
@@ -689,7 +694,7 @@ __device__ void SampleBSDF(Material material, float3 in, float3 nor, float2 uv, 
 }
 
 //__device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 uv, float3 dpdu, float u, float3& fr, float& pdf){
-__device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 uv, float3 dpdu, float3& fr, float& pdf){
+__device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 uv, float3 dpdu, float3& fr, float& pdf, TransportMode mode = TransportMode::Radiance){
 	switch (material.type){
 	case MT_LAMBERTIAN:
 		if (!SameHemiSphere(in, out, nor)){
@@ -802,8 +807,10 @@ __device__ void Fr(Material material, float3 in, float3 out, float3 nor, float2 
 		if (!reflect){//refract
 			float G = GGX_G(in, out, n, wh, dpdu, material.alphaU, material.alphaV);
 			float c = et*dot(out, wh) + ei*dot(in, wh);
-			fr = material.specular*et*et * D * G* (1.f - fresnel) * fabs(dot(in, wh)) * fabs(dot(out, wh)) /
+			fr = material.specular*ei*ei * D * G* (1.f - fresnel) * fabs(dot(in, wh)) * fabs(dot(out, wh)) /
 				(fabs(dot(out, n)) * fabs(dot(in, n)) * c*c);
+			if (mode == TransportMode::Radiance)
+				fr *= (1.f / (eta*eta));
 			pdf = (1.f - fresnel) * D*fabs(dot(wh, n))* et*et*fabs(dot(out, wh)) / (c*c);
 		}
 		else{
@@ -920,7 +927,7 @@ __global__ void Path(int iter, int maxDepth){
 		}
 
 		//direct light with multiple importance sampling
-		if (IsDiffuse(material.type)){
+		if (!IsDelta(material.type)){
 			float3 Ld = make_float3(0.f, 0.f, 0.f);
 			bool inf = false;
 			float u = uniform(rng);
@@ -1001,7 +1008,7 @@ __global__ void Path(int iter, int maxDepth){
 			break;
 
 		beta *= fr*fabs(dot(nor, out)) / pdf;
-		specular = !IsDiffuse(material.type);
+		specular = IsDelta(material.type);
 
 		r = Ray(pos, out, nullptr, kernel_epsilon);
 
@@ -1128,7 +1135,7 @@ __global__ void Volpath(int iter, int maxDepth){
 
 			Material material = kernel_materials[isect.matIdx];
 			//direct light with multiple importance sampling
-			if (IsDiffuse(material.type)){
+			if (!IsDelta(material.type)){
 				float3 Ld = make_float3(0.f, 0.f, 0.f);
 				bool inf = false;
 				float u = uniform(rng);
@@ -1222,7 +1229,7 @@ __global__ void Volpath(int iter, int maxDepth){
 				break;
 
 			beta *= fr*fabs(dot(nor, out)) / pdf;
-			specular = !IsDiffuse(material.type);
+			specular = !IsDelta(material.type);
 
 			Medium* m = dot(out, nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
 				: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
@@ -1344,7 +1351,7 @@ __global__ void LightTracing(int iter, int maxDepth){
 			Material mat = kernel_materials[isect.matIdx];
 
 			//direct
-			if (IsDiffuse(mat.type)){
+			if (!IsDelta(mat.type)){
 				Ray shadowRay;
 				float we, cameraPdf;
 				int raster;
@@ -1370,7 +1377,7 @@ __global__ void LightTracing(int iter, int maxDepth){
 			float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
 			float3 out, fr;
 			float pdf;
-			SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf);
+			SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf, TransportMode::Importance);
 			if (IsBlack(fr))
 				break;
 			beta *= fr*fabs(dot(out, nor)) / pdf;
@@ -1456,7 +1463,7 @@ __device__ int GenerateCameraPath(int x, int y, BdptVertex* path, thrust::unifor
 			BdptVertex vertex;
 			vertex.beta = beta;
 			vertex.isect = isect;
-			vertex.delta = !IsDiffuse(mat.type);
+			vertex.delta = IsDelta(mat.type);
 			path[bounces + 1] = vertex;
 			path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
 		}
@@ -1529,7 +1536,7 @@ __device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribu
 			BdptVertex vertex;
 			vertex.beta = beta;
 			vertex.isect = isect;
-			vertex.delta = !IsDiffuse(mat.type);
+			vertex.delta = IsDelta(mat.type);
 			path[bounces + 1] = vertex;
 			path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
 		}
@@ -1538,7 +1545,7 @@ __device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribu
 		float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
 		float3 out, fr;
 		float pdf;
-		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf);
+		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf, TransportMode::Importance);
 		if (IsBlack(fr))
 			break;
 		beta *= fr*fabs(dot(out, nor)) / pdf;
@@ -1630,7 +1637,7 @@ __device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, 
 		Material mat = kernel_materials[cur.isect.matIdx];
 		Area light = kernel_lights[next.isect.lightIdx];
 		float3 radiance = light.Le(next.isect.nor, -nout);
-		if (!IsDiffuse(mat.type) || IsBlack(radiance))
+		if (IsDelta(mat.type) || IsBlack(radiance))
 			return{ 0.f, 0.f, 0.f };
 		Ray shadowRay;
 		shadowRay.o = cur.isect.pos;
@@ -1675,7 +1682,7 @@ __device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, 
 		Ray shadowRay;
 		float we, cameraPdf;
 		kernel_camera->SampleCamera(cur.isect.pos, shadowRay, we, cameraPdf, raster, kernel_epsilon);
-		if (!IsDiffuse(mat.type) || cameraPdf == 0 || IntersectP(shadowRay))
+		if (IsDelta(mat.type) || cameraPdf == 0 || IntersectP(shadowRay))
 			return{ 0.f, 0.f, 0.f };
 
 		float3 fr;
@@ -1719,7 +1726,7 @@ __device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, 
 		shadowRay.d = c1Tol1;
 		shadowRay.tmin = kernel_epsilon;
 		shadowRay.tmax = length(dir) - kernel_epsilon;
-		if (!IsDiffuse(c1Mat.type) || !IsDiffuse(l1Mat.type) ||
+		if (IsDelta(c1Mat.type) || IsDelta(l1Mat.type) ||
 			IntersectP(shadowRay))
 			return{ 0.f, 0.f, 0.f };
 		float cos1 = fabs(dot(l1Toc1, l1.isect.nor));
@@ -1841,7 +1848,7 @@ __device__ VisiblePoint* vps;
 __device__ int* vpIdx, *vpOffset;//grid info
 __device__ float3 boundsMin, boundsMax;
 __device__ int gridRes[3], hashSize;
-__global__ void PPMSetParam(int* idx, float3 fmin, float3 fmax, int x, int y, int z, int hsize){
+__global__ void SPPMSetParam(int* idx, float3 fmin, float3 fmax, int x, int y, int z, int hsize){
 	vpIdx = idx;
 	boundsMin = fmin;
 	boundsMax = fmax;
@@ -1926,7 +1933,7 @@ void BuildHashTable(int width, int height){
 	HANDLE_ERROR(cudaMemcpy(device_vpIdx, &temp[0], total*sizeof(int), cudaMemcpyHostToDevice));
 	HANDLE_ERROR(cudaMemcpy(device_vpOffset, &off[0], (hSize + 1)*sizeof(int), cudaMemcpyHostToDevice));
 	
-	PPMSetParam << <1, 1 >> >(device_vpIdx, gridBounds.fmin, gridBounds.fmax, gRes[0], gRes[1], gRes[2], hSize);
+	SPPMSetParam << <1, 1 >> >(device_vpIdx, gridBounds.fmin, gridBounds.fmax, gRes[0], gRes[1], gRes[2], hSize);
 	delete[] host_vps;
 	
 	delete[] grid;
@@ -1956,23 +1963,8 @@ __device__ void TraceRay(int pixel, Ray r, int iter, int maxDepth, float initRad
 		float3 dpdu = isect.dpdu;
 		Material mat = kernel_materials[isect.matIdx];
 
-		//delta material should be more careful
-		if (!IsDiffuse(mat.type)){
-			float3 fr, out;
-			float pdf;
-			float3 uniformBsdf = make_float3(uniform(rng), uniform(rng), uniform(rng));
-			SampleBSDF(mat, -ray.d, nor, uv, dpdu, uniformBsdf, out, fr, pdf);
-			if (IsBlack(fr)) return;
-
-			beta *= fr*fabs(dot(out, nor)) / pdf;
-
-			ray = Ray(pos, out, nullptr, kernel_epsilon);
-
-			continue;
-		}
-
 		float3 Ld = { 0.f, 0.f, 0.f };
-		if (IsDiffuse(mat.type) && isect.lightIdx == -1){
+		if (!IsDelta(mat.type) && isect.lightIdx == -1){
 			float u = uniform(rng);
 			float choicePdf;
 			int idx = LookUpLightDistribution(u, choicePdf);
@@ -2021,11 +2013,26 @@ __device__ void TraceRay(int pixel, Ray r, int iter, int maxDepth, float initRad
 		}
 
 		//light vp
-		if (isect.lightIdx != -1){
+		if (bounces == 0 || (IsDelta(mat.type) && isect.lightIdx != -1)){
 			Ld += kernel_lights[isect.lightIdx].Le(isect.nor, -ray.d);
 		}
 
 		if (!IsNan(Ld)) vp.ld += beta*Ld;
+
+		//delta material should be more careful
+		if (IsDelta(mat.type) || (IsGlossy(mat.type) && mat.alphaU < 0.2f)){
+			float3 fr, out;
+			float pdf;
+			float3 uniformBsdf = make_float3(uniform(rng), uniform(rng), uniform(rng));
+			SampleBSDF(mat, -ray.d, nor, uv, dpdu, uniformBsdf, out, fr, pdf);
+			if (IsBlack(fr)) return;
+
+			beta *= fr*fabs(dot(out, nor)) / pdf;
+
+			ray = Ray(pos, out, nullptr, kernel_epsilon);
+
+			continue;
+		}
 
 		vp.beta = beta;
 		vp.dir = -ray.d;
@@ -2095,7 +2102,7 @@ __device__ void TracePhoton(int maxDepth, thrust::uniform_real_distribution<floa
 		float3 fr, out;
 		float3 bsdfUniform = make_float3(uniform(rng), uniform(rng), uniform(rng));
 		float pdf;
-		SampleBSDF(mat, -ray.d, nor, uv, dpdu, bsdfUniform, out, fr, pdf);
+		SampleBSDF(mat, -ray.d, nor, uv, dpdu, bsdfUniform, out, fr, pdf, TransportMode::Importance);
 		if (pdf == 0) break;
 
 		beta *= fr*fabs(dot(nor, out)) / pdf;
@@ -2178,7 +2185,7 @@ __global__ void StochasticProgressivePhotonmapperTP(int iter, int photonsPerIter
 	}
 	kernel_color[pixel] = L;
 }
-//**************************PPM End********************************
+//**************************SPPM End********************************
 
 __global__ void Output(int iter, float3* output, bool reset, bool filmic, IntegratorType type){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
