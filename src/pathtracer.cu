@@ -47,7 +47,7 @@ __device__ inline unsigned int WangHash(unsigned int seed)
 	return seed;
 }
 
-__device__ inline float DielectricFresnel(float cosi, float cost, const float& etai, const float& etat){
+__host__ __device__ inline float DielectricFresnel(float cosi, float cost, const float& etai, const float& etat){
 	float Rparl = (etat * cosi - etai * cost) / (etat * cosi + etai * cost);
 	float Rperp = (etai * cosi - etat * cost) / (etai * cosi + etat * cost);
 
@@ -136,11 +136,11 @@ __device__ inline float3 SampleGGX(float alphaU, float alphaV, float u1, float u
 	}
 }
 
-__device__ inline float3 Reflect(float3 in, float3 nor){
+__host__ __device__ inline float3 Reflect(float3 in, float3 nor){
 	return 2.f*dot(in, nor)*nor - in;
 }
 
-__device__ inline float3 Refract(float3 in, float3 nor, float etai, float etat){
+__host__ __device__ inline float3 Refract(float3 in, float3 nor, float etai, float etat){
 	float cosi = dot(in, nor);
 	bool enter = cosi > 0;
 	if (!enter){
@@ -912,13 +912,7 @@ __global__ void Path(int iter, int maxDepth){
 		float2 uv = isect.uv;
 		float3 dpdu = isect.dpdu;
 		Material material = kernel_materials[isect.matIdx];
-		/*if (isect.bssrdf != -1){
-		float3 L = SingleScatter(&isect, -r.d, cudaRNG)
-		+MultipleScatter(&isect, -r.d, cudaRNG);
-		Li += beta*L;
 
-		break;
-		}*/
 		if (bounces == 0 || specular){
 			if (isect.lightIdx != -1){
 				Li += beta*kernel_lights[isect.lightIdx].Le(nor, -r.d);
@@ -1063,13 +1057,7 @@ __global__ void Volpath(int iter, int maxDepth){
 		float3 nor = isect.nor;
 		float2 uv = isect.uv;
 		float3 dpdu = isect.dpdu;
-		/*if (isect.bssrdf != -1){
-			float3 L = SingleScatter(&isect, -r.d, cudaRNG)
-			+MultipleScatter(&isect, -r.d, cudaRNG);
-			Li += beta*L;
 
-			break;
-			}*/
 		float sampledDist;
 		bool sampledMedium = false;
 		if (r.medium){
@@ -1086,14 +1074,15 @@ __global__ void Volpath(int iter, int maxDepth){
 			float choicePdf;
 			int idx = LookUpLightDistribution(u, choicePdf);
 			if (idx == kernel_light_size) inf = true;
+			float3 samplePos = r(sampledDist);
 			float2 u1 = make_float2(uniform(rng), uniform(rng));
 			float3 radiance, lightNor;
 			Ray shadowRay;
 			float lightPdf;
 			if (!inf)
-				kernel_lights[idx].SampleLight(r(sampledDist), u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+				kernel_lights[idx].SampleLight(samplePos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
 			else
-				kernel_infinite->SampleLight(r(sampledDist), u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+				kernel_infinite->SampleLight(samplePos, u1, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
 			shadowRay.medium = r.medium;
 			float3 tr = Tr(shadowRay, uniform, rng);
 			float phase, unuse;
@@ -1106,7 +1095,7 @@ __global__ void Volpath(int iter, int maxDepth){
 			float2 phaseU = make_float2(uniform(rng), uniform(rng));
 			float3 dir;
 			r.medium->SamplePhase(phaseU, dir, phase, pdf);
-			r = Ray(r(sampledDist), dir, r.medium, kernel_epsilon);
+			r = Ray(samplePos, dir, r.medium, kernel_epsilon);
 			specular = false;
 		}
 		else{
@@ -1128,7 +1117,7 @@ __global__ void Volpath(int iter, int maxDepth){
 				bounces--;
 				Medium* m = dot(r.d, isect.nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
 					: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
-				r = Ray(pos, r.d, m);
+				r = Ray(pos, r.d, m, kernel_epsilon);
 
 				continue;
 			}
@@ -1229,7 +1218,7 @@ __global__ void Volpath(int iter, int maxDepth){
 				break;
 
 			beta *= fr*fabs(dot(nor, out)) / pdf;
-			specular = !IsDelta(material.type);
+			specular = IsDelta(material.type);
 
 			Medium* m = dot(out, nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
 				: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
@@ -1343,7 +1332,7 @@ __global__ void LightTracing(int iter, int maxDepth){
 				bounces--;
 				Medium* m = dot(ray.d, isect.nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
 					: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
-				ray = Ray(pos, ray.d, m);
+				ray = Ray(pos, ray.d, m, kernel_epsilon);
 
 				continue;
 			}
@@ -1400,11 +1389,12 @@ __global__ void LightTracing(int iter, int maxDepth){
 //**************************Lighttracing End***********************
 
 //**************************Bdpt Integrator************************
-#define BDPT_MAX_DEPTH 12
+#define BDPT_MAX_DEPTH 65
 
 struct BdptVertex{
 	float3 beta;
 	Intersection isect;
+	Medium* medium = nullptr;
 	bool delta;
 	float fwd;
 	float rev;
@@ -1415,8 +1405,10 @@ __device__ float ConvertPdf(float pdf, Intersection& prev, Intersection& cur){
 	float3 dir = prev.pos - cur.pos;
 	float square = dot(dir, dir);
 	dir = normalize(dir);
-	float costheta = fabs(dot(dir, cur.nor));
-	return pdf*costheta / square;
+	float ret = pdf / square;
+	if (!IsBlack(cur.nor))
+	    ret *= fabs(dot(dir, cur.nor));
+	return ret;
 }
 
 __device__ int GenerateCameraPath(int x, int y, BdptVertex* path, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
@@ -1428,6 +1420,7 @@ __device__ int GenerateCameraPath(int x, int y, BdptVertex* path, thrust::unifor
 	//float2 aperture = UniformDisk(uniform(rng), uniform(rng), unuse);//for dof
 	Ray ray = kernel_camera->GeneratePrimaryRay(x + offsetx, y + offsety, make_float2(0, 0));
 	ray.tmin = kernel_epsilon;
+	ray.medium = kernel_camera->medium == -1 ? nullptr : &kernel_mediums[kernel_camera->medium];
 	float3 beta = { 1.f, 1.f, 1.f };
 
 	int nVertex = 0;
@@ -1440,12 +1433,13 @@ __device__ int GenerateCameraPath(int x, int y, BdptVertex* path, thrust::unifor
 		vertex.beta = beta;
 		vertex.isect = cameraIsect;
 		vertex.delta = false;
+		vertex.medium = ray.medium;
 		vertex.fwd = 1.f;
 		path[0] = vertex;
 	}
 	nVertex++;
 
-	float forward = 0.f;
+	float forward = 0.f, rrPdf = 1.f;
 	kernel_camera->PdfCamera(ray.d, unuse, forward);
 	Intersection isect;
 	int bounces = 0;
@@ -1457,35 +1451,99 @@ __device__ int GenerateCameraPath(int x, int y, BdptVertex* path, thrust::unifor
 		float3 pos = isect.pos;
 		float3 nor = isect.nor;
 		float2 uv = isect.uv;
-		Material mat = kernel_materials[isect.matIdx];
-
-		{
-			BdptVertex vertex;
-			vertex.beta = beta;
-			vertex.isect = isect;
-			vertex.delta = IsDelta(mat.type);
-			path[bounces + 1] = vertex;
-			path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
+		float sampledDist;
+		bool sampledMedium = false;
+		if (ray.medium){
+			if (ray.medium->type == MT_HOMOGENEOUS)
+				beta *= ray.medium->homogeneous.Sample(ray, uniform, rng, sampledDist, sampledMedium);
+			else
+				beta *= ray.medium->heterogeneous.Sample(ray, uniform, rng, sampledDist, sampledMedium);
 		}
-		nVertex++;
+		if (IsBlack(beta)) break;
+		if (sampledMedium){
+			float3 samplePos = ray(sampledDist);
 
-		float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
-		float3 out, fr;
-		float pdf;
-		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf);
-		if (IsBlack(fr))
-			break;
-		beta *= fr*fabs(dot(out, nor)) / pdf;
+			float phase, pdf;
+			float2 phaseU = make_float2(uniform(rng), uniform(rng));
+			float3 dir;
+			ray.medium->SamplePhase(phaseU, dir, phase, pdf);
+			ray = Ray(samplePos, dir, ray.medium, kernel_epsilon);
 
-		forward = pdf;
-		//calc reverse pdf
-		{
-			float3 unuseFr;
+			//set medium Intersection
+			{
+				BdptVertex vertex;
+				Intersection mediumIsect;
+				mediumIsect.pos = samplePos;
+				mediumIsect.nor = { 0.f, 0.f, 0.f };
+				mediumIsect.matIdx = -1;
+				mediumIsect.lightIdx = -1;
+				vertex.beta = beta;
+				vertex.delta = false;
+				vertex.isect = mediumIsect;
+				vertex.medium = ray.medium;
+				path[bounces + 1] = vertex;
+				path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
+				forward = phase;
+				path[bounces].rev = ConvertPdf(forward, path[bounces + 1].isect, path[bounces].isect);
+			}
+			nVertex++;
+		}
+		else{
+			if (isect.matIdx == -1){
+				bounces--;
+				Medium* m = dot(ray.d, isect.nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
+					: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
+				ray = Ray(pos, ray.d, m, kernel_epsilon);
+
+				continue;
+			}
+
+			Material mat = kernel_materials[isect.matIdx];
+
+			{
+				BdptVertex vertex;
+				vertex.beta = beta;
+				vertex.isect = isect;
+				vertex.delta = IsDelta(mat.type);
+				vertex.medium = ray.medium;
+				path[bounces + 1] = vertex;
+				path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
+			}
+			nVertex++;
+
+			float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
+			float3 out, fr;
 			float pdf;
-			Fr(mat, out, -ray.d, nor, uv, isect.dpdu, unuseFr, pdf);
-			path[bounces].rev = ConvertPdf(pdf, path[bounces + 1].isect, path[bounces].isect);
+			SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf);
+			if (IsBlack(fr))
+				break;
+			beta *= fr*fabs(dot(out, nor)) / pdf;
+
+			forward = pdf;
+			if (IsDelta(mat.type)) forward = 0.f;
+			//calc reverse pdf
+			{
+				float3 unuseFr;
+				float pdf;
+				Fr(mat, out, -ray.d, nor, uv, isect.dpdu, unuseFr, pdf);
+				path[bounces].rev = ConvertPdf(pdf, path[bounces + 1].isect, path[bounces].isect);
+			}
+
+			Medium* m = dot(out, nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
+				: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
+			m = dot(-ray.d, nor)*dot(out, nor) > 0 ? ray.medium : m;
+
+			ray = Ray(pos, out, m, kernel_epsilon);
 		}
-		ray = Ray(pos, out, nullptr, kernel_epsilon);
+
+		//russian roulette
+		if (bounces > 3){
+			rrPdf = clamp(1.f - Luminance(beta), 0.f, 1.f);
+			if (uniform(rng) < rrPdf)
+				break;
+
+			beta /= (1 - rrPdf);
+		}
 	}
 
 	return nVertex;
@@ -1501,7 +1559,8 @@ __device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribu
 	float3 lightNor, radiance;
 	float pdfA, pdfW;
 	light.SampleLight(u, ray, lightNor, radiance, pdfA, pdfW, kernel_epsilon);
-	
+	ray.medium = light.medium == -1 ? nullptr : &kernel_mediums[light.medium];
+
 	int nVertex = 0;
 	//set light isect
 	{
@@ -1513,6 +1572,7 @@ __device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribu
 		vertex.beta = radiance;
 		vertex.isect = lightIsect;
 		vertex.delta = false;
+		vertex.medium = ray.medium;
 		vertex.fwd = pdfA * choicePdf;
 		path[0] = vertex;
 	}
@@ -1520,7 +1580,7 @@ __device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribu
 	beta *= radiance*fabs(dot(ray.d, lightNor)) / (pdfA*pdfW*choicePdf);
 
 	Intersection isect;
-	float forward = pdfW;
+	float forward = pdfW, rrPdf = 1.f;
 	int bounces = 0;
 	for (; bounces < BDPT_MAX_DEPTH; ++bounces){
 		if (!Intersect(ray, &isect)){
@@ -1530,35 +1590,97 @@ __device__ int GenerateLightPath(BdptVertex* path, thrust::uniform_real_distribu
 		float3 pos = isect.pos;
 		float3 nor = isect.nor;
 		float2 uv = isect.uv;
-		Material mat = kernel_materials[isect.matIdx];
-
-		{
-			BdptVertex vertex;
-			vertex.beta = beta;
-			vertex.isect = isect;
-			vertex.delta = IsDelta(mat.type);
-			path[bounces + 1] = vertex;
-			path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
+		float sampledDist;
+		bool sampledMedium = false;
+		if (ray.medium){
+			if (ray.medium->type == MT_HOMOGENEOUS)
+				beta *= ray.medium->homogeneous.Sample(ray, uniform, rng, sampledDist, sampledMedium);
+			else
+				beta *= ray.medium->heterogeneous.Sample(ray, uniform, rng, sampledDist, sampledMedium);
 		}
-		nVertex++;
+		if (IsBlack(beta)) break;
+		if (sampledMedium){
+			float3 samplePos = ray(sampledDist);
 
-		float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
-		float3 out, fr;
-		float pdf;
-		SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf, TransportMode::Importance);
-		if (IsBlack(fr))
-			break;
-		beta *= fr*fabs(dot(out, nor)) / pdf;
+			float phase, pdf;
+			float2 phaseU = make_float2(uniform(rng), uniform(rng));
+			float3 dir;
+			ray.medium->SamplePhase(phaseU, dir, phase, pdf);
+			ray = Ray(samplePos, dir, ray.medium, kernel_epsilon);
 
-		forward = pdf;
-		//calc reverse pdf
-		{
-			float3 unuseFr;
+			//set medium Intersection
+			{
+				BdptVertex vertex;
+				Intersection mediumIsect;
+				mediumIsect.pos = samplePos;
+				mediumIsect.nor = { 0.f, 0.f, 0.f };
+				mediumIsect.matIdx = -1;
+				mediumIsect.lightIdx = -1;
+				vertex.beta = beta;
+				vertex.delta = false;
+				vertex.isect = mediumIsect;
+				vertex.medium = ray.medium;
+				path[bounces + 1] = vertex;
+				path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
+				forward = phase;
+				path[bounces].rev = ConvertPdf(phase, path[bounces + 1].isect, path[bounces].isect);
+			}
+			nVertex++;
+		}
+		else{
+			if (isect.matIdx == -1){
+				bounces--;
+				Medium* m = dot(ray.d, isect.nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
+					: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
+				ray = Ray(pos, ray.d, m, kernel_epsilon);
+
+				continue;
+			}
+			Material mat = kernel_materials[isect.matIdx];
+
+			{
+				BdptVertex vertex;
+				vertex.beta = beta;
+				vertex.isect = isect;
+				vertex.delta = IsDelta(mat.type);
+				vertex.medium = ray.medium;
+				path[bounces + 1] = vertex;
+				path[bounces + 1].fwd = ConvertPdf(forward, path[bounces].isect, path[bounces + 1].isect);
+			}
+			nVertex++;
+
+			float3 u = make_float3(uniform(rng), uniform(rng), uniform(rng));
+			float3 out, fr;
 			float pdf;
-			Fr(mat, out, -ray.d, nor, uv, isect.dpdu, unuseFr, pdf);
-			path[bounces].rev = ConvertPdf(pdf, path[bounces + 1].isect, path[bounces].isect);
+			SampleBSDF(mat, -ray.d, nor, uv, isect.dpdu, u, out, fr, pdf, TransportMode::Importance);
+			if (IsBlack(fr))
+				break;
+			beta *= fr*fabs(dot(out, nor)) / pdf;
+
+			forward = pdf;
+			if (IsDelta(mat.type)) forward = 0.f;
+			//calc reverse pdf
+			{
+				float3 unuseFr;
+				float pdf;
+				Fr(mat, out, -ray.d, nor, uv, isect.dpdu, unuseFr, pdf);
+				path[bounces].rev = ConvertPdf(pdf, path[bounces + 1].isect, path[bounces].isect);
+			}
+			Medium* m = dot(out, nor) > 0 ? (isect.mediumOutside == -1 ? nullptr : &kernel_mediums[isect.mediumOutside])
+				: (isect.mediumInside == -1 ? nullptr : &kernel_mediums[isect.mediumInside]);
+			m = dot(-ray.d, nor)*dot(out, nor) > 0 ? ray.medium : m;
+
+			ray = Ray(pos, out, m, kernel_epsilon);
 		}
-		ray = Ray(pos, out, nullptr, kernel_epsilon);
+
+		//russian roulette
+		if (bounces > 3){
+			rrPdf = clamp(1.f - Luminance(beta), 0.f, 1.f);
+			if (uniform(rng) < rrPdf)
+				break;
+
+			beta /= (1 - rrPdf);
+		}
 	}
 
 	return nVertex;
@@ -1586,7 +1708,7 @@ __device__ float MisWeight(BdptVertex* cameraPath, BdptVertex* lightPath, int s,
 	for (int i = t - 1; i >= 0; --i){
 		ri *= remap(lightPath[i].rev) / remap(lightPath[i].fwd);
 
-		bool delta = i == 1 ? false : lightPath[i == 0 ? 0 : i - 1].delta;
+		bool delta = lightPath[i == 0 ? 0 : i - 1].delta;
 		if (!lightPath[i].delta && !delta)
 			sumW += ri;
 	}
@@ -1594,21 +1716,20 @@ __device__ float MisWeight(BdptVertex* cameraPath, BdptVertex* lightPath, int s,
 	return 1.f / (sumW + 1.f);
 }
 
-__device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, int t, int& raster){
+__device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, int t, int& raster,
+	thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng){
 	float3 L = { 0.f, 0.f, 0.f };
 
 	if (t == 0){
 		//naive path tracing
 		BdptVertex& cur = cameraPath[s - 1];
 		BdptVertex& prev = cameraPath[s - 2];
-		if (cur.isect.lightIdx == -1)
-			return{ 0.f, 0.f, 0.f };
+		if (cur.isect.lightIdx == -1) return{ 0.f, 0.f, 0.f };
 
-		float3 dir = prev.isect.pos - cur.isect.pos;
+		float3 dir = normalize(prev.isect.pos - cur.isect.pos);
 		Area light = kernel_lights[cur.isect.lightIdx];
-		L += cur.beta*light.Le(cur.isect.nor, normalize(dir));
-		if (IsBlack(L))
-			return L;
+		L += cur.beta*light.Le(cur.isect.nor, dir);
+		if (IsBlack(L)) return L;
 
 		Ray ray(cur.isect.pos, dir);
 		float choicePdf = PdfFromLightDistribution(cur.isect.lightIdx);
@@ -1631,44 +1752,56 @@ __device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, 
 		BdptVertex& cur = cameraPath[s - 1];
 		BdptVertex& next = lightPath[0];
 		float3 in = normalize(prev.isect.pos - cur.isect.pos);
-		float3 out = next.isect.pos - cur.isect.pos;
-		float distanceSquare = dot(out, out);
-		float3 nout = normalize(out);
-		Material mat = kernel_materials[cur.isect.matIdx];
-		Area light = kernel_lights[next.isect.lightIdx];
-		float3 radiance = light.Le(next.isect.nor, -nout);
-		if (IsDelta(mat.type) || IsBlack(radiance))
-			return{ 0.f, 0.f, 0.f };
+		bool isMedium = cur.isect.matIdx == -1;
+		Material mat;
+		if (!isMedium) mat = kernel_materials[cur.isect.matIdx];
+		float choicePdf, lightPdf;
+		int idx = LookUpLightDistribution(uniform(rng), choicePdf);
+		Area light = kernel_lights[idx];
+		float3 radiance, lightNor, lightPos;
 		Ray shadowRay;
-		shadowRay.o = cur.isect.pos;
-		shadowRay.d = nout;
-		shadowRay.tmin = kernel_epsilon;
-		shadowRay.tmax = sqrtf(distanceSquare) - kernel_epsilon;
-		if (IntersectP(shadowRay))
-			return{ 0.f, 0.f, 0.f };
+		float2 lightUniform = { uniform(rng), uniform(rng) };
+		light.SampleLight(cur.isect.pos, lightUniform, radiance, shadowRay, lightNor, lightPdf, kernel_epsilon);
+		lightPos = shadowRay(shadowRay.tmax + kernel_epsilon);
+		shadowRay.medium = cur.medium;
+		if (IsBlack(radiance)) return{ 0.f, 0.f, 0.f };
+		if (!isMedium && IsDelta(mat.type)) return{ 0.f, 0.f, 0.f };
+		float3 tr = Tr(shadowRay, uniform, rng);
+		if (IsBlack(tr)) return{ 0.f, 0.f, 0.f };
 
 		float3 fr;
-		float nextPdf;
-		Fr(mat, in, nout, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, nextPdf);
-		float G = fabs(dot(cur.isect.nor, nout))*fabs(dot(next.isect.nor, nout)) / distanceSquare;
-		L += cur.beta*fr*radiance*G / next.fwd;
+		float nextPdf, G, phase;
+		if (isMedium){
+			cur.medium->Phase(in, shadowRay.d, phase, nextPdf);
+			fr = make_float3(phase, phase, phase);
+			G = 1.f;
+		}
+		else{
+			Fr(mat, in, shadowRay.d, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, nextPdf);
+			G = fabs(dot(cur.isect.nor, shadowRay.d));
+		}
+		L += cur.beta*tr*fr*radiance*G / (lightPdf*choicePdf);
 		if (IsBlack(L)) return{ 0.f, 0.f, 0.f };
 
-		Ray ray(next.isect.pos, -nout);
+		BdptVertex tNext = next;
 		float pdfA, pdfW;
-		light.Pdf(ray, next.isect.nor, pdfA, pdfW);
-		float nextRev = next.rev;
+		light.Pdf(shadowRay, lightNor, pdfA, pdfW);
+		next.isect.pos = lightPos;
+		next.isect.nor = lightNor;
+		next.fwd = pdfA*choicePdf;
+		next.rev = ConvertPdf(nextPdf, cur.isect, next.isect);
 		float curRev = cur.rev;
 		float prevRev = prev.rev;
-		next.rev = ConvertPdf(nextPdf, cur.isect, next.isect);
 		cur.rev = ConvertPdf(pdfW, next.isect, cur.isect);
 		float pdf;
-		Fr(mat, nout, in, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, pdf);
+		if (isMedium) pdf = phase;
+		else Fr(mat, shadowRay.d, in, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, pdf);
 		prev.rev = ConvertPdf(pdf, cur.isect, prev.isect);
 		float mis = MisWeight(cameraPath, lightPath, s, t);
-		next.rev = nextRev;
+
 		cur.rev = curRev;
 		prev.rev = prevRev;
+		next = tNext;
 
 		return mis*L;
 	}
@@ -1678,17 +1811,27 @@ __device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, 
 		BdptVertex& cur = lightPath[t - 1];
 		BdptVertex& next = cameraPath[0];
 		float3 in = normalize(prev.isect.pos - cur.isect.pos);
-		Material mat = kernel_materials[cur.isect.matIdx];
+		bool isMedium = cur.isect.matIdx == -1;
+		Material mat;
+		if (!isMedium) mat = kernel_materials[cur.isect.matIdx];
 		Ray shadowRay;
 		float we, cameraPdf;
 		kernel_camera->SampleCamera(cur.isect.pos, shadowRay, we, cameraPdf, raster, kernel_epsilon);
-		if (IsDelta(mat.type) || cameraPdf == 0 || IntersectP(shadowRay))
-			return{ 0.f, 0.f, 0.f };
+		shadowRay.medium = cur.medium;
+		if (cameraPdf == 0) return{ 0.f, 0.f, 0.f };
+		if (!isMedium && IsDelta(mat.type)) return{ 0.f, 0.f, 0.f };
+		float3 tr = Tr(shadowRay, uniform, rng);
+		if (IsBlack(tr)) return{ 0.f, 0.f, 0.f };
 
 		float3 fr;
-		float nextPdf;
-		Fr(mat, in, shadowRay.d, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, nextPdf);
-		L += cur.beta*fr*we*fabs(dot(shadowRay.d, cur.isect.nor)) / cameraPdf;
+		float nextPdf, phase, costheta = fabs(dot(shadowRay.d, cur.isect.nor));
+		if (isMedium){
+			cur.medium->Phase(in, shadowRay.d, phase, nextPdf);
+			fr = make_float3(phase, phase, phase);
+			costheta = 1.f;
+		}
+		else Fr(mat, in, shadowRay.d, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, nextPdf);
+		L += cur.beta*tr*fr*we*costheta / cameraPdf;
 		if (IsBlack(L)) return{ 0.f, 0.f, 0.f };
 
 		float nextRev = next.rev;
@@ -1699,7 +1842,8 @@ __device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, 
 		kernel_camera->PdfCamera(-shadowRay.d, pdfA, pdfW);
 		cur.rev = ConvertPdf(pdfW, next.isect, cur.isect);
 		float pdf;
-		Fr(mat, shadowRay.d, in, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, pdf);
+		if (isMedium) pdf = phase;
+		else Fr(mat, shadowRay.d, in, cur.isect.nor, cur.isect.uv, cur.isect.dpdu, fr, pdf);
 		prev.rev = ConvertPdf(pdf, cur.isect, prev.isect);
 		float mis = MisWeight(cameraPath, lightPath, s, t);
 		next.rev = nextRev;
@@ -1719,24 +1863,36 @@ __device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, 
 		float3 c1Tol1 = -l1Toc1;
 		float3 c1Toc2 = normalize(c2.isect.pos - c1.isect.pos);
 		float3 dir = c1.isect.pos - l1.isect.pos;
-		Material c1Mat = kernel_materials[c1.isect.matIdx];
-		Material l1Mat = kernel_materials[l1.isect.matIdx];
+		Material c1Mat, l1Mat;
+		if (!c1.medium) c1Mat = kernel_materials[c1.isect.matIdx];
+		if (!l1.medium) l1Mat = kernel_materials[l1.isect.matIdx];
 		Ray shadowRay;
 		shadowRay.o = c1.isect.pos;
 		shadowRay.d = c1Tol1;
+		shadowRay.medium = c1.medium;
 		shadowRay.tmin = kernel_epsilon;
 		shadowRay.tmax = length(dir) - kernel_epsilon;
-		if (IsDelta(c1Mat.type) || IsDelta(l1Mat.type) ||
-			IntersectP(shadowRay))
-			return{ 0.f, 0.f, 0.f };
-		float cos1 = fabs(dot(l1Toc1, l1.isect.nor));
-		float cos2 = fabs(dot(c1Tol1, c1.isect.nor));
+		if (!c1.medium && IsDelta(c1Mat.type)) return{ 0.f, 0.f, 0.f };
+		if (!l1.medium && IsDelta(l1Mat.type)) return{ 0.f, 0.f, 0.f };
+		float3 tr = Tr(shadowRay, uniform, rng);
+		if (IsBlack(tr)) return{ 0.f, 0.f, 0.f };
+		float cos1 = l1.medium ? 1.f : fabs(dot(l1Toc1, l1.isect.nor));
+		float cos2 = c1.medium ? 1.f : fabs(dot(c1Tol1, c1.isect.nor));
 
 		float3 c1Fr, l1Fr;
 		float l1Pdf, c1Pdf;
-		Fr(c1Mat, c1Toc2, c1Tol1, c1.isect.nor, c1.isect.uv, c1.isect.dpdu, c1Fr, l1Pdf);
-		Fr(l1Mat, l1Tol2, l1Toc1, l1.isect.nor, l1.isect.uv, l1.isect.dpdu, l1Fr, c1Pdf);
-		float G = cos1*cos2 / dot(dir, dir);
+		float l1Phase, c1Phase;
+		if (c1.medium){
+			c1.medium->Phase(c1Toc2, c1Tol1, c1Phase, l1Pdf);
+			c1Fr = make_float3(c1Phase, c1Phase, c1Phase);
+		}
+		else Fr(c1Mat, c1Toc2, c1Tol1, c1.isect.nor, c1.isect.uv, c1.isect.dpdu, c1Fr, l1Pdf);
+		if (l1.medium){
+			l1.medium->Phase(l1Tol2, l1Toc1, l1Phase, c1Pdf);
+			l1Fr = make_float3(l1Phase, l1Phase, l1Phase);
+		}
+		else Fr(l1Mat, l1Tol2, l1Toc1, l1.isect.nor, l1.isect.uv, l1.isect.dpdu, l1Fr, c1Pdf);
+		float3 G = tr*cos1*cos2 / dot(dir, dir);
 		L += c1.beta*c1Fr*G*l1Fr*l1.beta;
 		if (IsBlack(L)) return{ 0.f, 0.f, 0.f };
 
@@ -1747,8 +1903,10 @@ __device__ float3 Connect(BdptVertex* cameraPath, BdptVertex* lightPath, int s, 
 		c1.rev = ConvertPdf(c1Pdf, l1.isect, c1.isect);
 		l1.rev = ConvertPdf(l1Pdf, c1.isect, l1.isect);
 		float l2Pdf, c2Pdf;
-		Fr(l1Mat, l1Toc1, l1Tol2, l1.isect.nor, l1.isect.uv, l1.isect.dpdu, l1Fr, l2Pdf);
-		Fr(c1Mat, c1Tol1, c1Toc2, c1.isect.nor, c1.isect.uv, c1.isect.dpdu, c1Fr, c2Pdf);
+		if (l1.medium) l1.medium->Phase(l1Toc1, l1Tol2, l1Phase, l2Pdf);
+		else Fr(l1Mat, l1Toc1, l1Tol2, l1.isect.nor, l1.isect.uv, l1.isect.dpdu, l1Fr, l2Pdf);
+		if (c1.medium) c1.medium->Phase(c1Tol1, c1Toc2, c1Phase, c2Pdf);
+		else Fr(c1Mat, c1Tol1, c1Toc2, c1.isect.nor, c1.isect.uv, c1.isect.dpdu, c1Fr, c2Pdf);
 		l2.rev = ConvertPdf(l2Pdf, l1.isect, l2.isect);
 		c2.rev = ConvertPdf(c2Pdf, c1.isect, c2.isect);
 		float mis = MisWeight(cameraPath, lightPath, s, t);
@@ -1792,7 +1950,7 @@ __global__ void Bdpt(int iter, int maxDepth){
 				continue;
 
 			int raster;
-			float3 L = Connect(cameraPath, lightPath, s, t, raster);
+			float3 L = Connect(cameraPath, lightPath, s, t, raster, uniform, rng);
 			if (IsInf(L) || IsNan(L) || IsBlack(L))
 				continue;
 
@@ -1951,6 +2109,7 @@ __device__ void TraceRay(int pixel, Ray r, int iter, int maxDepth, float initRad
 
 	float3 beta = { 1.f, 1.f, 1.f };
 	Ray ray = r;
+	bool specular = false;
 	for (int bounces = 0; bounces < maxDepth; ++bounces){
 		Intersection isect;
 		if (!Intersect(ray, &isect)){
@@ -2013,8 +2172,8 @@ __device__ void TraceRay(int pixel, Ray r, int iter, int maxDepth, float initRad
 		}
 
 		//light vp
-		if (bounces == 0 || (IsDelta(mat.type) && isect.lightIdx != -1)){
-			Ld += kernel_lights[isect.lightIdx].Le(isect.nor, -ray.d);
+		if (bounces == 0 || (specular && isect.lightIdx != -1)){
+			Ld += kernel_lights[isect.lightIdx].Le(nor, -ray.d);
 		}
 
 		if (!IsNan(Ld)) vp.ld += beta*Ld;
@@ -2028,6 +2187,7 @@ __device__ void TraceRay(int pixel, Ray r, int iter, int maxDepth, float initRad
 			if (IsBlack(fr)) return;
 
 			beta *= fr*fabs(dot(out, nor)) / pdf;
+			specular = IsDelta(mat.type);
 
 			ray = Ray(pos, out, nullptr, kernel_epsilon);
 

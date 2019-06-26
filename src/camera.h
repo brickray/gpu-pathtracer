@@ -106,8 +106,8 @@ public:
 		}
 
 		plane = plane*0.5f + make_float2(0.5f, 0.5f);
-		int x = plane.x * (resolution.x - 1);
-		int y = plane.y * (resolution.y - 1);
+		int x = floor(plane.x * (resolution.x - 1) + 0.5f);
+		int y = floor(plane.y * (resolution.y - 1) + 0.5f);
 		raster = y*resolution.x + x;
 		pdf = dot(dir, dir) / costheta;
 		we = distance*distance / (area*costheta*costheta*costheta*costheta);
