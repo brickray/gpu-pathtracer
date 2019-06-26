@@ -17,8 +17,8 @@ public:
 	__host__ __device__ void SampleLight(float3& pos, float2& uniform, float3& rad, Ray& ray, float3& nor, float& pdf, float epsilon = 0.01) const{
 		float pdfW;
 		float3 dir = UniformSphere(uniform.x, uniform.y, pdfW);
-		////d = d.x*u + d.y*v + d.z*w;
-		float3 p = pos + dir*radius;
+		//dir = dir.x*u + dir.y*v + dir.z*w;
+		//float3 p = pos + dir*radius;
 		float costheta = dot(dir, v);
 		float theta = acos(costheta);
 		float3 d = normalize(dir - costheta*v);
@@ -29,8 +29,8 @@ public:
 		float uu = phi / TWOPI;
 		float vv = theta / PI;
 
-		nor = -d;
-		ray = Ray(pos, d, nullptr, epsilon, radius - epsilon);
+		nor = -dir;
+		ray = Ray(pos, dir, nullptr, epsilon, 2.f*radius - epsilon);
 		pdf = pdfW;
 		rad = getTexelBilinear(make_float2(1.f - uu, vv));
 	}
