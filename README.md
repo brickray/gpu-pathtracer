@@ -4,7 +4,7 @@ GPUPathtracer
 physically based path tracer on gpu
 
 ![whiteroom](result/whiteroom.png)
-![whiteroom_ao](result/whiteroom_ao.png)
+![classroom](result/house.png)
 
 特点
 ----
