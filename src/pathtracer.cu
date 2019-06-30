@@ -2359,14 +2359,19 @@ struct Vpl{
 	int matIdx;
 };
 
-__device__ Vpl vpls[IR_MAX_VPLS];
-__device__ int numVpls;
+__device__ Vpl vpls[IR_MAX_VPLS][IR_MAX_VPLS];
+__device__ int numVpls[IR_MAX_VPLS];
+int vplIter = IR_MAX_VPLS;
 
 __global__ void GenerateVpl(int iter, int maxDepth){
-	thrust::default_random_engine rng(WangHash(iter));
+	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
+	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
+	unsigned pixel = x + y*blockDim.x*gridDim.x;
+
+	thrust::default_random_engine rng(WangHash(pixel) + WangHash(iter));
 	thrust::uniform_real_distribution<float> uniform(0.0f, 1.0f);
 
-	numVpls = 0;
+	numVpls[pixel] = 0;
 	float3 beta = { 1.f, 1.f, 1.f };
 	float choicePdf;
 	int idx = LookUpLightDistribution(uniform(rng), choicePdf);
@@ -2383,7 +2388,7 @@ __global__ void GenerateVpl(int iter, int maxDepth){
 		vpl.dir.x = pdfA*choicePdf;
 		vpl.pos = ray.o;
 		vpl.nor = lightNor;
-		vpls[numVpls++] = vpl;
+		vpls[pixel][numVpls[pixel]++] = vpl;
 	}
 
 	Intersection isect;
@@ -2407,7 +2412,7 @@ __global__ void GenerateVpl(int iter, int maxDepth){
 			vpl.uv = isect.uv;
 			vpl.dpdu = isect.dpdu;
 			vpl.matIdx = isect.matIdx;
-			vpls[numVpls++] = vpl;
+			vpls[pixel][numVpls[pixel]++] = vpl;
 		}
 
 		float3 fr, out;
@@ -2430,7 +2435,7 @@ __global__ void GenerateVpl(int iter, int maxDepth){
 	}
 }
 
-__global__ void InstantRadiosity(int iter, int maxDepth, float bias){
+__global__ void InstantRadiosity(int iter, int vplIter, int maxDepth, float bias){
 	unsigned x = blockIdx.x*blockDim.x + threadIdx.x;
 	unsigned y = blockIdx.y*blockDim.y + threadIdx.y;
 	unsigned pixel = x + y*blockDim.x*gridDim.x;
@@ -2470,8 +2475,8 @@ __global__ void InstantRadiosity(int iter, int maxDepth, float bias){
 			continue;
 		}
 
-		for (int i = 0; i < numVpls; ++i){
-			Vpl vpl = vpls[i];
+		for (int i = 0; i < numVpls[vplIter]; ++i){
+			Vpl vpl = vpls[vplIter][i];
 
 			float3 dir = pos - vpl.pos;
 			float3 out = normalize(dir);
@@ -2730,8 +2735,12 @@ void Render(Scene& scene, unsigned width, unsigned height, Camera* camera, unsig
 		StochasticProgressivePhotonmapperTP << <grid, block >> >(iter, photonsPerIteration);
 	}
 	else if (type == IT_IR){
-		GenerateVpl << <1, 1 >> >(iter, scene.integrator.maxDepth);
-		InstantRadiosity << <grid, block >> >(iter, scene.integrator.maxDepth, scene.integrator.vplBias);
+		if (vplIter == IR_MAX_VPLS){
+			vplIter = 0;
+			GenerateVpl << <IR_MAX_VPLS, 1 >> >(iter, scene.integrator.maxDepth);
+		}
+		InstantRadiosity << <grid, block >> >(iter, vplIter, scene.integrator.maxDepth, scene.integrator.vplBias);
+		vplIter++;
 	}
 
 	grid.x = width / block.x;
