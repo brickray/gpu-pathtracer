@@ -211,9 +211,14 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 			scene.integrator.initRadius = doc.HasMember("initRadius") ? doc["initRadius"].GetDouble() : 0.5f;
 			scene.integrator.photonsPerIteration = doc.HasMember("photonsPerIteration") ? doc["photonsPerIteration"].GetInt() : 100000;
 		}
+		else if (integrator == "ir"){
+			scene.integrator.type = IT_IR;
+			scene.integrator.maxDepth = doc.HasMember("maxDepth") ? doc["maxDepth"].GetInt() : 5;
+			scene.integrator.vplBias = doc.HasMember("vplBias") ? doc["vplBias"].GetDouble() : 0.5f;
+		}
 		else{
 			printf("Unsupport integrator [%s]\n", integrator);
-			printf("Choose one of them[ao, pt, vpt, lt, bdpt, mlt(underdeveloped), sppm]\n");
+			printf("Choose one of them[ao, pt, vpt, lt, bdpt, mlt(underdeveloped), sppm, ir]\n");
 			exit(1);
 		}
 	}

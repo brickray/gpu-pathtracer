@@ -20,6 +20,7 @@ enum IntegratorType{
 	IT_BDPT,
 	IT_MLT,
 	IT_SPPM,
+	IT_IR,
 };
 
 class Scene{
@@ -40,6 +41,7 @@ public:
 			float maxDist;
 			int maxDepth;
 		};
+		float vplBias;
 		float initRadius;
 		int photonsPerIteration;
 	} integrator;
