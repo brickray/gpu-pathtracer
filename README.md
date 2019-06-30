@@ -10,10 +10,10 @@ physically based path tracer on gpu
 ----
 
 - 积分器(ambient occlusion, path tracing, light tracing, volumetric path tracing, bidirectional path tracing,\
-  Stochastic Progressive Photonmapper)
+  stochastic progressive photonmapper, instant radiosity)
 - 材质(lambertian, mirror, dielectric, roughdielectric, roughconduct, substrate)
 - 参与介质渲染(homogeneous and heterogeneous)
-- 光源(area infinite)
+- 光源(area, infinite)
 - 多重重要性采样(mis)
 - 景深(dof)
 - 简单的场景加载(simple scene loader)
