@@ -1,6 +1,7 @@
 {
     "screen_width": 512,
     "screen_height": 512,
+    "integrator": "vpt",
     "maxDepth": 17,
     "epsilon": 0.001,
     "camera": {
@@ -76,6 +77,7 @@
             "p0": [ -0.63, 0.27, -0.2415 ],
             "p1": [ 0.693, 1.593, 0.2415 ],
             "density": "geometry/density.d",
+            "iterMax": 2000,
             "name": "hhh"
         }
     ],
@@ -103,8 +105,7 @@
         {
             "mesh": "geometry/density_render.obj",
             "inside": "hhh",
-            "outside": "",
-            "translate": [0, 0, -0.3115]
+            "outside": ""
         }
     ],
     "light": [
