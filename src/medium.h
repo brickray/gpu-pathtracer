@@ -17,7 +17,7 @@ public:
 	}
 
 	__device__ float3 Sample(const Ray& ray, thrust::uniform_real_distribution<float>& uniform, thrust::default_random_engine& rng, float& t, bool& sampled) const{
-		int channel = uniform(rng) * 3;
+		/*int channel = uniform(rng) * 3;
 		channel = channel == 3 ? 2 : channel;
 		float dist = -std::log(1 - uniform(rng)) / (&sigmaT.x)[channel];
 		dist = dist < ray.tmax ? dist : ray.tmax;
@@ -36,14 +36,16 @@ public:
 		    pdf = 1;
 		}
 
-		return sampledMedium ? (Tr * sigmaS / pdf) : Tr / pdf;
-		/*float sigma = dot(sigmaT, { 0.212671f, 0.715160f, 0.072169f });
-		float dist = Exponential(curand_uniform(&rng), sigma);
+		return sampledMedium ? (Tr * sigmaS / pdf) : Tr / pdf;*/
+		float sigma = dot(sigmaT, { 0.212671f, 0.715160f, 0.072169f });
+		float dist = Exponential(uniform(rng), sigma);
+		float3 Tr = Exp(sigmaT * -dist);
+		float pdf = sigma * exp(sigma * -dist);
 		bool sampledMedium = dist < ray.tmax;
 		sampled = sampledMedium;
 		t = dist;
 
-		return sampledMedium ? (sigmaS / sigmaT) : {1.f, 1.f, 1.f};*/
+		return sampledMedium ? (Tr * sigmaS / pdf) : sigmaT * Tr / pdf;
 	}
 };
 
@@ -55,6 +57,7 @@ public:
 	float invMaxDensity;
 	float3 p0, p1;
 	int iterMax;
+	int evalTransmittanceType; //0-delta tracking 1-ratio tracking 2-residual ratio tracking 
 
 public:
 	//有时候会因为迭代过于深而导致timeout
@@ -65,21 +68,63 @@ public:
 		float tr = 1.f;
 		float dist = 0.f;
 		int iter = iterMax;
-		while (true){
-			dist += -log(uniform(rng)) * invMaxDensity / sigma;
-			if (dist >= r.tmax) break;
-			float3 p = r(dist);
-			p = (p - p0) / d;
-			tr *= 1.f - getDensity(p)*invMaxDensity;
+		if (evalTransmittanceType == 0){
+			while (true){
+				dist += -log(uniform(rng)) * invMaxDensity / sigma;
+				if (dist >= r.tmax) break;
+				float3 p = r(dist);
+				p = (p - p0) / d;
+				if (getDensity(p)*invMaxDensity > uniform(rng)){
+					tr = 0;
+					break;
+				}
 
-			if (tr < 0.1f){
-				float q = 1.f - tr;
-				if (uniform(rng) < q) return{ 0.f, 0.f, 0.f };
-				tr /= (1.f - q);
+				if (--iter == 0){
+					tr = 0;
+					break;
+				}
+			}
+		}
+		else if (evalTransmittanceType == 1){
+			while (true){
+				dist += -log(uniform(rng)) * invMaxDensity / sigma;
+				if (dist >= r.tmax) break;
+				float3 p = r(dist);
+				p = (p - p0) / d;
+				tr *= 1.f - getDensity(p)*invMaxDensity;
+
+				if (tr < 0.1f){
+					float q = 1.f - tr;
+					if (uniform(rng) < q) return{ 0.f, 0.f, 0.f };
+					tr = 1;
+				}
+
+				if (--iter == 0)
+					break;
+			}
+		}
+		else{
+			float maxDensity = 1 / invMaxDensity;
+			float ce = 0.5 * maxDensity;
+			float tc = exp(-ray.tmax * ce * sigma);
+			while (true){
+				dist += -log(uniform(rng)) * (1 / (maxDensity - ce) / sigma);
+				if (dist >= r.tmax) break;
+				float3 p = r(dist);
+				p = (p - p0) / d;
+				tr *= 1.f - (getDensity(p) - ce) / (maxDensity - ce);
+
+				if (tr < 0.1f){
+					float q = 1.f - tr;
+					if (uniform(rng) < q) return{ 0.f, 0.f, 0.f };
+					tr /= (1.f - q);
+				}
+
+				if (--iter == 0)
+					break;
 			}
 
-			if (--iter == 0)
-				break;
+			tr *= tc;
 		}
 
 		return{ tr, tr, tr };

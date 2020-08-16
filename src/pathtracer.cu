@@ -1,3 +1,4 @@
+
 #include "pathtracer.h"
 #include "camera.h"
 #include "scene.h"

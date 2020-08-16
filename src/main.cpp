@@ -155,6 +155,13 @@ void record_time(){
 	sprintf(buffer, "%s  Seconds:[%.2fs], Fps:[%.2f], Iteration:[%d]", title, elapsed, 1.f / delta, iteration);
 	//printf("Seconds:[%.2fs], Fps:[%d], Iteration:[%d]\r\n", elapsed, fps, iteration);
 	glutSetWindowTitle(buffer);
+
+	static bool first = true;
+	if (first && elapsed > 10)
+	{
+		SaveImage();
+		first = false;
+	}
 }
 
 void update_camera(){

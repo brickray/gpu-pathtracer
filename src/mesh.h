@@ -66,6 +66,21 @@ public:
 
 		ray.tmax = tt;
 		if (isect){
+			float3 dpdu, dpdv;
+			float2 duv1 = v2.uv - v1.uv;
+			float2 duv2 = v3.uv - v1.uv;
+			float det = duv1.x * duv2.y - duv1.y * duv2.x;
+			if (fabs(det) < 1e-8) {
+				//degenerate
+				float3 nn = normalize(cross(e1, e2));
+				MakeCoordinate(nn, dpdu, dpdv);
+			}
+			else {
+				float invDet = 1 / det;
+				dpdu = (duv2.y * e1 - duv1.y * e2) * invDet;
+				dpdv = (-duv2.x * e1 + duv1.x * e2) * invDet;
+			}
+
 			isect->pos = ray(tt);
 			//不能默认文件里的法线已经归一化，这里需要手动归一化一下
 			//coffee场景里就因为这个问题导致渲染出现奇怪条纹，查了2天才查出来。。
@@ -73,7 +88,7 @@ public:
 			isect->uv = v1.uv*(1.f - b1 - b2) + v2.uv*b1 + v3.uv*b2;
 			isect->matIdx = matIdx;
 			isect->lightIdx = lightIdx;
-			isect->dpdu = normalize(v1.t * (1.f - b1 - b2) + v2.t*b1 + v3.t*b2);
+			isect->dpdu = normalize(cross(isect->nor, normalize(dpdv))); 
 			isect->bssrdf = bssrdfIdx;
 			isect->mediumInside = mediumInside;
 			isect->mediumOutside = mediumOutside;

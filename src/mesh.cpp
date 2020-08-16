@@ -94,13 +94,13 @@ float3 Mesh::genTangent(int idx1, int idx2, int idx3){
 	Vertex v1 = vertices[idx1];
 	Vertex v2 = vertices[idx2];
 	Vertex v3 = vertices[idx3];
-	float2 duv21 = v2.uv - v1.uv, duv31 = v3.uv - v1.uv;
-	float3 dp21 = v2.v - v1.v, dp31 = v3.v - v1.v;
-	float det = duv21.x * duv31.y - duv21.y*duv31.x;
+	float2 duv1 = v2.uv - v1.uv, duv2 = v3.uv - v1.uv;
+	float3 e1 = v2.v - v1.v, e2 = v3.v - v1.v;
+	float det = duv1.x * duv2.y - duv1.y*duv2.x;
 	bool degenerate = fabs(det) < 1e-8;
 	if (!degenerate){
 		float invdet = 1.f / det;
-		float3 tangent = normalize((duv31.y*dp21 - duv21.y*dp31)*invdet);
+		float3 tangent = normalize((-duv2.x*e1 + duv1.y*e2)*invdet);
 		return tangent;
 	}
 	else{

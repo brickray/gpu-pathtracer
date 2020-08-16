@@ -1,5 +1,13 @@
 #include "bvh.h"
-#include <xmmintrin.h>
+
+BBox GetBBox(Primitive& p){
+	if (p.type == GT_TRIANGLE)
+		return p.triangle.GetBBox();
+	else if (p.type == GT_LINES)
+		return p.line.GetBBox();
+	else if (p.type == GT_SPHERE)
+		return p.sphere.GetBBox();
+}
 
 BVH::BVH(){
 	total_nodes = 0;
@@ -11,12 +19,7 @@ void BVH::build(vector<Primitive>& primitives){
 
 	root_box.Reset();
 	for (int i = 0; i < primitives.size(); ++i){
-		if (primitives[i].type == GT_TRIANGLE)
-			root_box.Expand(primitives[i].triangle.GetBBox());
-		else if (primitives[i].type == GT_LINES)
-			root_box.Expand(primitives[i].line.GetBBox());
-		else if (primitives[i].type == GT_SPHERE)
-			root_box.Expand(primitives[i].sphere.GetBBox());
+		root_box.Expand(GetBBox(primitives[i]));
 	}
 
 	prims.reserve(primitives.size());
@@ -66,12 +69,7 @@ BVHNode* BVH::split(vector<Primitive>& primitives, BBox& bbox){
 		//place all triangles into correspond bucket
 		for (int j = 0; j < primitives.size(); ++j){
 			BBox bounds;
-			if (primitives[j].type == GT_TRIANGLE)
-				bounds = primitives[j].triangle.GetBBox();
-			else if (primitives[j].type == GT_LINES)
-				bounds = primitives[j].line.GetBBox();
-			else if (primitives[j].type == GT_SPHERE)
-				bounds = primitives[j].sphere.GetBBox();
+			bounds = GetBBox(primitives[j]);
 			float3 center = bounds.Centric();
 			float value = (i == 0) ? center.x : (i == 1) ? center.y : center.z;
 			float value_start = (i == 0) ? bbox.fmin.x : (i == 1) ? bbox.fmin.y : bbox.fmin.z;
@@ -127,12 +125,7 @@ BVHNode* BVH::split(vector<Primitive>& primitives, BBox& bbox){
 	for (int i = 0; i < primitives.size(); ++i){
 		Primitive prim = primitives[i];
 		BBox bounds;
-		if (prim.type == GT_TRIANGLE)
-			bounds = prim.triangle.GetBBox();
-		else if (prim.type == GT_LINES)
-			bounds = prim.line.GetBBox();
-		else if (prim.type == GT_SPHERE)
-			bounds = prim.sphere.GetBBox();
+		bounds = GetBBox(prim);
 		float3 center = bounds.Centric();
 		float value = (best_axis == 0) ? center.x : (best_axis == 1) ? center.y : center.z;
 		int no = (int)((value - value_start) / (value_end - value_start)*bucket_num);
@@ -169,7 +162,7 @@ void BVH::flatten(BVHNode* node, int cur, int& next){
 
 	if (node->left)
 		flatten(node->left, cur + 1, ++next);
-	
+
 	if (node->right){
 		linear_root[cur].second_child_offset = next + 1;
 		flatten(node->right, next, ++next);//参数传递从右到左，所以这里第二个参数不需要+1

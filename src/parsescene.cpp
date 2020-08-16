@@ -109,6 +109,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					float3 p0 = getFloat3((*it)["p0"]);
 					float3 p1 = getFloat3((*it)["p1"]);
 					string file = (*it)["density"].GetString();
+					int evalTransmittanceType = (*it).HasMember("evalTransmittanceType") ? (*it)["evalTransmittanceType"].GetInt() : 1;
 					medium.type = MT_HETEROGENEOUS;
 					medium.heterogeneous.sigmaA = sigmaA;
 					medium.heterogeneous.sigmaS = sigmaS;
@@ -119,6 +120,7 @@ bool LoadScene(const char* filename, GlobalConfig& config, Scene& scene){
 					medium.heterogeneous.p0 = p0;
 					medium.heterogeneous.p1 = p1;
 					medium.heterogeneous.iterMax = iterMax;
+					medium.heterogeneous.evalTransmittanceType = evalTransmittanceType;
 					medium.heterogeneous.density = new float[nx*ny*nz];
 					ReadDensityFromFile((base + file).c_str(), nx, ny, nz, medium.heterogeneous.density);
 					float max = 0.f;
